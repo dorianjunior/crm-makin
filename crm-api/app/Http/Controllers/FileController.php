@@ -54,7 +54,13 @@ class FileController extends Controller
 
     public function download(File $file)
     {
-        return Storage::disk('public')->download($file->path);
+        $filePath = storage_path('app/public/' . $file->path);
+
+        if (!file_exists($filePath)) {
+            return response()->json(['message' => 'File not found'], 404);
+        }
+
+        return response()->download($filePath);
     }
 
     public function destroy(File $file)
