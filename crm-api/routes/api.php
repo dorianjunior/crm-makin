@@ -1,6 +1,10 @@
 <?php
 
 use App\Http\Controllers\ActivityController;
+use App\Http\Controllers\API\CMS\MenuController;
+use App\Http\Controllers\API\CMS\PageController;
+use App\Http\Controllers\API\CMS\PostController;
+use App\Http\Controllers\API\CMS\SiteController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\EmailController;
@@ -75,4 +79,30 @@ Route::middleware(['auth:sanctum', 'active'])->group(function () {
 
     // System Logs
     Route::apiResource('system-logs', SystemLogController::class)->only(['index', 'show']);
+
+    // ============================================
+    // CMS ROUTES
+    // ============================================
+    Route::prefix('cms')->group(function () {
+        // Sites
+        Route::apiResource('sites', SiteController::class);
+        Route::post('sites/{site}/regenerate-key', [SiteController::class, 'regenerateApiKey']);
+        Route::post('sites/{site}/activate', [SiteController::class, 'activate']);
+        Route::post('sites/{site}/deactivate', [SiteController::class, 'deactivate']);
+
+        // Pages
+        Route::apiResource('pages', PageController::class);
+        Route::post('pages/{page}/publish', [PageController::class, 'publish']);
+        Route::post('pages/{page}/unpublish', [PageController::class, 'unpublish']);
+        Route::post('pages/{page}/request-approval', [PageController::class, 'requestApproval']);
+
+        // Posts
+        Route::apiResource('posts', PostController::class);
+        Route::post('posts/{post}/publish', [PostController::class, 'publish']);
+        Route::post('posts/{post}/unpublish', [PostController::class, 'unpublish']);
+        Route::post('posts/{post}/request-approval', [PostController::class, 'requestApproval']);
+
+        // Menus
+        Route::apiResource('menus', MenuController::class);
+    });
 });
