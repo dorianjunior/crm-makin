@@ -52,13 +52,13 @@ class GeminiService
 
             // Build generation config
             $config = $this->buildGenerationConfig();
-            
+
             // Build safety settings
             $safetySettings = $this->buildSafetySettings();
 
             // Combine system prompt with user prompt if provided
-            $fullPrompt = $systemPrompt 
-                ? "{$systemPrompt}\n\n{$prompt}" 
+            $fullPrompt = $systemPrompt
+                ? "{$systemPrompt}\n\n{$prompt}"
                 : $prompt;
 
             // Generate response
@@ -69,7 +69,7 @@ class GeminiService
             );
 
             $content = $response->text();
-            
+
             // Get token counts
             $inputTokens = $response->usageMetadata->promptTokenCount ?? 0;
             $outputTokens = $response->usageMetadata->candidatesTokenCount ?? 0;
@@ -118,10 +118,10 @@ class GeminiService
 
         try {
             $model = $this->client->generativeModel($this->setting->model);
-            
+
             // Build generation config
             $config = $this->buildGenerationConfig();
-            
+
             // Build safety settings
             $safetySettings = $this->buildSafetySettings();
 
@@ -132,7 +132,7 @@ class GeminiService
             $response = $chat->sendMessage($userMessage, $config, $safetySettings);
 
             $content = $response->text();
-            
+
             // Get token counts
             $inputTokens = $response->usageMetadata->promptTokenCount ?? 0;
             $outputTokens = $response->usageMetadata->candidatesTokenCount ?? 0;
@@ -185,7 +185,7 @@ class GeminiService
 
             // Build generation config
             $config = $this->buildGenerationConfig();
-            
+
             // Build safety settings
             $safetySettings = $this->buildSafetySettings();
 
@@ -198,7 +198,7 @@ class GeminiService
             foreach ($stream as $chunk) {
                 $text = $chunk->text();
                 $fullContent .= $text;
-                
+
                 // Call callback with chunk
                 $callback($text);
 
@@ -300,7 +300,7 @@ class GeminiService
         }
 
         $safetySettings = [];
-        
+
         foreach ($this->setting->safety_settings as $category => $threshold) {
             $safetySettings[] = new SafetySetting(
                 $category,
@@ -325,7 +325,7 @@ class GeminiService
         // For simplicity, using approximate pricing for gemini-pro:
         // Input: $0.00025 / 1K tokens
         // Output: $0.0005 / 1K tokens
-        
+
         $inputCost = ($inputTokens / 1000) * 0.00025;
         $outputCost = ($outputTokens / 1000) * 0.0005;
 
