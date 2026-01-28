@@ -20,7 +20,7 @@ return new class() extends Migration
             $table->string('change_summary')->nullable();
             $table->timestamps();
 
-            $table->index(['versionable_type', 'versionable_id', 'version_number']);
+            $table->index(['versionable_type', 'versionable_id', 'version_number'], 'content_versions_lookup_index');
         });
     }
 
