@@ -29,7 +29,7 @@ class WhatsAppAccountFactory extends Factory
             'phone_number_id' => $this->faker->numerify('##############'),
             'business_account_id' => $this->faker->numerify('##############'),
             'phone_number' => $phoneNumber,
-            'display_name' => $this->faker->company . ' Support',
+            'display_name' => $this->faker->company() . ' Support',
             'access_token' => Crypt::encryptString('test_access_token_' . Str::random(40)),
             'verify_token' => Crypt::encryptString('verify_' . Str::random(20)),
             'account_type' => $this->faker->randomElement(['STANDARD', 'OFFICIAL', 'VERIFIED']),
@@ -37,7 +37,7 @@ class WhatsAppAccountFactory extends Factory
             'is_active' => true,
             'metadata' => [
                 'timezone' => 'America/Sao_Paulo',
-                'business_name' => $this->faker->company,
+                'business_name' => $this->faker->company(),
             ],
         ];
     }
