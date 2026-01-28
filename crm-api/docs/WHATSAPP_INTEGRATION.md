@@ -464,7 +464,7 @@ Activity::create([
     'company_id' => $account->company_id,
     'lead_id' => $conversation->lead_id,
     'type' => 'whatsapp_message',
-    'description' => $direction === 'inbound' 
+    'description' => $direction === 'inbound'
         ? "Mensagem recebida via WhatsApp: {$content}"
         : "Mensagem enviada via WhatsApp: {$content}",
     'metadata' => [

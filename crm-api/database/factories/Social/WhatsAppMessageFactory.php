@@ -23,11 +23,11 @@ class WhatsAppMessageFactory extends Factory
         $direction = $this->faker->randomElement(['inbound', 'outbound']);
         $type = $this->faker->randomElement(['text', 'image', 'video', 'audio', 'document']);
         $status = $direction === 'inbound' ? 'received' : $this->faker->randomElement(['sent', 'delivered', 'read']);
-        
+
         $sentAt = $this->faker->dateTimeBetween('-7 days', 'now');
         $deliveredAt = $status !== 'sent' ? $this->faker->dateTimeBetween($sentAt, 'now') : null;
         $readAt = $status === 'read' ? $this->faker->dateTimeBetween($deliveredAt ?? $sentAt, 'now') : null;
-        
+
         return [
             'whatsapp_conversation_id' => WhatsAppConversation::factory(),
             'message_id' => 'wamid.' . $this->faker->regexify('[A-Z0-9]{50}'),
@@ -173,7 +173,7 @@ class WhatsAppMessageFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             $deliveredAt = $this->faker->dateTimeBetween($attributes['sent_at'] ?? '-1 hour', 'now');
-            
+
             return [
                 'status' => 'read',
                 'delivered_at' => $deliveredAt,

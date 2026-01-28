@@ -23,7 +23,7 @@ class WhatsAppAccountFactory extends Factory
     public function definition(): array
     {
         $phoneNumber = $this->faker->numerify('+551198#######');
-        
+
         return [
             'company_id' => Company::factory(),
             'phone_number_id' => $this->faker->numerify('##############'),

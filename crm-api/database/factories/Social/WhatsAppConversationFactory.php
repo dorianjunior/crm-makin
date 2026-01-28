@@ -22,7 +22,7 @@ class WhatsAppConversationFactory extends Factory
     public function definition(): array
     {
         $phone = $this->faker->numerify('551198#######');
-        
+
         return [
             'whatsapp_account_id' => WhatsAppAccount::factory(),
             'lead_id' => null, // Can be linked later
