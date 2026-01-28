@@ -1,19 +1,26 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\CRM;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Pipeline extends Model
+class Product extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'company_id',
         'name',
+        'price',
+        'active',
+    ];
+
+    protected $casts = [
+        'price' => 'decimal:2',
+        'active' => 'boolean',
     ];
 
     public function company(): BelongsTo
@@ -21,8 +28,8 @@ class Pipeline extends Model
         return $this->belongsTo(Company::class);
     }
 
-    public function stages(): HasMany
+    public function proposalItems(): HasMany
     {
-        return $this->hasMany(PipelineStage::class)->orderBy('order');
+        return $this->hasMany(ProposalItem::class);
     }
 }

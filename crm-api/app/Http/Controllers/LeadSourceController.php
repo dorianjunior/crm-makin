@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\LeadSource;
+use App\Models\CRM\LeadSource;
 use Illuminate\Http\Request;
 
 class LeadSourceController extends Controller
@@ -16,6 +16,7 @@ class LeadSourceController extends Controller
         }
 
         $sources = $query->get();
+
         return response()->json($sources);
     }
 
@@ -27,6 +28,7 @@ class LeadSourceController extends Controller
         ]);
 
         $source = LeadSource::create($validated);
+
         return response()->json($source, 201);
     }
 
@@ -42,12 +44,14 @@ class LeadSourceController extends Controller
         ]);
 
         $leadSource->update($validated);
+
         return response()->json($leadSource);
     }
 
     public function destroy(LeadSource $leadSource)
     {
         $leadSource->delete();
+
         return response()->json(['message' => 'Lead source deleted successfully']);
     }
 }

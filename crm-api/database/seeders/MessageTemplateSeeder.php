@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\MessageTemplate;
-use App\Models\Company;
+use App\Models\CRM\Company;
+use App\Models\CRM\MessageTemplate;
 use Illuminate\Database\Seeder;
 
 class MessageTemplateSeeder extends Seeder

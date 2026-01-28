@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
+use App\Models\CRM\Product;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -20,6 +20,7 @@ class ProductController extends Controller
         }
 
         $products = $query->paginate(15);
+
         return response()->json($products);
     }
 
@@ -33,6 +34,7 @@ class ProductController extends Controller
         ]);
 
         $product = Product::create($validated);
+
         return response()->json($product, 201);
     }
 
@@ -50,12 +52,14 @@ class ProductController extends Controller
         ]);
 
         $product->update($validated);
+
         return response()->json($product);
     }
 
     public function destroy(Product $product)
     {
         $product->delete();
+
         return response()->json(['message' => 'Product deleted successfully']);
     }
 }

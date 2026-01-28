@@ -1,0 +1,19 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+
+parameters:
+    level: 5
+    paths:
+        - app/
+    
+    # Ignores
+    excludePaths:
+        - app/Providers/BroadcastServiceProvider.php
+    
+    # Type coverage
+    checkMissingIterableValueType: false
+    checkGenericClassInNonGenericObjectType: false
+    
+    # PHPStan rules
+    reportUnmatchedIgnoredErrors: false
+    treatPhpDocTypesAsCertain: false

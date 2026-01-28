@@ -17,6 +17,7 @@ class UserController extends Controller
         }
 
         $users = $query->paginate(15);
+
         return response()->json($users);
     }
 
@@ -48,7 +49,7 @@ class UserController extends Controller
             'company_id' => 'sometimes|exists:companies,id',
             'role_id' => 'sometimes|exists:roles,id',
             'name' => 'sometimes|string|max:255',
-            'email' => 'sometimes|string|email|max:255|unique:users,email,' . $user->id,
+            'email' => 'sometimes|string|email|max:255|unique:users,email,'.$user->id,
             'password' => 'sometimes|string|min:8',
             'active' => 'boolean',
         ]);
@@ -58,12 +59,14 @@ class UserController extends Controller
         }
 
         $user->update($validated);
+
         return response()->json($user->load(['company', 'role']));
     }
 
     public function destroy(User $user)
     {
         $user->delete();
+
         return response()->json(['message' => 'User deleted successfully']);
     }
 }

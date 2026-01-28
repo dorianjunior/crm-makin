@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Activity;
+use App\Models\CRM\Activity;
 use Illuminate\Http\Request;
 
 class ActivityController extends Controller
@@ -20,6 +20,7 @@ class ActivityController extends Controller
         }
 
         $activities = $query->orderBy('created_at', 'desc')->paginate(15);
+
         return response()->json($activities);
     }
 
@@ -33,6 +34,7 @@ class ActivityController extends Controller
         ]);
 
         $activity = Activity::create($validated);
+
         return response()->json($activity->load(['lead', 'user']), 201);
     }
 
@@ -49,12 +51,14 @@ class ActivityController extends Controller
         ]);
 
         $activity->update($validated);
+
         return response()->json($activity->load(['lead', 'user']));
     }
 
     public function destroy(Activity $activity)
     {
         $activity->delete();
+
         return response()->json(['message' => 'Activity deleted successfully']);
     }
 }

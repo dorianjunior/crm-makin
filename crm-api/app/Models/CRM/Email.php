@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\CRM;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class WhatsappMessage extends Model
+class Email extends Model
 {
     use HasFactory;
 
@@ -15,8 +16,8 @@ class WhatsappMessage extends Model
     protected $fillable = [
         'lead_id',
         'user_id',
-        'message',
-        'status',
+        'subject',
+        'body',
         'sent_at',
     ];
 

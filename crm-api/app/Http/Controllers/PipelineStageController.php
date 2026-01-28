@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\PipelineStage;
+use App\Models\CRM\PipelineStage;
 use Illuminate\Http\Request;
 
 class PipelineStageController extends Controller
@@ -16,6 +16,7 @@ class PipelineStageController extends Controller
         }
 
         $stages = $query->orderBy('order')->get();
+
         return response()->json($stages);
     }
 
@@ -28,6 +29,7 @@ class PipelineStageController extends Controller
         ]);
 
         $stage = PipelineStage::create($validated);
+
         return response()->json($stage, 201);
     }
 
@@ -44,12 +46,14 @@ class PipelineStageController extends Controller
         ]);
 
         $pipelineStage->update($validated);
+
         return response()->json($pipelineStage);
     }
 
     public function destroy(PipelineStage $pipelineStage)
     {
         $pipelineStage->delete();
+
         return response()->json(['message' => 'Pipeline stage deleted successfully']);
     }
 
@@ -70,6 +74,7 @@ class PipelineStageController extends Controller
     public function detachLead(PipelineStage $pipelineStage, $leadId)
     {
         $pipelineStage->leads()->detach($leadId);
+
         return response()->json(['message' => 'Lead detached from stage successfully']);
     }
 }

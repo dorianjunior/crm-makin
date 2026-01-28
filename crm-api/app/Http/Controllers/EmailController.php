@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Email;
+use App\Models\CRM\Email;
 use Illuminate\Http\Request;
 
 class EmailController extends Controller
@@ -16,6 +16,7 @@ class EmailController extends Controller
         }
 
         $emails = $query->orderBy('sent_at', 'desc')->paginate(15);
+
         return response()->json($emails);
     }
 
@@ -30,6 +31,7 @@ class EmailController extends Controller
         ]);
 
         $email = Email::create($validated);
+
         return response()->json($email->load(['lead', 'user']), 201);
     }
 
@@ -47,12 +49,14 @@ class EmailController extends Controller
         ]);
 
         $email->update($validated);
+
         return response()->json($email->load(['lead', 'user']));
     }
 
     public function destroy(Email $email)
     {
         $email->delete();
+
         return response()->json(['message' => 'Email deleted successfully']);
     }
 }

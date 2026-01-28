@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Models\Lead;
-use App\Models\Company;
-use App\Models\LeadSource;
+use App\Models\CRM\Company;
+use App\Models\CRM\Lead;
+use App\Models\CRM\LeadSource;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -18,7 +18,7 @@ class LeadSeeder extends Seeder
         $demoCompany = Company::where('name', 'Demo Company')->first();
         $sources = LeadSource::where('company_id', $demoCompany->id)->get();
         $salesUsers = User::where('company_id', $demoCompany->id)
-            ->whereHas('role', fn($q) => $q->where('name', 'Sales'))
+            ->whereHas('role', fn ($q) => $q->where('name', 'Sales'))
             ->get();
 
         $leads = [

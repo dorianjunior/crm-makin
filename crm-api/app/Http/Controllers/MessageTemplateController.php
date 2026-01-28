@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\MessageTemplate;
+use App\Models\CRM\MessageTemplate;
 use Illuminate\Http\Request;
 
 class MessageTemplateController extends Controller
@@ -20,6 +20,7 @@ class MessageTemplateController extends Controller
         }
 
         $templates = $query->get();
+
         return response()->json($templates);
     }
 
@@ -33,6 +34,7 @@ class MessageTemplateController extends Controller
         ]);
 
         $template = MessageTemplate::create($validated);
+
         return response()->json($template, 201);
     }
 
@@ -50,12 +52,14 @@ class MessageTemplateController extends Controller
         ]);
 
         $messageTemplate->update($validated);
+
         return response()->json($messageTemplate);
     }
 
     public function destroy(MessageTemplate $messageTemplate)
     {
         $messageTemplate->delete();
+
         return response()->json(['message' => 'Message template deleted successfully']);
     }
 }

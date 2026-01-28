@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\LeadSource;
-use App\Models\Company;
+use App\Models\CRM\Company;
+use App\Models\CRM\LeadSource;
 use Illuminate\Database\Seeder;
 
 class LeadSourceSeeder extends Seeder

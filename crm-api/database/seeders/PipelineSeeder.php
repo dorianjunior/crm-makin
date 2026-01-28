@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Models\Pipeline;
-use App\Models\PipelineStage;
-use App\Models\Company;
+use App\Models\CRM\Company;
+use App\Models\CRM\Pipeline;
+use App\Models\CRM\PipelineStage;
 use Illuminate\Database\Seeder;
 
 class PipelineSeeder extends Seeder

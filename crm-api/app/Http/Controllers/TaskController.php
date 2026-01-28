@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Task;
+use App\Models\CRM\Task;
 use Illuminate\Http\Request;
 
 class TaskController extends Controller
@@ -24,6 +24,7 @@ class TaskController extends Controller
         }
 
         $tasks = $query->orderBy('due_date')->paginate(15);
+
         return response()->json($tasks);
     }
 
@@ -40,6 +41,7 @@ class TaskController extends Controller
         ]);
 
         $task = Task::create($validated);
+
         return response()->json($task->load(['company', 'lead', 'user']), 201);
     }
 
@@ -59,12 +61,14 @@ class TaskController extends Controller
         ]);
 
         $task->update($validated);
+
         return response()->json($task->load(['company', 'lead', 'user']));
     }
 
     public function destroy(Task $task)
     {
         $task->delete();
+
         return response()->json(['message' => 'Task deleted successfully']);
     }
 }

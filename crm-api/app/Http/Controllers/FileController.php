@@ -21,6 +21,7 @@ class FileController extends Controller
         }
 
         $files = $query->paginate(15);
+
         return response()->json($files);
     }
 
@@ -54,9 +55,9 @@ class FileController extends Controller
 
     public function download(File $file)
     {
-        $filePath = storage_path('app/public/' . $file->path);
+        $filePath = storage_path('app/public/'.$file->path);
 
-        if (!file_exists($filePath)) {
+        if (! file_exists($filePath)) {
             return response()->json(['message' => 'File not found'], 404);
         }
 
@@ -67,6 +68,7 @@ class FileController extends Controller
     {
         Storage::disk('public')->delete($file->path);
         $file->delete();
+
         return response()->json(['message' => 'File deleted successfully']);
     }
 }

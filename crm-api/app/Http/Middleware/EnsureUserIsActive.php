@@ -13,9 +13,9 @@ class EnsureUserIsActive
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if ($request->user() && !$request->user()->active) {
+        if ($request->user() && ! $request->user()->active) {
             return response()->json([
-                'message' => 'Your account is inactive. Please contact support.'
+                'message' => 'Your account is inactive. Please contact support.',
             ], 403);
         }
 

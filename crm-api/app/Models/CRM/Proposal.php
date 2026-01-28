@@ -1,20 +1,24 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\CRM;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Activity extends Model
+class Proposal extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'lead_id',
-        'user_id',
-        'type',
-        'description',
+        'total_value',
+        'status',
+    ];
+
+    protected $casts = [
+        'total_value' => 'decimal:2',
     ];
 
     public function lead(): BelongsTo
@@ -22,8 +26,8 @@ class Activity extends Model
         return $this->belongsTo(Lead::class);
     }
 
-    public function user(): BelongsTo
+    public function items(): HasMany
     {
-        return $this->belongsTo(User::class);
+        return $this->hasMany(ProposalItem::class);
     }
 }

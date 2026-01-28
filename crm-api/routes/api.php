@@ -1,23 +1,23 @@
 <?php
 
+use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\CompanyController;
-use App\Http\Controllers\RoleController;
-use App\Http\Controllers\PermissionController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\LeadSourceController;
+use App\Http\Controllers\EmailController;
+use App\Http\Controllers\FileController;
 use App\Http\Controllers\LeadController;
-use App\Http\Controllers\ActivityController;
-use App\Http\Controllers\TaskController;
+use App\Http\Controllers\LeadSourceController;
+use App\Http\Controllers\MessageTemplateController;
+use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\PipelineController;
 use App\Http\Controllers\PipelineStageController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProposalController;
-use App\Http\Controllers\EmailController;
-use App\Http\Controllers\WhatsappMessageController;
-use App\Http\Controllers\MessageTemplateController;
-use App\Http\Controllers\FileController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SystemLogController;
+use App\Http\Controllers\TaskController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\WhatsappMessageController;
 use Illuminate\Support\Facades\Route;
 
 // ============================================
@@ -32,7 +32,6 @@ Route::prefix('auth')->group(function () {
 // PROTECTED ROUTES - Require Authentication
 // ============================================
 Route::middleware(['auth:sanctum', 'active'])->group(function () {
-
     // Authentication
     Route::prefix('auth')->group(function () {
         Route::post('/logout', [AuthController::class, 'logout']);

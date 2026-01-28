@@ -24,6 +24,7 @@ class SystemLogController extends Controller
         }
 
         $logs = $query->orderBy('created_at', 'desc')->paginate(50);
+
         return response()->json($logs);
     }
 
@@ -37,6 +38,7 @@ class SystemLogController extends Controller
         ]);
 
         $log = SystemLog::create($validated);
+
         return response()->json($log, 201);
     }
 

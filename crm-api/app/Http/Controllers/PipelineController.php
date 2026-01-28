@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Pipeline;
+use App\Models\CRM\Pipeline;
 use Illuminate\Http\Request;
 
 class PipelineController extends Controller
@@ -16,6 +16,7 @@ class PipelineController extends Controller
         }
 
         $pipelines = $query->get();
+
         return response()->json($pipelines);
     }
 
@@ -27,6 +28,7 @@ class PipelineController extends Controller
         ]);
 
         $pipeline = Pipeline::create($validated);
+
         return response()->json($pipeline, 201);
     }
 
@@ -42,12 +44,14 @@ class PipelineController extends Controller
         ]);
 
         $pipeline->update($validated);
+
         return response()->json($pipeline);
     }
 
     public function destroy(Pipeline $pipeline)
     {
         $pipeline->delete();
+
         return response()->json(['message' => 'Pipeline deleted successfully']);
     }
 }

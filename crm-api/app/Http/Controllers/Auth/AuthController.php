@@ -53,13 +53,13 @@ class AuthController extends Controller
 
         $user = User::where('email', $request->email)->first();
 
-        if (!$user || !Hash::check($request->password, $user->password)) {
+        if (! $user || ! Hash::check($request->password, $user->password)) {
             throw ValidationException::withMessages([
                 'email' => ['The provided credentials are incorrect.'],
             ]);
         }
 
-        if (!$user->active) {
+        if (! $user->active) {
             throw ValidationException::withMessages([
                 'email' => ['Your account is inactive.'],
             ]);

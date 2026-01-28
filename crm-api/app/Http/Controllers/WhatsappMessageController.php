@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\WhatsappMessage;
+use App\Models\CRM\WhatsappMessage;
 use Illuminate\Http\Request;
 
 class WhatsappMessageController extends Controller
@@ -20,6 +20,7 @@ class WhatsappMessageController extends Controller
         }
 
         $messages = $query->orderBy('sent_at', 'desc')->paginate(15);
+
         return response()->json($messages);
     }
 
@@ -34,6 +35,7 @@ class WhatsappMessageController extends Controller
         ]);
 
         $whatsappMessage = WhatsappMessage::create($validated);
+
         return response()->json($whatsappMessage->load(['lead', 'user']), 201);
     }
 
@@ -51,12 +53,14 @@ class WhatsappMessageController extends Controller
         ]);
 
         $whatsappMessage->update($validated);
+
         return response()->json($whatsappMessage->load(['lead', 'user']));
     }
 
     public function destroy(WhatsappMessage $whatsappMessage)
     {
         $whatsappMessage->delete();
+
         return response()->json(['message' => 'WhatsApp message deleted successfully']);
     }
 }

@@ -10,6 +10,7 @@ class RoleController extends Controller
     public function index()
     {
         $roles = Role::with('permissions')->get();
+
         return response()->json($roles);
     }
 
@@ -38,7 +39,7 @@ class RoleController extends Controller
     public function update(Request $request, Role $role)
     {
         $validated = $request->validate([
-            'name' => 'sometimes|string|max:255|unique:roles,name,' . $role->id,
+            'name' => 'sometimes|string|max:255|unique:roles,name,'.$role->id,
             'permissions' => 'array',
             'permissions.*' => 'exists:permissions,id',
         ]);
@@ -57,6 +58,7 @@ class RoleController extends Controller
     public function destroy(Role $role)
     {
         $role->delete();
+
         return response()->json(['message' => 'Role deleted successfully']);
     }
 }

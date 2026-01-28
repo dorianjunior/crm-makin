@@ -10,6 +10,7 @@ class PermissionController extends Controller
     public function index()
     {
         $permissions = Permission::all();
+
         return response()->json($permissions);
     }
 
@@ -20,6 +21,7 @@ class PermissionController extends Controller
         ]);
 
         $permission = Permission::create($validated);
+
         return response()->json($permission, 201);
     }
 
@@ -31,16 +33,18 @@ class PermissionController extends Controller
     public function update(Request $request, Permission $permission)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:permissions,name,' . $permission->id,
+            'name' => 'required|string|max:255|unique:permissions,name,'.$permission->id,
         ]);
 
         $permission->update($validated);
+
         return response()->json($permission);
     }
 
     public function destroy(Permission $permission)
     {
         $permission->delete();
+
         return response()->json(['message' => 'Permission deleted successfully']);
     }
 }

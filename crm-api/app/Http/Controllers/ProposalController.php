@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Proposal;
+use App\Models\CRM\Proposal;
 use Illuminate\Http\Request;
 
 class ProposalController extends Controller
@@ -20,6 +20,7 @@ class ProposalController extends Controller
         }
 
         $proposals = $query->paginate(15);
+
         return response()->json($proposals);
     }
 
@@ -90,6 +91,7 @@ class ProposalController extends Controller
     public function destroy(Proposal $proposal)
     {
         $proposal->delete();
+
         return response()->json(['message' => 'Proposal deleted successfully']);
     }
 }

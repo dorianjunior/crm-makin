@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Lead;
+use App\Models\CRM\Lead;
 use Illuminate\Http\Request;
 
 class LeadController extends Controller
@@ -24,6 +24,7 @@ class LeadController extends Controller
         }
 
         $leads = $query->paginate(15);
+
         return response()->json($leads);
     }
 
@@ -41,6 +42,7 @@ class LeadController extends Controller
         ]);
 
         $lead = Lead::create($validated);
+
         return response()->json($lead->load(['company', 'source', 'assignedUser']), 201);
     }
 
@@ -70,12 +72,14 @@ class LeadController extends Controller
         ]);
 
         $lead->update($validated);
+
         return response()->json($lead->load(['company', 'source', 'assignedUser']));
     }
 
     public function destroy(Lead $lead)
     {
         $lead->delete();
+
         return response()->json(['message' => 'Lead deleted successfully']);
     }
 }

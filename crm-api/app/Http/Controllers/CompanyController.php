@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Company;
+use App\Models\CRM\Company;
 use Illuminate\Http\Request;
 
 class CompanyController extends Controller
@@ -10,6 +10,7 @@ class CompanyController extends Controller
     public function index()
     {
         $companies = Company::with(['users', 'leads'])->paginate(15);
+
         return response()->json($companies);
     }
 
@@ -23,6 +24,7 @@ class CompanyController extends Controller
         ]);
 
         $company = Company::create($validated);
+
         return response()->json($company, 201);
     }
 
@@ -41,12 +43,14 @@ class CompanyController extends Controller
         ]);
 
         $company->update($validated);
+
         return response()->json($company);
     }
 
     public function destroy(Company $company)
     {
         $company->delete();
+
         return response()->json(['message' => 'Company deleted successfully']);
     }
 }
