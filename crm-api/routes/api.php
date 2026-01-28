@@ -1,9 +1,18 @@
 <?php
 
+use App\Http\Controllers\API\CMS\BannerController;
+use App\Http\Controllers\API\CMS\ContentApprovalController;
+use App\Http\Controllers\API\CMS\FaqController;
+use App\Http\Controllers\API\CMS\FormController;
 use App\Http\Controllers\API\CMS\MenuController;
 use App\Http\Controllers\API\CMS\PageController;
+use App\Http\Controllers\API\CMS\PortfolioController;
 use App\Http\Controllers\API\CMS\PostController;
+use App\Http\Controllers\API\CMS\PreviewController;
 use App\Http\Controllers\API\CMS\SiteController;
+use App\Http\Controllers\API\CMS\TeamMemberController;
+use App\Http\Controllers\API\CMS\TestimonialController;
+use App\Http\Controllers\API\CMS\VersionController;
 use App\Http\Controllers\API\CRM\ActivityController;
 use App\Http\Controllers\API\CRM\CompanyController;
 use App\Http\Controllers\API\CRM\EmailController;
@@ -30,6 +39,13 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('auth')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
+});
+
+// ============================================
+// PUBLIC ROUTES - CMS Preview (No Auth)
+// ============================================
+Route::prefix('cms/preview')->group(function () {
+    Route::get('/{type}/{id}/{token}', [PreviewController::class, 'show']);
 });
 
 // ============================================
@@ -132,5 +148,63 @@ Route::middleware(['auth:sanctum', 'active'])->group(function () {
 
         // Menus
         Route::apiResource('menus', MenuController::class);
+
+        // Content Approvals
+        Route::prefix('approvals')->group(function () {
+            Route::get('/', [ContentApprovalController::class, 'index']);
+            Route::get('/statistics', [ContentApprovalController::class, 'statistics']);
+            Route::get('/{approval}', [ContentApprovalController::class, 'show']);
+            Route::post('/{approval}/approve', [ContentApprovalController::class, 'approve']);
+            Route::post('/{approval}/reject', [ContentApprovalController::class, 'reject']);
+        });
+
+        // Preview & Versioning
+        Route::prefix('preview')->group(function () {
+            Route::post('/{type}/{id}/token', [PreviewController::class, 'generateToken']);
+            Route::delete('/tokens/{token}', [PreviewController::class, 'revokeToken']);
+        });
+
+        Route::prefix('versions')->group(function () {
+            Route::get('/{type}/{id}', [VersionController::class, 'index']);
+            Route::get('/{type}/{id}/{versionNumber}', [VersionController::class, 'show']);
+            Route::post('/{type}/{id}', [VersionController::class, 'store']);
+            Route::post('/{type}/{id}/rollback/{versionNumber}', [VersionController::class, 'rollback']);
+            Route::post('/{type}/{id}/compare', [VersionController::class, 'compare']);
+        });
+
+        // Portfolios
+        Route::apiResource('portfolios', PortfolioController::class);
+        Route::post('portfolios/{portfolio}/publish', [PortfolioController::class, 'publish']);
+        Route::post('portfolios/{portfolio}/unpublish', [PortfolioController::class, 'unpublish']);
+        Route::post('portfolios/{portfolio}/request-approval', [PortfolioController::class, 'requestApproval']);
+
+        // FAQs
+        Route::apiResource('faqs', FaqController::class);
+        Route::post('faqs/{faq}/publish', [FaqController::class, 'publish']);
+        Route::post('faqs/{faq}/unpublish', [FaqController::class, 'unpublish']);
+        Route::post('faqs/{faq}/request-approval', [FaqController::class, 'requestApproval']);
+
+        // Testimonials
+        Route::apiResource('testimonials', TestimonialController::class);
+        Route::post('testimonials/{testimonial}/publish', [TestimonialController::class, 'publish']);
+        Route::post('testimonials/{testimonial}/unpublish', [TestimonialController::class, 'unpublish']);
+        Route::post('testimonials/{testimonial}/request-approval', [TestimonialController::class, 'requestApproval']);
+
+        // Team Members
+        Route::apiResource('team-members', TeamMemberController::class);
+        Route::post('team-members/{teamMember}/publish', [TeamMemberController::class, 'publish']);
+        Route::post('team-members/{teamMember}/unpublish', [TeamMemberController::class, 'unpublish']);
+        Route::post('team-members/{teamMember}/request-approval', [TeamMemberController::class, 'requestApproval']);
+
+        // Forms
+        Route::apiResource('forms', FormController::class);
+        Route::post('forms/{form}/activate', [FormController::class, 'activate']);
+        Route::post('forms/{form}/deactivate', [FormController::class, 'deactivate']);
+
+        // Banners
+        Route::apiResource('banners', BannerController::class);
+        Route::post('banners/{banner}/publish', [BannerController::class, 'publish']);
+        Route::post('banners/{banner}/unpublish', [BannerController::class, 'unpublish']);
+        Route::post('banners/{banner}/request-approval', [BannerController::class, 'requestApproval']);
     });
 });
