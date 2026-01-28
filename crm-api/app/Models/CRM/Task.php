@@ -2,6 +2,7 @@
 
 namespace App\Models\CRM;
 
+use App\Enums\TaskStatus;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -23,6 +24,7 @@ class Task extends Model
 
     protected $casts = [
         'due_date' => 'date',
+        'status' => TaskStatus::class,
     ];
 
     public function company(): BelongsTo

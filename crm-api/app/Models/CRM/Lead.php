@@ -2,6 +2,7 @@
 
 namespace App\Models\CRM;
 
+use App\Enums\LeadStatus;
 use App\Models\File;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -23,6 +24,10 @@ class Lead extends Model
         'phone',
         'status',
         'notes',
+    ];
+
+    protected $casts = [
+        'status' => LeadStatus::class,
     ];
 
     public function company(): BelongsTo

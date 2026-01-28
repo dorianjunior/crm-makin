@@ -2,6 +2,8 @@
 
 namespace App\Models\CRM;
 
+use App\Enums\CompanyPlan;
+use App\Enums\CompanyStatus;
 use App\Models\File;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -17,6 +19,11 @@ class Company extends Model
         'domain',
         'plan',
         'status',
+    ];
+
+    protected $casts = [
+        'plan' => CompanyPlan::class,
+        'status' => CompanyStatus::class,
     ];
 
     public function users(): HasMany

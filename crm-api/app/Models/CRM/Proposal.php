@@ -2,6 +2,7 @@
 
 namespace App\Models\CRM;
 
+use App\Enums\ProposalStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -19,6 +20,7 @@ class Proposal extends Model
 
     protected $casts = [
         'total_value' => 'decimal:2',
+        'status' => ProposalStatus::class,
     ];
 
     public function lead(): BelongsTo

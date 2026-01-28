@@ -1,27 +1,27 @@
 <?php
 
-use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\API\CMS\MenuController;
 use App\Http\Controllers\API\CMS\PageController;
 use App\Http\Controllers\API\CMS\PostController;
 use App\Http\Controllers\API\CMS\SiteController;
+use App\Http\Controllers\API\CRM\ActivityController;
+use App\Http\Controllers\API\CRM\CompanyController;
+use App\Http\Controllers\API\CRM\EmailController;
+use App\Http\Controllers\API\CRM\FileController;
+use App\Http\Controllers\API\CRM\LeadController;
+use App\Http\Controllers\API\CRM\LeadSourceController;
+use App\Http\Controllers\API\CRM\MessageTemplateController;
+use App\Http\Controllers\API\CRM\PipelineController;
+use App\Http\Controllers\API\CRM\PipelineStageController;
+use App\Http\Controllers\API\CRM\ProductController;
+use App\Http\Controllers\API\CRM\ProposalController;
+use App\Http\Controllers\API\CRM\SystemLogController;
+use App\Http\Controllers\API\CRM\TaskController;
+use App\Http\Controllers\API\CRM\WhatsappMessageController;
 use App\Http\Controllers\Auth\AuthController;
-use App\Http\Controllers\CompanyController;
-use App\Http\Controllers\EmailController;
-use App\Http\Controllers\FileController;
-use App\Http\Controllers\LeadController;
-use App\Http\Controllers\LeadSourceController;
-use App\Http\Controllers\MessageTemplateController;
 use App\Http\Controllers\PermissionController;
-use App\Http\Controllers\PipelineController;
-use App\Http\Controllers\PipelineStageController;
-use App\Http\Controllers\ProductController;
-use App\Http\Controllers\ProposalController;
 use App\Http\Controllers\RoleController;
-use App\Http\Controllers\SystemLogController;
-use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\WhatsappMessageController;
 use Illuminate\Support\Facades\Route;
 
 // ============================================
@@ -42,9 +42,6 @@ Route::middleware(['auth:sanctum', 'active'])->group(function () {
         Route::get('/user', [AuthController::class, 'user']);
     });
 
-    // Companies
-    Route::apiResource('companies', CompanyController::class);
-
     // Roles & Permissions
     Route::apiResource('roles', RoleController::class);
     Route::apiResource('permissions', PermissionController::class);
@@ -52,33 +49,64 @@ Route::middleware(['auth:sanctum', 'active'])->group(function () {
     // Users
     Route::apiResource('users', UserController::class);
 
-    // Lead Management
-    Route::apiResource('lead-sources', LeadSourceController::class);
-    Route::apiResource('leads', LeadController::class);
-    Route::apiResource('activities', ActivityController::class);
-    Route::apiResource('tasks', TaskController::class);
+    // ============================================
+    // CRM ROUTES
+    // ============================================
+    Route::prefix('crm')->group(function () {
+        // Companies
+        Route::apiResource('companies', CompanyController::class);
+        Route::post('companies/{company}/activate', [CompanyController::class, 'activate']);
+        Route::post('companies/{company}/deactivate', [CompanyController::class, 'deactivate']);
+        Route::post('companies/{company}/suspend', [CompanyController::class, 'suspend']);
 
-    // Pipeline Management
-    Route::apiResource('pipelines', PipelineController::class);
-    Route::apiResource('pipeline-stages', PipelineStageController::class);
-    Route::post('pipeline-stages/{pipelineStage}/leads', [PipelineStageController::class, 'attachLead']);
-    Route::delete('pipeline-stages/{pipelineStage}/leads/{leadId}', [PipelineStageController::class, 'detachLead']);
+        // Lead Management
+        Route::apiResource('lead-sources', LeadSourceController::class);
+        Route::apiResource('leads', LeadController::class);
+        Route::post('leads/{lead}/assign', [LeadController::class, 'assign']);
+        Route::post('leads/{lead}/change-status', [LeadController::class, 'changeStatus']);
 
-    // Products & Proposals
-    Route::apiResource('products', ProductController::class);
-    Route::apiResource('proposals', ProposalController::class);
+        // Activities
+        Route::apiResource('activities', ActivityController::class);
+        Route::get('activities/recent', [ActivityController::class, 'recent']);
 
-    // Communication
-    Route::apiResource('emails', EmailController::class);
-    Route::apiResource('whatsapp-messages', WhatsappMessageController::class);
-    Route::apiResource('message-templates', MessageTemplateController::class);
+        // Tasks
+        Route::apiResource('tasks', TaskController::class);
+        Route::post('tasks/{task}/complete', [TaskController::class, 'complete']);
+        Route::post('tasks/{task}/cancel', [TaskController::class, 'cancel']);
+        Route::get('tasks/overdue', [TaskController::class, 'overdue']);
+        Route::get('tasks/upcoming', [TaskController::class, 'upcoming']);
 
-    // Files
-    Route::apiResource('files', FileController::class)->except(['update']);
-    Route::get('files/{file}/download', [FileController::class, 'download']);
+        // Pipeline Management
+        Route::apiResource('pipelines', PipelineController::class);
+        Route::post('pipelines/{pipeline}/stages', [PipelineController::class, 'addStage']);
+        Route::put('pipelines/{pipeline}/stages/{stageId}', [PipelineController::class, 'updateStage']);
+        Route::post('pipelines/{pipeline}/reorder-stages', [PipelineController::class, 'reorderStages']);
 
-    // System Logs
-    Route::apiResource('system-logs', SystemLogController::class)->only(['index', 'show']);
+        Route::apiResource('pipeline-stages', PipelineStageController::class);
+
+        // Products & Proposals
+        Route::apiResource('products', ProductController::class);
+        Route::post('products/{product}/activate', [ProductController::class, 'activate']);
+        Route::post('products/{product}/deactivate', [ProductController::class, 'deactivate']);
+
+        Route::apiResource('proposals', ProposalController::class);
+        Route::post('proposals/{proposal}/accept', [ProposalController::class, 'accept']);
+        Route::post('proposals/{proposal}/reject', [ProposalController::class, 'reject']);
+        Route::post('proposals/{proposal}/items', [ProposalController::class, 'addItem']);
+        Route::delete('proposals/{proposal}/items/{itemId}', [ProposalController::class, 'removeItem']);
+
+        // Communication
+        Route::apiResource('emails', EmailController::class);
+        Route::apiResource('whatsapp-messages', WhatsappMessageController::class);
+        Route::apiResource('message-templates', MessageTemplateController::class);
+
+        // Files
+        Route::apiResource('files', FileController::class)->except(['update']);
+        Route::get('files/{file}/download', [FileController::class, 'download']);
+
+        // System Logs
+        Route::apiResource('system-logs', SystemLogController::class)->only(['index', 'show']);
+    });
 
     // ============================================
     // CMS ROUTES
