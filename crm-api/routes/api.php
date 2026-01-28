@@ -29,6 +29,8 @@ use App\Http\Controllers\API\CRM\TaskController;
 use App\Http\Controllers\API\CRM\WhatsappMessageController;
 use App\Http\Controllers\API\Social\InstagramController;
 use App\Http\Controllers\API\Social\InstagramWebhookController;
+use App\Http\Controllers\API\Social\WhatsAppController;
+use App\Http\Controllers\API\Social\WhatsAppWebhookController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
@@ -56,6 +58,14 @@ Route::prefix('cms/preview')->group(function () {
 Route::prefix('webhooks/instagram')->group(function () {
     Route::get('/verify', [InstagramWebhookController::class, 'verify']); // Meta webhook verification
     Route::post('/handle', [InstagramWebhookController::class, 'handle']); // Incoming messages
+});
+
+// ============================================
+// PUBLIC ROUTES - WhatsApp Webhook (No Auth)
+// ============================================
+Route::prefix('webhooks/whatsapp')->group(function () {
+    Route::get('/verify', [WhatsAppWebhookController::class, 'verify']); // Meta webhook verification
+    Route::post('/handle', [WhatsAppWebhookController::class, 'handle']); // Incoming messages & status
 });
 
 // ============================================
@@ -127,6 +137,7 @@ Route::middleware(['auth:sanctum', 'active'])->group(function () {
         Route::apiResource('message-templates', MessageTemplateController::class);
 
         // Files
+    // ============================================
     // SOCIAL MEDIA INTEGRATION ROUTES
     // ============================================
     Route::prefix('social')->group(function () {
@@ -139,6 +150,18 @@ Route::middleware(['auth:sanctum', 'active'])->group(function () {
             Route::get('/accounts/{account}/posts', [InstagramController::class, 'getPosts']);
             Route::post('/accounts/{account}/refresh-token', [InstagramController::class, 'refreshToken']);
             Route::delete('/accounts/{account}/disconnect', [InstagramController::class, 'disconnect']);
+        });
+
+        // WhatsApp
+        Route::prefix('whatsapp')->group(function () {
+            Route::get('/accounts', [WhatsAppController::class, 'index']);
+            Route::post('/accounts', [WhatsAppController::class, 'store']);
+            Route::get('/accounts/{account}/conversations', [WhatsAppController::class, 'conversations']);
+            Route::get('/conversations/{conversation}/messages', [WhatsAppController::class, 'messages']);
+            Route::post('/accounts/{account}/send', [WhatsAppController::class, 'sendMessage']);
+            Route::post('/accounts/{account}/send-media', [WhatsAppController::class, 'sendMedia']);
+            Route::post('/conversations/{conversation}/mark-read', [WhatsAppController::class, 'markAsRead']);
+            Route::delete('/accounts/{account}/disconnect', [WhatsAppController::class, 'disconnect']);
         });
     });
 
