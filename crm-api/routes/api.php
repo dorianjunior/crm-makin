@@ -35,6 +35,9 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\AISettingsController;
+use App\Http\Controllers\AIPromptTemplateController;
+use App\Http\Controllers\AIConversationController;
 use Illuminate\Support\Facades\Route;
 
 // ============================================
@@ -163,6 +166,27 @@ Route::middleware(['auth:sanctum', 'active'])->group(function () {
             Route::post('/conversations/{conversation}/mark-read', [WhatsAppController::class, 'markAsRead']);
             Route::delete('/accounts/{account}/disconnect', [WhatsAppController::class, 'disconnect']);
         });
+    });
+
+    // ============================================
+    // AI INTEGRATION ROUTES
+    // ============================================
+    Route::prefix('ai')->group(function () {
+        // AI Settings
+        Route::apiResource('settings', AISettingsController::class);
+        Route::post('settings/{id}/set-default', [AISettingsController::class, 'setDefault']);
+        Route::post('settings/{id}/test', [AISettingsController::class, 'test']);
+
+        // Prompt Templates
+        Route::apiResource('templates', AIPromptTemplateController::class);
+        Route::post('templates/{id}/preview', [AIPromptTemplateController::class, 'preview']);
+        Route::get('templates/{id}/statistics', [AIPromptTemplateController::class, 'statistics']);
+
+        // Conversations
+        Route::apiResource('conversations', AIConversationController::class);
+        Route::post('conversations/{id}/send-message', [AIConversationController::class, 'sendMessage']);
+        Route::post('conversations/{id}/complete', [AIConversationController::class, 'complete']);
+        Route::get('conversations/statistics', [AIConversationController::class, 'statistics']);
     });
 
     // ============================================
