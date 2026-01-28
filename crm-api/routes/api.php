@@ -27,6 +27,8 @@ use App\Http\Controllers\API\CRM\ProposalController;
 use App\Http\Controllers\API\CRM\SystemLogController;
 use App\Http\Controllers\API\CRM\TaskController;
 use App\Http\Controllers\API\CRM\WhatsappMessageController;
+use App\Http\Controllers\API\Social\InstagramController;
+use App\Http\Controllers\API\Social\InstagramWebhookController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
@@ -46,6 +48,14 @@ Route::prefix('auth')->group(function () {
 // ============================================
 Route::prefix('cms/preview')->group(function () {
     Route::get('/{type}/{id}/{token}', [PreviewController::class, 'show']);
+});
+
+// ============================================
+// PUBLIC ROUTES - Instagram Webhook (No Auth)
+// ============================================
+Route::prefix('webhooks/instagram')->group(function () {
+    Route::get('/verify', [InstagramWebhookController::class, 'verify']); // Meta webhook verification
+    Route::post('/handle', [InstagramWebhookController::class, 'handle']); // Incoming messages
 });
 
 // ============================================
@@ -117,6 +127,22 @@ Route::middleware(['auth:sanctum', 'active'])->group(function () {
         Route::apiResource('message-templates', MessageTemplateController::class);
 
         // Files
+    // SOCIAL MEDIA INTEGRATION ROUTES
+    // ============================================
+    Route::prefix('social')->group(function () {
+        // Instagram
+        Route::prefix('instagram')->group(function () {
+            Route::get('/auth-url', [InstagramController::class, 'getAuthUrl']);
+            Route::post('/connect', [InstagramController::class, 'connect']);
+            Route::get('/accounts', [InstagramController::class, 'index']);
+            Route::get('/accounts/{account}/messages', [InstagramController::class, 'getMessages']);
+            Route::get('/accounts/{account}/posts', [InstagramController::class, 'getPosts']);
+            Route::post('/accounts/{account}/refresh-token', [InstagramController::class, 'refreshToken']);
+            Route::delete('/accounts/{account}/disconnect', [InstagramController::class, 'disconnect']);
+        });
+    });
+
+    // ============================================
         Route::apiResource('files', FileController::class)->except(['update']);
         Route::get('files/{file}/download', [FileController::class, 'download']);
 

@@ -26,6 +26,14 @@ class Company extends Model
         'status' => CompanyStatus::class,
     ];
 
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory()
+    {
+        return \Database\Factories\CompanyFactory::new();
+    }
+
     public function users(): HasMany
     {
         return $this->hasMany(User::class);
