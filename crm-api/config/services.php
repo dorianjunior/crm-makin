@@ -48,4 +48,11 @@ return [
         'webhook_verify_token' => env('WHATSAPP_WEBHOOK_VERIFY_TOKEN'),
     ],
 
+    'gemini' => [
+        'api_key' => env('GEMINI_API_KEY'),
+        'model' => env('GEMINI_MODEL', 'gemini-1.5-flash'),
+        'max_output_tokens' => env('GEMINI_MAX_OUTPUT_TOKENS', 1024),
+        'temperature' => env('GEMINI_TEMPERATURE', 0.7),
+    ],
+
 ];
