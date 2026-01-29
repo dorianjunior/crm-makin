@@ -41,6 +41,9 @@ use App\Http\Controllers\AIConversationController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\NotificationPreferenceController;
 use App\Http\Controllers\NotificationTemplateController;
+use App\Http\Controllers\ReportController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ReportScheduleController;
 use Illuminate\Support\Facades\Route;
 
 // ============================================
@@ -321,5 +324,54 @@ Route::middleware(['auth:sanctum', 'active'])->group(function () {
         Route::post('banners/{banner}/publish', [BannerController::class, 'publish']);
         Route::post('banners/{banner}/unpublish', [BannerController::class, 'unpublish']);
         Route::post('banners/{banner}/request-approval', [BannerController::class, 'requestApproval']);
+    });
+
+    // ========================================
+    // REPORTS & DASHBOARDS
+    // ========================================
+    
+    // Dashboards
+    Route::prefix('dashboards')->group(function () {
+        Route::get('/', [DashboardController::class, 'index']);
+        Route::get('/leads', [DashboardController::class, 'leads']);
+        Route::get('/sales', [DashboardController::class, 'sales']);
+        Route::get('/activities', [DashboardController::class, 'activities']);
+        Route::get('/tasks', [DashboardController::class, 'tasks']);
+        Route::get('/conversion', [DashboardController::class, 'conversion']);
+        Route::get('/top-performers', [DashboardController::class, 'topPerformers']);
+        Route::get('/sales-funnel', [DashboardController::class, 'salesFunnel']);
+        Route::get('/realtime', [DashboardController::class, 'realTime']);
+    });
+
+    // Reports
+    Route::prefix('reports')->group(function () {
+        Route::get('/', [ReportController::class, 'index']);
+        Route::get('/types', [ReportController::class, 'types']);
+        Route::get('/columns/{type}', [ReportController::class, 'columns']);
+        Route::get('/filters/{type}', [ReportController::class, 'filters']);
+        Route::get('/{id}', [ReportController::class, 'show']);
+        Route::post('/', [ReportController::class, 'store']);
+        Route::put('/{id}', [ReportController::class, 'update']);
+        Route::delete('/{id}', [ReportController::class, 'destroy']);
+        Route::post('/{id}/execute', [ReportController::class, 'execute']);
+        Route::post('/{id}/export', [ReportController::class, 'export']);
+        Route::get('/{id}/exports/{exportId}/download', [ReportController::class, 'downloadExport']);
+        Route::post('/{id}/duplicate', [ReportController::class, 'duplicate']);
+        Route::post('/{id}/toggle-favorite', [ReportController::class, 'toggleFavorite']);
+
+        // Report Schedules
+        Route::prefix('{reportId}/schedules')->group(function () {
+            Route::get('/', [ReportScheduleController::class, 'index']);
+            Route::get('/frequencies', [ReportScheduleController::class, 'frequencies']);
+            Route::get('/formats', [ReportScheduleController::class, 'formats']);
+            Route::get('/{id}', [ReportScheduleController::class, 'show']);
+            Route::post('/', [ReportScheduleController::class, 'store']);
+            Route::put('/{id}', [ReportScheduleController::class, 'update']);
+            Route::delete('/{id}', [ReportScheduleController::class, 'destroy']);
+            Route::post('/{id}/activate', [ReportScheduleController::class, 'activate']);
+            Route::post('/{id}/deactivate', [ReportScheduleController::class, 'deactivate']);
+            Route::post('/{id}/recipients', [ReportScheduleController::class, 'addRecipient']);
+            Route::delete('/{id}/recipients', [ReportScheduleController::class, 'removeRecipient']);
+        });
     });
 });
