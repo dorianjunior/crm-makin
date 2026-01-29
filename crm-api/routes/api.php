@@ -38,6 +38,9 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\AISettingsController;
 use App\Http\Controllers\AIPromptTemplateController;
 use App\Http\Controllers\AIConversationController;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\NotificationPreferenceController;
+use App\Http\Controllers\NotificationTemplateController;
 use Illuminate\Support\Facades\Route;
 
 // ============================================
@@ -187,6 +190,45 @@ Route::middleware(['auth:sanctum', 'active'])->group(function () {
         Route::post('conversations/{id}/send-message', [AIConversationController::class, 'sendMessage']);
         Route::post('conversations/{id}/complete', [AIConversationController::class, 'complete']);
         Route::get('conversations/statistics', [AIConversationController::class, 'statistics']);
+    });
+
+    // ============================================
+    // NOTIFICATION ROUTES
+    // ============================================
+    Route::prefix('notifications')->group(function () {
+        // Notifications
+        Route::get('/', [NotificationController::class, 'index']);
+        Route::get('/statistics', [NotificationController::class, 'statistics']);
+        Route::get('/{id}', [NotificationController::class, 'show']);
+        Route::post('/', [NotificationController::class, 'store']);
+        Route::post('/{id}/mark-as-read', [NotificationController::class, 'markAsRead']);
+        Route::post('/mark-all-as-read', [NotificationController::class, 'markAllAsRead']);
+        Route::post('/test', [NotificationController::class, 'sendTest']);
+        Route::delete('/{id}', [NotificationController::class, 'destroy']);
+
+        // Preferences
+        Route::prefix('preferences')->group(function () {
+            Route::get('/', [NotificationPreferenceController::class, 'index']);
+            Route::get('/type/{type}', [NotificationPreferenceController::class, 'getByType']);
+            Route::get('/{id}', [NotificationPreferenceController::class, 'show']);
+            Route::post('/', [NotificationPreferenceController::class, 'store']);
+            Route::put('/{id}', [NotificationPreferenceController::class, 'update']);
+            Route::post('/{id}/enable/{channel}', [NotificationPreferenceController::class, 'enableChannel']);
+            Route::post('/{id}/disable/{channel}', [NotificationPreferenceController::class, 'disableChannel']);
+            Route::post('/reset-default', [NotificationPreferenceController::class, 'resetToDefault']);
+            Route::delete('/{id}', [NotificationPreferenceController::class, 'destroy']);
+        });
+
+        // Templates
+        Route::prefix('templates')->group(function () {
+            Route::get('/', [NotificationTemplateController::class, 'index']);
+            Route::get('/{id}', [NotificationTemplateController::class, 'show']);
+            Route::post('/', [NotificationTemplateController::class, 'store']);
+            Route::put('/{id}', [NotificationTemplateController::class, 'update']);
+            Route::post('/{id}/preview', [NotificationTemplateController::class, 'preview']);
+            Route::get('/{id}/variables', [NotificationTemplateController::class, 'variables']);
+            Route::delete('/{id}', [NotificationTemplateController::class, 'destroy']);
+        });
     });
 
     // ============================================
