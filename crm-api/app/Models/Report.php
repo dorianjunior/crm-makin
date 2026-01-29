@@ -135,7 +135,7 @@ class Report extends Model
     {
         $this->is_favorite = !$this->is_favorite;
         $this->save();
-        
+
         return $this->is_favorite;
     }
 

@@ -66,16 +66,16 @@ class ExportService
     {
         // Note: Requires dompdf or similar library
         // For now, this is a stub that creates a simple HTML file
-        
+
         $html = $this->generateHtmlReport($report, $results);
-        
+
         $path = 'exports/pdf/' . $filename;
         Storage::put($path, $html);
-        
+
         // TODO: Convert HTML to PDF using library like dompdf
         // $pdf = Pdf::loadHTML($html);
         // Storage::put($path, $pdf->output());
-        
+
         return $path;
     }
 
@@ -86,15 +86,15 @@ class ExportService
     {
         // Note: Requires PhpSpreadsheet or Laravel Excel
         // For now, this creates a CSV-like format
-        
+
         $data = $results['data'];
         $columns = $report->columns ?? array_keys($data[0] ?? []);
-        
+
         $content = [];
-        
+
         // Header
         $content[] = implode(',', $columns);
-        
+
         // Data rows
         foreach ($data as $row) {
             $values = [];
@@ -104,12 +104,12 @@ class ExportService
             }
             $content[] = implode(',', $values);
         }
-        
+
         $path = 'exports/excel/' . str_replace('.xlsx', '.csv', $filename);
         Storage::put($path, implode("\n", $content));
-        
+
         // TODO: Convert to real Excel using PhpSpreadsheet
-        
+
         return $path;
     }
 
@@ -120,12 +120,12 @@ class ExportService
     {
         $data = $results['data'];
         $columns = $report->columns ?? array_keys($data[0] ?? []);
-        
+
         $content = [];
-        
+
         // Header
         $content[] = implode(',', $columns);
-        
+
         // Data rows
         foreach ($data as $row) {
             $values = [];
@@ -135,10 +135,10 @@ class ExportService
             }
             $content[] = implode(',', $values);
         }
-        
+
         $path = 'exports/csv/' . $filename;
         Storage::put($path, implode("\n", $content));
-        
+
         return $path;
     }
 
@@ -150,7 +150,7 @@ class ExportService
         $data = $results['data'];
         $summary = $results['summary'] ?? [];
         $columns = $report->columns ?? array_keys($data[0] ?? []);
-        
+
         $html = '<!DOCTYPE html>
 <html>
 <head>
@@ -194,7 +194,7 @@ class ExportService
             $html .= '<th>' . htmlspecialchars(ucfirst(str_replace('_', ' ', $column))) . '</th>';
         }
         $html .= '</tr></thead>';
-        
+
         $html .= '<tbody>';
         foreach ($data as $row) {
             $html .= '<tr>';
@@ -205,11 +205,11 @@ class ExportService
             $html .= '</tr>';
         }
         $html .= '</tbody>';
-        
+
         $html .= '</table>';
         $html .= '<div class="footer">Relatório gerado automaticamente pelo CRM Makin</div>';
         $html .= '</body></html>';
-        
+
         return $html;
     }
 
@@ -221,17 +221,17 @@ class ExportService
         if (is_array($value) || is_object($value)) {
             $value = json_encode($value);
         }
-        
+
         $value = (string) $value;
-        
+
         // Escape double quotes
         $value = str_replace('"', '""', $value);
-        
+
         // Wrap in quotes if contains comma, newline, or double quote
         if (strpos($value, ',') !== false || strpos($value, "\n") !== false || strpos($value, '"') !== false) {
             $value = '"' . $value . '"';
         }
-        
+
         return $value;
     }
 
@@ -243,7 +243,7 @@ class ExportService
         $slug = Str::slug($report->name);
         $timestamp = now()->format('Y-m-d_H-i-s');
         $extension = $format === 'excel' ? 'xlsx' : $format;
-        
+
         return "{$slug}_{$timestamp}.{$extension}";
     }
 
@@ -253,13 +253,13 @@ class ExportService
     public function cleanOldExports(int $days = 7): int
     {
         $expired = ReportExport::where('expires_at', '<=', now()->subDays($days))->get();
-        
+
         $count = 0;
         foreach ($expired as $export) {
             $export->delete(); // Will trigger file deletion in model boot
             $count++;
         }
-        
+
         return $count;
     }
 

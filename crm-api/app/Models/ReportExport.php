@@ -120,15 +120,15 @@ class ReportExport extends Model
     {
         $this->status = 'completed';
         $this->completed_at = now();
-        
+
         if ($rowsCount !== null) {
             $this->rows_count = $rowsCount;
         }
-        
+
         if ($fileSize !== null) {
             $this->file_size = $fileSize;
         }
-        
+
         $this->save();
     }
 
@@ -183,7 +183,7 @@ class ReportExport extends Model
         if ($this->file_path && Storage::exists($this->file_path)) {
             return Storage::delete($this->file_path);
         }
-        
+
         return false;
     }
 

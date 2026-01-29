@@ -329,7 +329,7 @@ Route::middleware(['auth:sanctum', 'active'])->group(function () {
     // ========================================
     // REPORTS & DASHBOARDS
     // ========================================
-    
+
     // Dashboards
     Route::prefix('dashboards')->group(function () {
         Route::get('/', [DashboardController::class, 'index']);
