@@ -1897,35 +1897,36 @@ onMounted(() => {
 
 ### FASE 0: Preparação e Refatoração Base (Semana 1)
 
+
 #### ✅ Checklist Completo
 
-- [ ] **Ferramentas de Qualidade**
-  - [ ] Instalar Pest: `composer require --dev pestphp/pest`
-  - [ ] Instalar Larastan: `composer require --dev larastan/larastan`
-  - [ ] Instalar Pint: `composer require --dev laravel/pint`
-  - [ ] Configurar PHPStan (nível 5+)
-  - [ ] Git hooks para Pint
+- [x] **Ferramentas de Qualidade**
+    - [x] Instalar Pest: `composer require --dev pestphp/pest`
+    - [x] Instalar Larastan: `composer require --dev larastan/larastan`
+    - [x] Instalar Pint: `composer require --dev laravel/pint`
+    - [x] Configurar PHPStan (nível 5+)  
+    - [ ] Git hooks para Pint  <!-- TODO: FALTA IMPLEMENTAR -->
 
-- [ ] **Estrutura de Pastas**
-  - [ ] Criar `app/Services/{CRM,CMS,Social,AI}`
-  - [ ] Criar `app/Models/{CRM,CMS,Social,AI}`
-  - [ ] Criar `app/Jobs/{CRM,CMS,Social,AI,Notifications}`
-  - [ ] Criar `app/Enums`, `app/Contracts`
-  - [ ] Criar `app/Http/Controllers/API/{CRM,CMS,Social,AI}`
-  - [ ] Criar `app/Http/Resources/{CRM,CMS,Social,AI}`
-  - [ ] Criar `app/Http/Requests/{CRM,CMS,Social,AI}`
+- [x] **Estrutura de Pastas**
+    - [x] Criar `app/Services/{CRM,CMS,Social,AI}`
+    - [x] Criar `app/Models/{CRM,CMS,Social,AI}`
+    - [x] Criar `app/Jobs/{CRM,CMS,Social,AI,Notifications}`
+    - [x] Criar `app/Enums`, `app/Contracts`
+    - [x] Criar `app/Http/Controllers/API/{CRM,CMS,Social,AI}`
+    - [x] Criar `app/Http/Resources/{CRM,CMS,Social,AI}`
+    - [x] Criar `app/Http/Requests/{CRM,CMS,Social,AI}`
 
-- [ ] **Migrar Models Existentes**
-  - [ ] Mover para `app/Models/CRM/`
-  - [ ] Atualizar namespaces
-  - [ ] Atualizar imports em controllers/services
-  - [ ] Rodar testes: `php artisan test`
+- [ ] **Migrar Models Existentes** <!-- TODO: FALTA MIGRAR MODELS CRM/SOCIAL PARA SUBPASTAS -->
+    - [ ] Mover para `app/Models/CRM/`
+    - [ ] Atualizar namespaces
+    - [ ] Atualizar imports em controllers/services
+    - [ ] Rodar testes: `php artisan test`
 
-- [ ] **Criar Enums Básicos**
-  - [ ] ContentStatus.php
-  - [ ] ContentType.php
-  - [ ] MessageStatus.php
-  - [ ] AIProvider.php
+- [x] **Criar Enums Básicos**
+    - [x] ContentStatus.php
+    - [x] ContentType.php
+    - [x] MessageStatus.php
+    - [x] AIProvider.php
 
 **Tempo estimado:** 3-5 horas
 
@@ -1933,48 +1934,49 @@ onMounted(() => {
 
 ### FASE 1: CMS Headless - Base (Semana 2-3)
 
+
 #### ✅ Checklist Completo
 
-- [ ] **Migrations CMS Base**
-  - [ ] create_sites_table
-  - [ ] create_pages_table
-  - [ ] create_posts_table
-  - [ ] create_post_categories_table
-  - [ ] create_content_versions_table
-  - [ ] create_menus_table
-  - [ ] create_menu_items_table
-  - [ ] create_content_approvals_table
-  - [ ] Executar: `php artisan migrate`
+- [x] **Migrations CMS Base**
+    - [x] create_sites_table
+    - [x] create_pages_table
+    - [x] create_posts_table
+    - [x] create_post_categories_table
+    - [x] create_content_versions_table
+    - [x] create_menus_table
+    - [x] create_menu_items_table
+    - [x] create_content_approvals_table
+    - [x] Executar: `php artisan migrate`
 
-- [ ] **Models e Relationships**
-  - [ ] Site, Page, Post, PostCategory
-  - [ ] ContentVersion, Menu, MenuItem
-  - [ ] Relationships definidos
-  - [ ] Scopes (published, draft, etc.)
-  - [ ] Casts (JSON, dates, enums)
-  - [ ] Soft deletes habilitados
+- [x] **Models e Relationships**
+    - [x] Site, Page, Post, PostCategory
+    - [x] ContentVersion, Menu, MenuItem
+    - [x] Relationships definidos
+    - [x] Scopes (published, draft, etc.)
+    - [x] Casts (JSON, dates, enums)
+    - [x] Soft deletes habilitados
 
-- [ ] **Services CMS**
-  - [ ] SiteService (CRUD de sites, generate API key)
-  - [ ] ContentService (CRUD páginas/posts, unique slug)
-  - [ ] VersioningService (create, getHistory, rollback)
-  - [ ] PublishingService (publish, workflow aprovação)
+- [x] **Services CMS**
+    - [x] SiteService (CRUD de sites, generate API key)
+    - [x] ContentService (CRUD páginas/posts, unique slug)
+    - [x] VersioningService (create, getHistory, rollback)
+    - [x] PublishingService (publish, workflow aprovação)
 
-- [ ] **Controllers e Routes**
-  - [ ] SiteController (API REST)
-  - [ ] PageController (API REST + preview)
-  - [ ] PostController (API REST)
-  - [ ] MenuController (API REST)
-  - [ ] Form Requests (validação)
-  - [ ] API Resources (transformação)
-  - [ ] Policies (autorização)
-  - [ ] Routes em api.php
+- [x] **Controllers e Routes**
+    - [x] SiteController (API REST)
+    - [x] PageController (API REST + preview)
+    - [x] PostController (API REST)
+    - [x] MenuController (API REST)
+    - [x] Form Requests (validação)
+    - [x] API Resources (transformação)
+    - [ ] Policies (autorização) <!-- TODO: FALTA IMPLEMENTAR POLICIES -->
+    - [x] Routes em api.php
 
-- [ ] **Testes**
-  - [ ] Feature: SiteTest, PageTest, PostTest
-  - [ ] Unit: ContentServiceTest, VersioningServiceTest
-  - [ ] Cobertura ~60%+
-  - [ ] `php artisan test` passando
+- [ ] **Testes** <!-- TODO: FALTA IMPLEMENTAR TESTES FEATURE E UNIT -->
+    - [ ] Feature: SiteTest, PageTest, PostTest
+    - [ ] Unit: ContentServiceTest, VersioningServiceTest
+    - [ ] Cobertura ~60%+
+    - [ ] `php artisan test` passando
 
 **Tempo estimado:** 10-15 horas
 
@@ -1982,39 +1984,40 @@ onMounted(() => {
 
 ### FASE 2: CMS Completo (Semana 4-5)
 
+
 #### ✅ Checklist Completo
 
-- [ ] **Tipos de Conteúdo Restantes**
-  - [ ] Migration + Model: Portfolio
-  - [ ] Migration + Model: Faq
-  - [ ] Migration + Model: Testimonial
-  - [ ] Migration + Model: TeamMember
-  - [ ] Migration + Model: Form
-  - [ ] Migration + Model: Banner
-  - [ ] Controllers e Resources para cada tipo
-  - [ ] Routes configuradas
+- [x] **Tipos de Conteúdo Restantes**
+    - [x] Migration + Model: Portfolio
+    - [x] Migration + Model: Faq
+    - [x] Migration + Model: Testimonial
+    - [x] Migration + Model: TeamMember
+    - [x] Migration + Model: Form
+    - [x] Migration + Model: Banner
+    - [x] Controllers e Resources para cada tipo
+    - [x] Routes configuradas
 
-- [ ] **Sistema de Aprovação**
-  - [ ] ContentApproval model
-  - [ ] PublishingService: requestApproval, approve, reject
-  - [ ] Events: ContentPublished, ApprovalRequested
-  - [ ] Notifications para managers
-  - [ ] Endpoints de aprovação
-  - [ ] Testes de workflow
+- [x] **Sistema de Aprovação**
+    - [x] ContentApproval model
+    - [x] PublishingService: requestApproval, approve, reject
+    - [ ] Events: ContentPublished, ApprovalRequested <!-- TODO: FALTA IMPLEMENTAR EVENTS -->
+    - [ ] Notifications para managers <!-- TODO: INTEGRAR NOTIFICAÇÕES CMS -->
+    - [x] Endpoints de aprovação
+    - [ ] Testes de workflow <!-- TODO: FALTA TESTES DE WORKFLOW -->
 
-- [ ] **Preview e Versionamento Avançado**
-  - [ ] Preview token generation (JWT)
-  - [ ] Endpoint público de preview
-  - [ ] Rollback de versões
-  - [ ] Comparação de versões (diff)
-  - [ ] Interface de versionamento
+- [x] **Preview e Versionamento Avançado**
+    - [x] Preview token generation (JWT)
+    - [x] Endpoint público de preview
+    - [x] Rollback de versões
+    - [x] Comparação de versões (diff)
+    - [x] Interface de versionamento
 
-- [ ] **SDK JavaScript**
-  - [ ] Criar pacote cms-client-sdk
-  - [ ] Métodos: getPages, getPage, getPosts, etc.
-  - [ ] Autenticação via API key
-  - [ ] README com exemplos
-  - [ ] Testar integração com site Vue.js
+- [ ] **SDK JavaScript** <!-- TODO: FALTA SDK JAVASCRIPT -->
+    - [ ] Criar pacote cms-client-sdk
+    - [ ] Métodos: getPages, getPage, getPosts, etc.
+    - [ ] Autenticação via API key
+    - [ ] README com exemplos
+    - [ ] Testar integração com site Vue.js
 
 **Tempo estimado:** 10-15 horas
 
@@ -2028,48 +2031,48 @@ onMounted(() => {
 #### ✅ Checklist Completo
 
 - [x] **Setup Meta Developer**
-  - [x] Documentação de setup criada
-  - [x] Configurar Instagram Basic Display
-  - [x] Configurar OAuth redirect
-  - [x] Obter App ID e Secret
-  - [x] Configurar webhooks
-  - [x] Adicionar credenciais no .env
+    - [x] Documentação de setup criada
+    - [x] Configurar Instagram Basic Display
+    - [x] Configurar OAuth redirect
+    - [x] Obter App ID e Secret
+    - [x] Configurar webhooks
+    - [x] Adicionar credenciais no .env
 
 - [x] **Models e Migrations**
-  - [x] create_instagram_accounts_table
-  - [x] create_instagram_messages_table
-  - [x] InstagramAccount model
-  - [x] InstagramMessage model
-  - [x] Relationships com Company e Lead
+    - [x] create_instagram_accounts_table
+    - [x] create_instagram_messages_table
+    - [x] InstagramAccount model
+    - [x] InstagramMessage model
+    - [x] Relationships com Company e Lead
 
 - [x] **InstagramService**
-  - [x] Implementar MessageServiceInterface
-  - [x] connectAccount (OAuth)
-  - [x] fetchRecentMessages
-  - [x] fetchPosts
-  - [x] saveMessage
-  - [x] Criptografia de tokens
+    - [x] Implementar MessageServiceInterface
+    - [x] connectAccount (OAuth)
+    - [x] fetchRecentMessages
+    - [x] fetchPosts
+    - [x] saveMessage
+    - [x] Criptografia de tokens
 
 - [x] **Controllers e Webhooks**
-  - [x] InstagramController (connect, messages)
-  - [x] InstagramWebhookController (handle, verify)
-  - [x] Validação de signature
-  - [x] Routes configuradas
+    - [x] InstagramController (connect, messages)
+    - [x] InstagramWebhookController (handle, verify)
+    - [x] Validação de signature
+    - [x] Routes configuradas
 
 - [x] **Jobs**
-  - [x] SyncInstagramMessagesJob
-  - [x] ProcessIncomingMessageJob
-  - [x] Schedule a cada 5 minutos
-  - [x] Vincular mensagens a leads
+    - [x] SyncInstagramMessagesJob
+    - [x] ProcessIncomingMessageJob
+    - [x] Schedule a cada 5 minutos
+    - [x] Vincular mensagens a leads
 
 - [x] **Testes**
-  - [x] Feature: OAuth flow, listar mensagens
-  - [x] Unit: InstagramService (mock API)
-  - [x] Webhook validation
+    - [x] Feature: OAuth flow, listar mensagens
+    - [x] Unit: InstagramService (mock API)
+    - [x] Webhook validation
 
 - [x] **Documentação**
-  - [x] INSTAGRAM_INTEGRATION.md completo
-  - [x] FASE3_INSTAGRAM_COMPLETE.md resumo
+    - [x] INSTAGRAM_INTEGRATION.md completo
+    - [x] FASE3_INSTAGRAM_COMPLETE.md resumo
 
 **Tempo estimado:** 8-12 horas  
 **Tempo real:** ~10 horas  
@@ -2082,7 +2085,7 @@ onMounted(() => {
 > **Status**: ⏳ Pendente - Melhorias após implementação base  
 > **Prioridade**: Média
 
-#### 📋 Checklist de Funcionalidades Avançadas
+#### 📋 Checklist de Funcionalidades Avançadas (TODO)
 
 - [ ] **Envio de Mensagens**
   - [ ] Implementar sendMessage no InstagramService
@@ -2200,51 +2203,51 @@ onMounted(() => {
 #### ✅ Checklist Completo
 
 - [x] **Setup Gemini**
-  - [x] Criar conta Google AI Studio
-  - [x] Obter API key
-  - [x] Testar chamada manual
-  - [x] Configurar .env
+    - [x] Criar conta Google AI Studio
+    - [x] Obter API key
+    - [x] Testar chamada manual
+    - [x] Configurar .env
 
 - [x] **Models e Migrations**
-  - [x] create_ai_settings_table
-  - [x] create_ai_prompt_templates_table
-  - [x] create_ai_conversations_table
-  - [x] create_ai_messages_table
-  - [x] create_ai_feedback_table
-  - [x] Models completos
+    - [x] create_ai_settings_table
+    - [x] create_ai_prompt_templates_table
+    - [x] create_ai_conversations_table
+    - [x] create_ai_messages_table
+    - [x] create_ai_feedback_table
+    - [x] Models completos
 
 - [x] **Services IA**
-  - [x] AIProviderInterface
-  - [x] GeminiService (generate, chat, countTokens)
-  - [x] AIFactory (Strategy Pattern)
-  - [x] ResponseGeneratorService
-  - [x] ConversationService
-  - [x] Testes com mock
+    - [x] AIProviderInterface
+    - [x] GeminiService (generate, chat, countTokens)
+    - [x] AIFactory (Strategy Pattern)
+    - [x] ResponseGeneratorService
+    - [x] ConversationService
+    - [x] Testes com mock
 
 - [x] **Controllers**
-  - [x] AISettingsController (CRUD configurações)
-  - [x] AIConversationController (histórico)
-  - [x] AIPromptTemplateController (templates)
-  - [x] API Resources
-  - [x] Form Requests
+    - [x] AISettingsController (CRUD configurações)
+    - [x] AIConversationController (histórico)
+    - [x] AIPromptTemplateController (templates)
+    - [x] API Resources
+    - [x] Form Requests
 
 - [x] **Integração com Social**
-  - [x] GenerateAIResponseJob
-  - [x] Integrar com ProcessIncomingMessage
-  - [x] Delay configurável
-  - [x] Flag ai_generated
-  - [x] Testar fluxo completo
+    - [x] GenerateAIResponseJob
+    - [x] Integrar com ProcessIncomingMessage
+    - [x] Delay configurável
+    - [x] Flag ai_generated
+    - [x] Testar fluxo completo
 
 - [x] **Prompt Templates**
-  - [x] Seeder com templates padrão
-  - [x] Atendimento, FAQ, vendas, suporte
-  - [x] Variáveis dinâmicas
-  - [x] Interface de edição
+    - [x] Seeder com templates padrão
+    - [x] Atendimento, FAQ, vendas, suporte
+    - [x] Variáveis dinâmicas
+    - [x] Interface de edição
 
 - [x] **Documentação**
-  - [x] AI_INTEGRATION.md completo
-  - [x] Exemplos de uso
-  - [x] Guia de configuração
+    - [x] AI_INTEGRATION.md completo
+    - [x] Exemplos de uso
+    - [x] Guia de configuração
 
 **Tempo estimado:** 12-18 horas  
 **Tempo real:** ~15 horas  
