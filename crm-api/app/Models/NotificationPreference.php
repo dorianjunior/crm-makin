@@ -73,7 +73,7 @@ class NotificationPreference extends Model
     public function getEnabledChannels(): array
     {
         $channels = [];
-        
+
         if ($this->email_enabled) $channels[] = 'email';
         if ($this->whatsapp_enabled) $channels[] = 'whatsapp';
         if ($this->push_enabled) $channels[] = 'push';

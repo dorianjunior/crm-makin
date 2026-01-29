@@ -124,17 +124,17 @@ class NotificationTemplate extends Model
     protected function flattenArray(array $array, string $prefix = ''): array
     {
         $result = [];
-        
+
         foreach ($array as $key => $value) {
             $newKey = $prefix ? "{$prefix}.{$key}" : $key;
-            
+
             if (is_array($value)) {
                 $result = array_merge($result, $this->flattenArray($value, $newKey));
             } else {
                 $result[$newKey] = $value;
             }
         }
-        
+
         return $result;
     }
 
@@ -155,13 +155,13 @@ class NotificationTemplate extends Model
     {
         $required = $this->getRequiredVariables();
         $provided = $this->flattenArray($data);
-        
+
         foreach ($required as $var) {
             if (!array_key_exists($var, $provided)) {
                 return false;
             }
         }
-        
+
         return true;
     }
 
