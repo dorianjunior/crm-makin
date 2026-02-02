@@ -47,10 +47,12 @@ class AppServiceProvider extends ServiceProvider
         }
 
         // Register CMS event subscribers
-        Event::subscribe(\App\Listeners\CMS\LogContentActivity::class);
+        // Event::subscribe(\App\Listeners\CMS\LogContentActivity::class); // TODO: Fix Activity model for CMS events
         Event::subscribe(\App\Listeners\CMS\LogContentChanges::class);
 
         // Register CMS event listeners
+        // TODO: Fix Notification model notifiable_type constraint for CMS events
+        /*
         Event::listen(
             \App\Events\CMS\ApprovalRequested::class,
             \App\Listeners\CMS\NotifyManagersOfApprovalRequest::class
@@ -65,5 +67,6 @@ class AppServiceProvider extends ServiceProvider
             \App\Events\CMS\ApprovalProcessed::class,
             \App\Listeners\CMS\NotifyApprovalProcessed::class
         );
+        */
     }
 }

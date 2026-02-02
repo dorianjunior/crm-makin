@@ -93,7 +93,7 @@ class ContentApprovalTest extends TestCase
 
         $approval->refresh();
         $this->assertEquals('approved', $approval->status);
-        $this->assertEquals($this->manager->id, $approval->reviewed_by);
+        $this->assertEquals($this->manager->id, $approval->approved_by);
 
         $page->refresh();
         $this->assertEquals(ContentStatus::PUBLISHED, $page->status);
@@ -123,7 +123,7 @@ class ContentApprovalTest extends TestCase
 
         $approval->refresh();
         $this->assertEquals('rejected', $approval->status);
-        $this->assertEquals($this->manager->id, $approval->reviewed_by);
+        $this->assertEquals($this->manager->id, $approval->approved_by);
         $this->assertStringContainsString('revision', $approval->review_notes);
 
         $page->refresh();
@@ -142,7 +142,7 @@ class ContentApprovalTest extends TestCase
             'approvable_id' => $page->id,
             'requested_by' => $this->user->id,
             'status' => 'approved',
-            'reviewed_by' => $this->manager->id,
+            'approved_by' => $this->manager->id,
         ]);
 
         $response = $this->actingAs($this->manager)
@@ -191,7 +191,7 @@ class ContentApprovalTest extends TestCase
             'approvable_id' => $page->id,
             'requested_by' => $this->user->id,
             'status' => 'approved',
-            'reviewed_by' => $this->manager->id,
+            'approved_by' => $this->manager->id,
         ]);
 
         $response = $this->actingAs($this->user)

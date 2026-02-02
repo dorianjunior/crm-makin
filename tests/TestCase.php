@@ -33,6 +33,16 @@ abstract class TestCase extends BaseTestCase
             ]);
         }
 
+        if (! User::find(2)) {
+            User::factory()->create([
+                'id' => 2,
+                'name' => 'Test Reviewer',
+                'email' => 'reviewer@test.com',
+                'role_id' => 1,
+                'company_id' => 1,
+            ]);
+        }
+
         if (! Site::find(1)) {
             Site::factory()->create([
                 'id' => 1,

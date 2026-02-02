@@ -122,7 +122,7 @@ class PublishingServiceTest extends TestCase
 
         $approval->refresh();
         $this->assertEquals('approved', $approval->status);
-        $this->assertEquals($reviewerId, $approval->reviewed_by);
+        $this->assertEquals($reviewerId, $approval->approved_by);
 
         $page->refresh();
         $this->assertEquals(ContentStatus::PUBLISHED, $page->status);
@@ -152,8 +152,8 @@ class PublishingServiceTest extends TestCase
 
         $approval->refresh();
         $this->assertEquals('rejected', $approval->status);
-        $this->assertEquals($reviewerId, $approval->reviewed_by);
-        $this->assertStringContainsString($reason, $approval->review_notes);
+        $this->assertEquals($reviewerId, $approval->approved_by);
+        $this->assertStringContainsString($reason, $approval->rejection_reason);
 
         $page->refresh();
         $this->assertEquals(ContentStatus::DRAFT, $page->status);

@@ -114,7 +114,7 @@ class SiteTest extends TestCase
     {
         $site = Site::factory()->create([
             'company_id' => $this->user->company_id,
-            'is_active' => false,
+            'active' => false,
         ]);
 
         $response = $this->actingAs($this->user)
@@ -123,14 +123,14 @@ class SiteTest extends TestCase
         $response->assertOk();
 
         $site->refresh();
-        $this->assertTrue($site->is_active);
+        $this->assertTrue($site->active);
     }
 
     public function test_can_deactivate_site(): void
     {
         $site = Site::factory()->create([
             'company_id' => $this->user->company_id,
-            'is_active' => true,
+            'active' => true,
         ]);
 
         $response = $this->actingAs($this->user)
@@ -139,7 +139,7 @@ class SiteTest extends TestCase
         $response->assertOk();
 
         $site->refresh();
-        $this->assertFalse($site->is_active);
+        $this->assertFalse($site->active);
     }
 
     public function test_cannot_access_other_company_site(): void

@@ -6,7 +6,7 @@ use App\Events\CMS\ApprovalApproved;
 use App\Events\CMS\ApprovalRejected;
 use App\Events\CMS\ApprovalRequested;
 use App\Events\CMS\ContentPublished;
-use App\Models\Activity;
+use App\Models\CRM\Activity;
 use Illuminate\Events\Dispatcher;
 
 class LogContentActivity
