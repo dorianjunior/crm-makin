@@ -28,10 +28,10 @@ class ApprovalRequestedNotification extends Notification implements ShouldQueue
     {
         $contentTitle = $this->content->title ?? $this->content->name ?? "Item #{$this->content->id}";
 
-        return (new MailMessage)
+        return (new MailMessage())
             ->subject("Nova Solicitação de Aprovação - {$this->contentType}")
             ->greeting("Olá, {$notifiable->name}!")
-            ->line("Uma nova solicitação de aprovação foi criada.")
+            ->line('Uma nova solicitação de aprovação foi criada.')
             ->line("**Tipo de Conteúdo:** {$this->contentType}")
             ->line("**Título:** {$contentTitle}")
             ->line("**Solicitado por:** {$this->approval->requestedBy->name}")

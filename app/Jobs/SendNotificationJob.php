@@ -13,7 +13,10 @@ use Illuminate\Support\Facades\Log;
 
 class SendNotificationJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     /**
      * The number of times the job may be attempted.
@@ -40,10 +43,11 @@ class SendNotificationJob implements ShouldQueue
         try {
             $notification = Notification::find($this->notificationId);
 
-            if (!$notification) {
+            if (! $notification) {
                 Log::warning('Notification not found', [
                     'notification_id' => $this->notificationId,
                 ]);
+
                 return;
             }
 
@@ -52,6 +56,7 @@ class SendNotificationJob implements ShouldQueue
                 Log::info('Notification already sent', [
                     'notification_id' => $this->notificationId,
                 ]);
+
                 return;
             }
 
@@ -68,7 +73,6 @@ class SendNotificationJob implements ShouldQueue
                     'notification_id' => $this->notificationId,
                 ]);
             }
-
         } catch (\Exception $e) {
             Log::error('Error sending notification', [
                 'notification_id' => $this->notificationId,

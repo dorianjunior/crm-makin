@@ -31,18 +31,18 @@ class BannerResource extends JsonResource
             'published_at' => $this->published_at?->toIso8601String(),
             'created_at' => $this->created_at->toIso8601String(),
             'updated_at' => $this->updated_at->toIso8601String(),
-            'creator' => $this->whenLoaded('creator', fn() => [
+            'creator' => $this->whenLoaded('creator', fn () => [
                 'id' => $this->creator->id,
                 'name' => $this->creator->name,
                 'email' => $this->creator->email,
             ]),
-            'site' => $this->whenLoaded('site', fn() => [
+            'site' => $this->whenLoaded('site', fn () => [
                 'id' => $this->site->id,
                 'name' => $this->site->name,
                 'domain' => $this->site->domain,
             ]),
-            'versions' => $this->whenLoaded('versions', fn() => ContentVersionResource::collection($this->versions)),
-            'approvals' => $this->whenLoaded('approvals', fn() => ContentApprovalResource::collection($this->approvals)),
+            'versions' => $this->whenLoaded('versions', fn () => ContentVersionResource::collection($this->versions)),
+            'approvals' => $this->whenLoaded('approvals', fn () => ContentApprovalResource::collection($this->approvals)),
         ];
     }
 }

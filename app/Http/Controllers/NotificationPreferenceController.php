@@ -145,7 +145,7 @@ class NotificationPreferenceController extends Controller
         }
 
         $validChannels = ['email', 'whatsapp', 'push', 'sms', 'in_app'];
-        if (!in_array($channel, $validChannels)) {
+        if (! in_array($channel, $validChannels)) {
             return response()->json(['message' => 'Invalid channel'], 400);
         }
 
@@ -170,7 +170,7 @@ class NotificationPreferenceController extends Controller
         }
 
         $validChannels = ['email', 'whatsapp', 'push', 'sms', 'in_app'];
-        if (!in_array($channel, $validChannels)) {
+        if (! in_array($channel, $validChannels)) {
             return response()->json(['message' => 'Invalid channel'], 400);
         }
 

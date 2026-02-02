@@ -19,12 +19,12 @@ class InAppNotificationChannel implements NotificationChannelInterface
             ]);
 
             return true;
-
         } catch (\Exception $e) {
             Log::error('In-app notification failed', [
                 'notification_id' => $notification->id,
                 'error' => $e->getMessage(),
             ]);
+
             return false;
         }
     }

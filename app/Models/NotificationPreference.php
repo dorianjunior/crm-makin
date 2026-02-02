@@ -46,6 +46,7 @@ class NotificationPreference extends Model
     public function isChannelEnabled(string $channel): bool
     {
         $field = "{$channel}_enabled";
+
         return $this->{$field} ?? false;
     }
 
@@ -55,6 +56,7 @@ class NotificationPreference extends Model
     public function enableChannel(string $channel): bool
     {
         $field = "{$channel}_enabled";
+
         return $this->update([$field => true]);
     }
 
@@ -64,6 +66,7 @@ class NotificationPreference extends Model
     public function disableChannel(string $channel): bool
     {
         $field = "{$channel}_enabled";
+
         return $this->update([$field => false]);
     }
 
@@ -74,11 +77,21 @@ class NotificationPreference extends Model
     {
         $channels = [];
 
-        if ($this->email_enabled) $channels[] = 'email';
-        if ($this->whatsapp_enabled) $channels[] = 'whatsapp';
-        if ($this->push_enabled) $channels[] = 'push';
-        if ($this->sms_enabled) $channels[] = 'sms';
-        if ($this->in_app_enabled) $channels[] = 'in_app';
+        if ($this->email_enabled) {
+            $channels[] = 'email';
+        }
+        if ($this->whatsapp_enabled) {
+            $channels[] = 'whatsapp';
+        }
+        if ($this->push_enabled) {
+            $channels[] = 'push';
+        }
+        if ($this->sms_enabled) {
+            $channels[] = 'sms';
+        }
+        if ($this->in_app_enabled) {
+            $channels[] = 'in_app';
+        }
 
         return $channels;
     }
@@ -114,7 +127,7 @@ class NotificationPreference extends Model
         // Check days of week
         if (isset($schedule['days_of_week'])) {
             $currentDay = $now->dayOfWeek; // 0 = Sunday, 6 = Saturday
-            if (!in_array($currentDay, $schedule['days_of_week'])) {
+            if (! in_array($currentDay, $schedule['days_of_week'])) {
                 return false;
             }
         }

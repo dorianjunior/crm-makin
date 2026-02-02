@@ -32,6 +32,7 @@ class WhatsAppWebhookController extends Controller
             Log::info('WhatsApp webhook verified successfully', [
                 'account_id' => $account->id,
             ]);
+
             return $challenge;
         }
 
@@ -55,6 +56,7 @@ class WhatsAppWebhookController extends Controller
         // Verify signature
         if (! $this->verifySignature($request)) {
             Log::warning('Invalid WhatsApp webhook signature');
+
             return response()->json(['error' => 'Invalid signature'], 403);
         }
 
@@ -95,6 +97,7 @@ class WhatsAppWebhookController extends Controller
             Log::warning('WhatsApp account not found for webhook', [
                 'phone_number_id' => $phoneNumberId,
             ]);
+
             return false;
         }
 
@@ -103,10 +106,11 @@ class WhatsAppWebhookController extends Controller
 
         if (! $appSecret) {
             Log::warning('WhatsApp app secret not configured');
+
             return true; // Allow if secret not configured (development)
         }
 
-        $expected = 'sha256=' . hash_hmac('sha256', $body, $appSecret);
+        $expected = 'sha256='.hash_hmac('sha256', $body, $appSecret);
 
         return hash_equals($expected, $signature);
     }
@@ -134,6 +138,7 @@ class WhatsAppWebhookController extends Controller
 
         if (! $phoneNumberId) {
             Log::warning('WhatsApp webhook missing phone_number_id');
+
             return;
         }
 
@@ -144,6 +149,7 @@ class WhatsAppWebhookController extends Controller
             Log::warning('WhatsApp account not found', [
                 'phone_number_id' => $phoneNumberId,
             ]);
+
             return;
         }
 

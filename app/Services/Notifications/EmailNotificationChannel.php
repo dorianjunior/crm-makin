@@ -3,8 +3,8 @@
 namespace App\Services\Notifications;
 
 use App\Models\Notification;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class EmailNotificationChannel implements NotificationChannelInterface
 {
@@ -13,7 +13,7 @@ class EmailNotificationChannel implements NotificationChannelInterface
         try {
             $user = $notification->user;
 
-            if (!$user || !$user->email) {
+            if (! $user || ! $user->email) {
                 throw new \Exception('User email not found');
             }
 
@@ -24,12 +24,12 @@ class EmailNotificationChannel implements NotificationChannelInterface
             });
 
             return true;
-
         } catch (\Exception $e) {
             Log::error('Email notification failed', [
                 'notification_id' => $notification->id,
                 'error' => $e->getMessage(),
             ]);
+
             return false;
         }
     }
@@ -55,7 +55,7 @@ class EmailNotificationChannel implements NotificationChannelInterface
                         <h2 style='margin: 0;'>{$notification->title}</h2>
                     </div>
                     <div class='content priority-{$notification->priority}'>
-                        " . nl2br($notification->message) . "
+                        ".nl2br($notification->message)."
                     </div>
                     <div class='footer'>
                         <p>Esta é uma notificação automática. Por favor, não responda este email.</p>

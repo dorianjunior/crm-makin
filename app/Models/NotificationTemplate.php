@@ -108,10 +108,10 @@ class NotificationTemplate extends Model
             // Handle nested arrays with dot notation
             if (is_array($value)) {
                 foreach ($this->flattenArray($value, $key) as $nestedKey => $nestedValue) {
-                    $text = str_replace("{{" . $nestedKey . "}}", $nestedValue, $text);
+                    $text = str_replace('{{'.$nestedKey.'}}', $nestedValue, $text);
                 }
             } else {
-                $text = str_replace("{{" . $key . "}}", $value, $text);
+                $text = str_replace('{{'.$key.'}}', $value, $text);
             }
         }
 
@@ -143,8 +143,9 @@ class NotificationTemplate extends Model
      */
     public function getRequiredVariables(): array
     {
-        $text = $this->subject . ' ' . $this->body_template;
+        $text = $this->subject.' '.$this->body_template;
         preg_match_all('/\{\{(\w+(?:\.\w+)*)\}\}/', $text, $matches);
+
         return array_unique($matches[1] ?? []);
     }
 
@@ -157,7 +158,7 @@ class NotificationTemplate extends Model
         $provided = $this->flattenArray($data);
 
         foreach ($required as $var) {
-            if (!array_key_exists($var, $provided)) {
+            if (! array_key_exists($var, $provided)) {
                 return false;
             }
         }

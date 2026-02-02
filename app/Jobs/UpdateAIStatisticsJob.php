@@ -14,7 +14,10 @@ use Illuminate\Support\Facades\Log;
 
 class UpdateAIStatisticsJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     /**
      * The number of times the job may be attempted.
@@ -45,7 +48,6 @@ class UpdateAIStatisticsJob implements ShouldQueue
                 'company_id' => $this->companyId,
                 'template_id' => $this->templateId,
             ]);
-
         } catch (\Exception $e) {
             Log::error('Failed to update AI statistics', [
                 'company_id' => $this->companyId,

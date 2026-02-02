@@ -9,10 +9,13 @@ use Illuminate\Queue\SerializesModels;
 
 class ContentPublished
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
+    use Dispatchable;
+    use InteractsWithSockets;
+    use SerializesModels;
 
     public function __construct(
         public Model $content,
-        public string $contentType
+        public string $contentType,
+        public int $userId
     ) {}
 }

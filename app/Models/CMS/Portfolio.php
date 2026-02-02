@@ -13,7 +13,8 @@ use Illuminate\Support\Str;
 
 class Portfolio extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
+    use SoftDeletes;
 
     protected $fillable = [
         'site_id',

@@ -97,7 +97,7 @@ class AIPromptTemplate extends Model
         $prompt = $this->user_prompt_template;
 
         foreach ($variables as $key => $value) {
-            $prompt = str_replace("{{" . $key . "}}", $value, $prompt);
+            $prompt = str_replace('{{'.$key.'}}', $value, $prompt);
         }
 
         return $prompt;
@@ -109,6 +109,7 @@ class AIPromptTemplate extends Model
     public function getRequiredVariables(): array
     {
         preg_match_all('/\{\{(\w+)\}\}/', $this->user_prompt_template, $matches);
+
         return $matches[1] ?? [];
     }
 
@@ -118,6 +119,7 @@ class AIPromptTemplate extends Model
     public function hasAllRequiredVariables(array $variables): bool
     {
         $required = $this->getRequiredVariables();
+
         return empty(array_diff($required, array_keys($variables)));
     }
 

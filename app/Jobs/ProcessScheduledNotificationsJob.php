@@ -12,7 +12,10 @@ use Illuminate\Support\Facades\Log;
 
 class ProcessScheduledNotificationsJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     /**
      * The number of times the job may be attempted.
@@ -45,7 +48,6 @@ class ProcessScheduledNotificationsJob implements ShouldQueue
             Log::info('Failed notifications retried', [
                 'count' => $retried,
             ]);
-
         } catch (\Exception $e) {
             Log::error('Error processing scheduled notifications', [
                 'error' => $e->getMessage(),

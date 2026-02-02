@@ -26,10 +26,10 @@ class ContentPublishedNotification extends Notification implements ShouldQueue
     {
         $contentTitle = $this->content->title ?? $this->content->name ?? "Item #{$this->content->id}";
 
-        return (new MailMessage)
+        return (new MailMessage())
             ->subject("Conteúdo Publicado - {$this->contentType}")
             ->greeting("Olá, {$notifiable->name}!")
-            ->line("Seu conteúdo foi publicado com sucesso.")
+            ->line('Seu conteúdo foi publicado com sucesso.')
             ->line("**Tipo de Conteúdo:** {$this->contentType}")
             ->line("**Título:** {$contentTitle}")
             ->line("**Publicado em:** {$this->content->published_at->format('d/m/Y H:i')}")

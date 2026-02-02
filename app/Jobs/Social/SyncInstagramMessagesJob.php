@@ -13,7 +13,10 @@ use Illuminate\Support\Facades\Log;
 
 class SyncInstagramMessagesJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     /**
      * The number of seconds the job can run before timing out.
@@ -46,6 +49,7 @@ class SyncInstagramMessagesJob implements ShouldQueue
                 Log::warning('Instagram account not found or inactive', [
                     'account_id' => $this->accountId,
                 ]);
+
                 return;
             }
 

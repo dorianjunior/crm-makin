@@ -116,7 +116,7 @@ class ReportExport extends Model
         $this->save();
     }
 
-    public function markAsCompleted(int $rowsCount = null, int $fileSize = null): void
+    public function markAsCompleted(?int $rowsCount = null, ?int $fileSize = null): void
     {
         $this->status = 'completed';
         $this->completed_at = now();
@@ -166,7 +166,7 @@ class ReportExport extends Model
 
     public function getDownloadUrl(): ?string
     {
-        if (!$this->isCompleted() || $this->isExpired() || !$this->file_path) {
+        if (! $this->isCompleted() || $this->isExpired() || ! $this->file_path) {
             return null;
         }
 
@@ -189,7 +189,7 @@ class ReportExport extends Model
 
     public function getFileSizeFormatted(): string
     {
-        if (!$this->file_size) {
+        if (! $this->file_size) {
             return 'N/A';
         }
 
@@ -202,7 +202,7 @@ class ReportExport extends Model
             $unit++;
         }
 
-        return round($size, 2) . ' ' . $units[$unit];
+        return round($size, 2).' '.$units[$unit];
     }
 
     public function extendExpiration(int $days = 7): void

@@ -4,17 +4,16 @@ namespace App\Events\CMS;
 
 use App\Models\CMS\ContentApproval;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
 class ApprovalRequested
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
+    use Dispatchable;
+    use InteractsWithSockets;
+    use SerializesModels;
 
     public function __construct(
-        public Model $content,
-        public string $contentType,
         public ContentApproval $approval
     ) {}
 }

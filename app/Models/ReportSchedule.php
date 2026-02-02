@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Carbon\Carbon;
 
 class ReportSchedule extends Model
 {
@@ -92,7 +92,7 @@ class ReportSchedule extends Model
             case 'weekly':
                 $dayOfWeek = $config['day_of_week'] ?? 1; // Monday
                 $time = $config['time'] ?? '08:00';
-                $next = Carbon::parse('next ' . $this->getDayName($dayOfWeek) . ' ' . $time);
+                $next = Carbon::parse('next '.$this->getDayName($dayOfWeek).' '.$time);
                 if ($next->isPast()) {
                     $next->addWeek();
                 }
@@ -111,7 +111,7 @@ class ReportSchedule extends Model
 
             case 'quarterly':
                 $month = $now->month;
-                $quarterStartMonth = (int)(floor(($month - 1) / 3) * 3) + 1;
+                $quarterStartMonth = (int) (floor(($month - 1) / 3) * 3) + 1;
                 $next = Carbon::create($now->year, $quarterStartMonth, 1)->addMonths(3);
                 $this->next_run_at = $next;
                 break;
@@ -156,7 +156,7 @@ class ReportSchedule extends Model
 
     public function hasRecipients(): bool
     {
-        return !empty($this->recipients);
+        return ! empty($this->recipients);
     }
 
     public function getRecipientsList(): array
@@ -167,7 +167,7 @@ class ReportSchedule extends Model
     public function addRecipient(string $email): void
     {
         $recipients = $this->recipients ?? [];
-        if (!in_array($email, $recipients)) {
+        if (! in_array($email, $recipients)) {
             $recipients[] = $email;
             $this->recipients = $recipients;
             $this->save();
@@ -177,7 +177,7 @@ class ReportSchedule extends Model
     public function removeRecipient(string $email): void
     {
         $recipients = $this->recipients ?? [];
-        $recipients = array_filter($recipients, fn($r) => $r !== $email);
+        $recipients = array_filter($recipients, fn ($r) => $r !== $email);
         $this->recipients = array_values($recipients);
         $this->save();
     }

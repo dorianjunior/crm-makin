@@ -20,7 +20,7 @@ class InstagramAccountFactory extends Factory
             'company_id' => \App\Models\CRM\Company::factory(),
             'instagram_user_id' => $this->faker->unique()->numerify('##########'),
             'username' => $this->faker->unique()->userName(),
-            'access_token' => encrypt('test_access_token_' . $this->faker->uuid()),
+            'access_token' => encrypt('test_access_token_'.$this->faker->uuid()),
             'token_expires_at' => now()->addDays(60),
             'account_type' => $this->faker->randomElement(['BUSINESS', 'CREATOR', 'PERSONAL']),
             'profile_picture_url' => $this->faker->imageUrl(150, 150, 'people'),

@@ -19,6 +19,8 @@ class SiteController extends Controller
 
     public function index(): AnonymousResourceCollection
     {
+        $this->authorize('viewAny', Site::class);
+
         $companyId = auth()->user()->company_id;
         $sites = $this->siteService->getByCompany($companyId);
 
@@ -27,6 +29,8 @@ class SiteController extends Controller
 
     public function store(StoreSiteRequest $request): SiteResource
     {
+        $this->authorize('create', Site::class);
+
         $data = $request->validated();
         $data['company_id'] = auth()->user()->company_id;
 
@@ -37,11 +41,15 @@ class SiteController extends Controller
 
     public function show(Site $site): SiteResource
     {
+        $this->authorize('view', $site);
+
         return new SiteResource($site);
     }
 
     public function update(UpdateSiteRequest $request, Site $site): SiteResource
     {
+        $this->authorize('update', $site);
+
         $data = $request->validated();
         $site = $this->siteService->update($site, $data);
 
@@ -50,6 +58,8 @@ class SiteController extends Controller
 
     public function destroy(Site $site): JsonResponse
     {
+        $this->authorize('delete', $site);
+
         $this->siteService->delete($site);
 
         return response()->json(['message' => 'Site deleted successfully']);
@@ -57,6 +67,8 @@ class SiteController extends Controller
 
     public function regenerateApiKey(Site $site): JsonResponse
     {
+        $this->authorize('regenerateApiKey', $site);
+
         $apiKey = $this->siteService->regenerateApiKey($site);
 
         return response()->json([
@@ -67,6 +79,8 @@ class SiteController extends Controller
 
     public function activate(Site $site): SiteResource
     {
+        $this->authorize('toggle', $site);
+
         $site = $this->siteService->activate($site);
 
         return new SiteResource($site);
@@ -74,6 +88,8 @@ class SiteController extends Controller
 
     public function deactivate(Site $site): SiteResource
     {
+        $this->authorize('toggle', $site);
+
         $site = $this->siteService->deactivate($site);
 
         return new SiteResource($site);

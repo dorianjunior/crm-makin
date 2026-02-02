@@ -30,7 +30,7 @@ class WhatsAppMessageFactory extends Factory
 
         return [
             'whatsapp_conversation_id' => WhatsAppConversation::factory(),
-            'message_id' => 'wamid.' . $this->faker->regexify('[A-Z0-9]{50}'),
+            'message_id' => 'wamid.'.$this->faker->regexify('[A-Z0-9]{50}'),
             'direction' => $direction,
             'type' => $type,
             'content' => $this->faker->sentence(10),
@@ -39,8 +39,8 @@ class WhatsAppMessageFactory extends Factory
             'media_id' => $type !== 'text' ? $this->faker->numerify('##############') : null,
             'status' => $status,
             'error_message' => null,
-            'from_phone' => $direction === 'inbound' ? '+551198' . $this->faker->numerify('#######') : '+551199' . $this->faker->numerify('#######'),
-            'to_phone' => $direction === 'outbound' ? '+551198' . $this->faker->numerify('#######') : '+551199' . $this->faker->numerify('#######'),
+            'from_phone' => $direction === 'inbound' ? '+551198'.$this->faker->numerify('#######') : '+551199'.$this->faker->numerify('#######'),
+            'to_phone' => $direction === 'outbound' ? '+551198'.$this->faker->numerify('#######') : '+551199'.$this->faker->numerify('#######'),
             'sent_at' => $sentAt,
             'delivered_at' => $deliveredAt,
             'read_at' => $readAt,

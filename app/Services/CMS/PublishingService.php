@@ -3,19 +3,14 @@
 namespace App\Services\CMS;
 
 use App\Enums\ContentStatus;
-use App\Events\CMS\ApprovalApproved;
-use App\Events\CMS\ApprovalRejected;
+use App\Events\CMS\ApprovalProcessed;
 use App\Events\CMS\ApprovalRequested;
-use App\Events\CMS\ContentPublished;
+use App\Events\CMS\ContentPublished as ContentPublishedEvent;
 use App\Models\CMS\ContentApproval;
 use App\Models\CMS\Page;
 use App\Models\CMS\Post;
 use App\Models\User;
-use App\Notifications\CMS\ApprovalDecisionNotification;
-use App\Notifications\CMS\ApprovalRequestedNotification;
-use App\Notifications\CMS\ContentPublishedNotification;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Notification;
 
 class PublishingService
 {
@@ -31,13 +26,7 @@ class PublishingService
         ]);
 
         // Dispatch event
-        $contentType = class_basename($content);
-        event(new ContentPublished($content, $contentType));
-
-        // Notify content creator
-        if ($content->creator) {
-            $content->creator->notify(new ContentPublishedNotification($content, $contentType));
-        }
+        event(new ContentPublishedEvent($content, class_basename($content), $userId));
 
         return true;
     }
@@ -77,19 +66,7 @@ class PublishingService
         ]);
 
         // Dispatch event
-        $contentType = class_basename($content);
-        event(new ApprovalRequested($content, $contentType, $approval));
-
-        // Notify managers (users with permission to approve content)
-        $managers = User::whereHas('roles', function ($query) {
-            $query->whereHas('permissions', function ($q) {
-                $q->where('name', 'approve_content');
-            });
-        })->get();
-
-        if ($managers->isNotEmpty()) {
-            Notification::send($managers, new ApprovalRequestedNotification($content, $contentType, $approval));
-        }
+        event(new ApprovalRequested($approval));
 
         return $approval;
     }
@@ -103,15 +80,7 @@ class PublishingService
         $this->publish($content, $userId);
 
         // Dispatch event
-        $contentType = class_basename($content);
-        event(new ApprovalApproved($content, $contentType, $approval));
-
-        // Notify requester
-        if ($approval->requestedBy) {
-            $approval->requestedBy->notify(
-                new ApprovalDecisionNotification($content, $contentType, $approval, true)
-            );
-        }
+        event(new ApprovalProcessed($approval, 'approved', $userId));
 
         return true;
     }
@@ -127,15 +96,7 @@ class PublishingService
         ]);
 
         // Dispatch event
-        $contentType = class_basename($content);
-        event(new ApprovalRejected($content, $contentType, $approval));
-
-        // Notify requester
-        if ($approval->requestedBy) {
-            $approval->requestedBy->notify(
-                new ApprovalDecisionNotification($content, $contentType, $approval, false)
-            );
-        }
+        event(new ApprovalProcessed($approval, 'rejected', $userId));
 
         return true;
     }

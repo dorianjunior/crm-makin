@@ -3,7 +3,6 @@
 namespace App\Jobs;
 
 use App\Models\ReportSchedule;
-use App\Models\Report;
 use App\Services\Reports\ExportService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
@@ -15,6 +14,7 @@ class GenerateScheduledReportJob implements ShouldQueue
     use Queueable;
 
     public $tries = 3;
+
     public $backoff = 60;
 
     /**
@@ -56,7 +56,6 @@ class GenerateScheduledReportJob implements ShouldQueue
                 $schedule->markAsExecuted();
 
                 Log::info("Scheduled report {$report->id} generated successfully");
-
             } catch (\Exception $e) {
                 Log::error("Failed to generate scheduled report {$schedule->id}: {$e->getMessage()}");
             }
@@ -78,7 +77,7 @@ class GenerateScheduledReportJob implements ShouldQueue
                     function ($message) use ($recipient, $report, $export) {
                         $message->to($recipient)
                             ->subject("Relatório: {$report->name}")
-                            ->attach(storage_path('app/' . $export->file_path), [
+                            ->attach(storage_path('app/'.$export->file_path), [
                                 'as' => $export->filename,
                             ]);
                     }

@@ -31,7 +31,7 @@ class ApprovalDecisionNotification extends Notification implements ShouldQueue
         $decision = $this->approved ? 'aprovada' : 'rejeitada';
         $decisionUpper = $this->approved ? 'Aprovada' : 'Rejeitada';
 
-        $mail = (new MailMessage)
+        $mail = (new MailMessage())
             ->subject("Solicitação {$decisionUpper} - {$this->contentType}")
             ->greeting("Olá, {$notifiable->name}!")
             ->line("Sua solicitação de aprovação foi {$decision}.")

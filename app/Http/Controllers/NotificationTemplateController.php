@@ -160,7 +160,7 @@ class NotificationTemplateController extends Controller
         $data = $request->data;
 
         // Check required variables
-        if (!$template->hasAllRequiredVariables($data)) {
+        if (! $template->hasAllRequiredVariables($data)) {
             return response()->json([
                 'message' => 'Missing required variables',
                 'required' => $template->getRequiredVariables(),

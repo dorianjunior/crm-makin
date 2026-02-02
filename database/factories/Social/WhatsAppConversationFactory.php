@@ -28,7 +28,7 @@ class WhatsAppConversationFactory extends Factory
             'lead_id' => null, // Can be linked later
             'conversation_id' => $phone,
             'contact_name' => $this->faker->name,
-            'contact_phone' => '+' . $phone,
+            'contact_phone' => '+'.$phone,
             'contact_profile_pic' => $this->faker->imageUrl(200, 200, 'people'),
             'is_group' => false,
             'unread_count' => $this->faker->numberBetween(0, 5),
@@ -87,7 +87,7 @@ class WhatsAppConversationFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'is_group' => true,
-            'contact_name' => $this->faker->words(3, true) . ' Group',
+            'contact_name' => $this->faker->words(3, true).' Group',
             'metadata' => [
                 'group_size' => $this->faker->numberBetween(3, 50),
                 'group_admin' => $this->faker->phoneNumber,

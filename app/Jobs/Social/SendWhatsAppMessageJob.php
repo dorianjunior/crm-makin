@@ -13,7 +13,10 @@ use Illuminate\Support\Facades\Log;
 
 class SendWhatsAppMessageJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     /**
      * The number of seconds the job can run before timing out.
@@ -75,7 +78,6 @@ class SendWhatsAppMessageJob implements ShouldQueue
                 'message_id' => $message['message_id'] ?? null,
                 'account_id' => $this->accountId,
             ]);
-
         } catch (\Exception $e) {
             Log::error('Failed to send WhatsApp message', [
                 'account_id' => $this->accountId,

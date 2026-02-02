@@ -11,7 +11,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class AIConversation extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
+    use SoftDeletes;
 
     protected $fillable = [
         'company_id',
@@ -160,6 +161,7 @@ class AIConversation extends Model
     public function markAsCompleted(): bool
     {
         $this->calculateDuration();
+
         return $this->update(['status' => 'completed']);
     }
 
@@ -206,6 +208,7 @@ class AIConversation extends Model
         if ($this->message_count === 0) {
             return 0;
         }
+
         return round($this->total_tokens / $this->message_count, 2);
     }
 
@@ -217,6 +220,7 @@ class AIConversation extends Model
         if ($this->message_count === 0) {
             return 0;
         }
+
         return round($this->total_cost / $this->message_count, 4);
     }
 
@@ -234,6 +238,7 @@ class AIConversation extends Model
     public function getAverageSatisfactionRating(): ?float
     {
         $avg = $this->feedback()->avg('rating');
+
         return $avg ? round($avg, 2) : null;
     }
 }

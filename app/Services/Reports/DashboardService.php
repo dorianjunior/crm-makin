@@ -2,13 +2,13 @@
 
 namespace App\Services\Reports;
 
+use App\Models\Activity;
 use App\Models\Lead;
 use App\Models\Proposal;
-use App\Models\Activity;
 use App\Models\Task;
 use App\Models\User;
-use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class DashboardService
 {
@@ -41,7 +41,7 @@ class DashboardService
         $previousPeriod = Lead::where('company_id', $companyId)
             ->whereBetween('created_at', [
                 Carbon::parse($dateFrom)->subDays($dateTo->diffInDays($dateFrom)),
-                $dateFrom
+                $dateFrom,
             ]);
 
         $total = $leads->count();
@@ -78,7 +78,7 @@ class DashboardService
             ->where('status', 'accepted')
             ->whereBetween('accepted_at', [
                 Carbon::parse($dateFrom)->subDays($dateTo->diffInDays($dateFrom)),
-                $dateFrom
+                $dateFrom,
             ]);
 
         $totalRevenue = $sales->sum('total');
@@ -134,7 +134,7 @@ class DashboardService
         $overdue = Task::whereHas('assignedTo', function ($query) use ($companyId) {
             $query->where('company_id', $companyId);
         })->where('status', '!=', 'completed')
-          ->where('due_date', '<', now());
+            ->where('due_date', '<', now());
 
         return [
             'total' => $tasks->count(),
@@ -247,7 +247,7 @@ class DashboardService
     /**
      * Get timeline data for charts
      */
-    private function getTimelineData($query, $dateFrom, $dateTo, string $dateField = 'created_at', string $valueField = null)
+    private function getTimelineData($query, $dateFrom, $dateTo, string $dateField = 'created_at', ?string $valueField = null)
     {
         $days = Carbon::parse($dateFrom)->diffInDays($dateTo);
 
@@ -289,8 +289,8 @@ class DashboardService
             'overdue_tasks' => Task::whereHas('assignedTo', function ($query) use ($companyId) {
                 $query->where('company_id', $companyId);
             })->where('status', '!=', 'completed')
-              ->where('due_date', '<', now())
-              ->count(),
+                ->where('due_date', '<', now())
+                ->count(),
         ];
     }
 }

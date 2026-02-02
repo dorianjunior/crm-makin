@@ -153,7 +153,7 @@ class AIConversationController extends Controller
                 ->orderBy('created_at', 'asc')
                 ->take(20) // Limit history to last 20 messages
                 ->get()
-                ->map(fn($msg) => $msg->toContextArray())
+                ->map(fn ($msg) => $msg->toContextArray())
                 ->toArray();
 
             // Generate AI response
@@ -179,7 +179,6 @@ class AIConversationController extends Controller
                     'conversation' => $conversation->fresh(),
                 ],
             ]);
-
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Failed to generate AI response',

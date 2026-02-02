@@ -38,7 +38,7 @@ class ExportService
             $results = $this->reportService->execute($report, $filters);
 
             // Generate file based on format
-            $filePath = match($format) {
+            $filePath = match ($format) {
                 'pdf' => $this->generatePdf($report, $results, $export->filename),
                 'excel' => $this->generateExcel($report, $results, $export->filename),
                 'csv' => $this->generateCsv($report, $results, $export->filename),
@@ -50,9 +50,9 @@ class ExportService
                 rowsCount: count($results['data']),
                 fileSize: Storage::size($filePath)
             );
-
         } catch (\Exception $e) {
             $export->markAsFailed($e->getMessage());
+
             throw $e;
         }
 
@@ -69,7 +69,7 @@ class ExportService
 
         $html = $this->generateHtmlReport($report, $results);
 
-        $path = 'exports/pdf/' . $filename;
+        $path = 'exports/pdf/'.$filename;
         Storage::put($path, $html);
 
         // TODO: Convert HTML to PDF using library like dompdf
@@ -105,7 +105,7 @@ class ExportService
             $content[] = implode(',', $values);
         }
 
-        $path = 'exports/excel/' . str_replace('.xlsx', '.csv', $filename);
+        $path = 'exports/excel/'.str_replace('.xlsx', '.csv', $filename);
         Storage::put($path, implode("\n", $content));
 
         // TODO: Convert to real Excel using PhpSpreadsheet
@@ -136,7 +136,7 @@ class ExportService
             $content[] = implode(',', $values);
         }
 
-        $path = 'exports/csv/' . $filename;
+        $path = 'exports/csv/'.$filename;
         Storage::put($path, implode("\n", $content));
 
         return $path;
@@ -155,7 +155,7 @@ class ExportService
 <html>
 <head>
     <meta charset="utf-8">
-    <title>' . htmlspecialchars($report->name) . '</title>
+    <title>'.htmlspecialchars($report->name).'</title>
     <style>
         body { font-family: Arial, sans-serif; margin: 20px; }
         h1 { color: #333; border-bottom: 2px solid #007bff; padding-bottom: 10px; }
@@ -171,19 +171,19 @@ class ExportService
     </style>
 </head>
 <body>
-    <h1>' . htmlspecialchars($report->name) . '</h1>
+    <h1>'.htmlspecialchars($report->name).'</h1>
     <div class="meta">
-        <p><strong>Tipo:</strong> ' . htmlspecialchars($report->type) . '</p>
-        <p><strong>Gerado em:</strong> ' . now()->format('d/m/Y H:i:s') . '</p>
-        <p><strong>Total de registros:</strong> ' . count($data) . '</p>
+        <p><strong>Tipo:</strong> '.htmlspecialchars($report->type).'</p>
+        <p><strong>Gerado em:</strong> '.now()->format('d/m/Y H:i:s').'</p>
+        <p><strong>Total de registros:</strong> '.count($data).'</p>
     </div>';
 
-        if (!empty($summary)) {
+        if (! empty($summary)) {
             $html .= '<div class="summary">';
             $html .= '<h3>Resumo</h3>';
             foreach ($summary as $key => $value) {
                 $label = ucfirst(str_replace('_', ' ', $key));
-                $html .= '<div class="summary-item"><span class="summary-label">' . $label . ':</span> ' . $value . '</div>';
+                $html .= '<div class="summary-item"><span class="summary-label">'.$label.':</span> '.$value.'</div>';
             }
             $html .= '</div>';
         }
@@ -191,7 +191,7 @@ class ExportService
         $html .= '<table>';
         $html .= '<thead><tr>';
         foreach ($columns as $column) {
-            $html .= '<th>' . htmlspecialchars(ucfirst(str_replace('_', ' ', $column))) . '</th>';
+            $html .= '<th>'.htmlspecialchars(ucfirst(str_replace('_', ' ', $column))).'</th>';
         }
         $html .= '</tr></thead>';
 
@@ -200,7 +200,7 @@ class ExportService
             $html .= '<tr>';
             foreach ($columns as $column) {
                 $value = is_array($row) ? ($row[$column] ?? '') : ($row->$column ?? '');
-                $html .= '<td>' . htmlspecialchars($value) . '</td>';
+                $html .= '<td>'.htmlspecialchars($value).'</td>';
             }
             $html .= '</tr>';
         }
@@ -229,7 +229,7 @@ class ExportService
 
         // Wrap in quotes if contains comma, newline, or double quote
         if (strpos($value, ',') !== false || strpos($value, "\n") !== false || strpos($value, '"') !== false) {
-            $value = '"' . $value . '"';
+            $value = '"'.$value.'"';
         }
 
         return $value;
@@ -278,7 +278,7 @@ class ExportService
      */
     public function download(ReportExport $export): array
     {
-        if (!$export->isCompleted()) {
+        if (! $export->isCompleted()) {
             throw new \Exception('Export is not completed yet');
         }
 
@@ -286,7 +286,7 @@ class ExportService
             throw new \Exception('Export has expired');
         }
 
-        if (!$export->fileExists()) {
+        if (! $export->fileExists()) {
             throw new \Exception('Export file not found');
         }
 
@@ -302,7 +302,7 @@ class ExportService
      */
     private function getMimeType(string $format): string
     {
-        return match($format) {
+        return match ($format) {
             'pdf' => 'application/pdf',
             'excel' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
             'csv' => 'text/csv',

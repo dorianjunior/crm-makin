@@ -38,18 +38,20 @@ class NotificationService
                 );
 
                 // Check if channel is enabled
-                if ($preference && !$preference->isChannelEnabled($notification->channel)) {
+                if ($preference && ! $preference->isChannelEnabled($notification->channel)) {
                     Log::info('Notification channel disabled by user preference', [
                         'notification_id' => $notification->id,
                         'channel' => $notification->channel,
                     ]);
+
                     return false;
                 }
 
                 // Check schedule
-                if ($preference && !$preference->shouldSendNow()) {
+                if ($preference && ! $preference->shouldSendNow()) {
                     // Reschedule for later
                     $notification->update(['scheduled_at' => now()->addHour()]);
+
                     return false;
                 }
             }
@@ -57,7 +59,7 @@ class NotificationService
             // Get channel class
             $channelClass = $this->channels[$notification->channel] ?? null;
 
-            if (!$channelClass) {
+            if (! $channelClass) {
                 throw new \Exception("Channel {$notification->channel} not supported");
             }
 
@@ -74,7 +76,6 @@ class NotificationService
             }
 
             return $result;
-
         } catch (\Exception $e) {
             Log::error('Failed to send notification', [
                 'notification_id' => $notification->id,
@@ -82,6 +83,7 @@ class NotificationService
             ]);
 
             $notification->markAsFailed($e->getMessage());
+
             return false;
         }
     }
@@ -94,7 +96,7 @@ class NotificationService
         $notification = Notification::create($data);
 
         // Send immediately if not scheduled
-        if (!$notification->scheduled_at || $notification->scheduled_at->isPast()) {
+        if (! $notification->scheduled_at || $notification->scheduled_at->isPast()) {
             $this->send($notification);
         }
 
@@ -116,22 +118,24 @@ class NotificationService
         // Get template
         $template = NotificationTemplate::getByTypeAndChannel($companyId, $type, $channel);
 
-        if (!$template) {
+        if (! $template) {
             Log::warning('No template found', [
                 'company_id' => $companyId,
                 'type' => $type,
                 'channel' => $channel,
             ]);
+
             return null;
         }
 
         // Validate required variables
-        if (!$template->hasAllRequiredVariables($data)) {
+        if (! $template->hasAllRequiredVariables($data)) {
             Log::error('Missing required variables for template', [
                 'template_id' => $template->id,
                 'required' => $template->getRequiredVariables(),
                 'provided' => array_keys($data),
             ]);
+
             return null;
         }
 

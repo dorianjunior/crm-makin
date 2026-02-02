@@ -51,7 +51,7 @@ class Report extends Model
 
         static::creating(function ($report) {
             if (empty($report->slug)) {
-                $report->slug = Str::slug($report->name) . '-' . Str::random(6);
+                $report->slug = Str::slug($report->name).'-'.Str::random(6);
             }
         });
     }
@@ -106,19 +106,19 @@ class Report extends Model
     {
         return $query->where(function ($q) use ($userId) {
             $q->where('user_id', $userId)
-              ->orWhere('is_public', true);
+                ->orWhere('is_public', true);
         });
     }
 
     public function scopeSearch($query, ?string $search)
     {
-        if (!$search) {
+        if (! $search) {
             return $query;
         }
 
         return $query->where(function ($q) use ($search) {
             $q->where('name', 'like', "%{$search}%")
-              ->orWhere('description', 'like', "%{$search}%");
+                ->orWhere('description', 'like', "%{$search}%");
         });
     }
 
@@ -133,17 +133,17 @@ class Report extends Model
 
     public function toggleFavorite(): bool
     {
-        $this->is_favorite = !$this->is_favorite;
+        $this->is_favorite = ! $this->is_favorite;
         $this->save();
 
         return $this->is_favorite;
     }
 
-    public function duplicate(string $name = null): self
+    public function duplicate(?string $name = null): self
     {
         $newReport = $this->replicate(['slug']);
-        $newReport->name = $name ?? $this->name . ' (Copy)';
-        $newReport->slug = Str::slug($newReport->name) . '-' . Str::random(6);
+        $newReport->name = $name ?? $this->name.' (Copy)';
+        $newReport->slug = Str::slug($newReport->name).'-'.Str::random(6);
         $newReport->is_favorite = false;
         $newReport->execution_count = 0;
         $newReport->last_executed_at = null;
@@ -154,12 +154,12 @@ class Report extends Model
 
     public function hasFilters(): bool
     {
-        return !empty($this->filters);
+        return ! empty($this->filters);
     }
 
     public function hasChartConfig(): bool
     {
-        return !empty($this->chart_config);
+        return ! empty($this->chart_config);
     }
 
     public function getChartType(): ?string

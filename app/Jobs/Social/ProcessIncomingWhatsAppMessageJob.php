@@ -14,7 +14,10 @@ use Illuminate\Support\Facades\Log;
 
 class ProcessIncomingWhatsAppMessageJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     /**
      * The number of seconds the job can run before timing out.
@@ -53,6 +56,7 @@ class ProcessIncomingWhatsAppMessageJob implements ShouldQueue
                 Log::warning('WhatsApp account not found or inactive', [
                     'account_id' => $this->accountId,
                 ]);
+
                 return;
             }
 
@@ -109,7 +113,6 @@ class ProcessIncomingWhatsAppMessageJob implements ShouldQueue
             if ($mediaId) {
                 $this->downloadMedia($account, $message, $mediaId);
             }
-
         } catch (\Exception $e) {
             Log::error('Failed to process incoming WhatsApp message', [
                 'account_id' => $this->accountId,
@@ -141,7 +144,7 @@ class ProcessIncomingWhatsAppMessageJob implements ShouldQueue
 
             // Try to link to existing lead
             $lead = \App\Models\CRM\Lead::where('phone', 'like', "%{$fromPhone}%")
-                ->orWhere('phone', 'like', "%".substr($fromPhone, -10)."%")
+                ->orWhere('phone', 'like', '%'.substr($fromPhone, -10).'%')
                 ->first();
 
             if ($lead) {
@@ -237,7 +240,7 @@ class ProcessIncomingWhatsAppMessageJob implements ShouldQueue
             \App\Models\CRM\Activity::create([
                 'lead_id' => $conversation->lead_id,
                 'type' => 'whatsapp_message',
-                'description' => "WhatsApp message received: " . ($message->content ?? $message->type),
+                'description' => 'WhatsApp message received: '.($message->content ?? $message->type),
                 'metadata' => [
                     'message_id' => $message->message_id,
                     'message_type' => $message->type,

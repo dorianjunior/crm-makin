@@ -14,7 +14,10 @@ use Illuminate\Support\Facades\Log;
 
 class ProcessIncomingInstagramMessageJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     /**
      * The number of seconds the job can run before timing out.
@@ -56,6 +59,7 @@ class ProcessIncomingInstagramMessageJob implements ShouldQueue
                 Log::warning('Invalid message data received', [
                     'data' => $this->messageData,
                 ]);
+
                 return;
             }
 
@@ -68,6 +72,7 @@ class ProcessIncomingInstagramMessageJob implements ShouldQueue
                 Log::warning('Instagram account not found for recipient', [
                     'recipient_id' => $recipientId,
                 ]);
+
                 return;
             }
 
@@ -108,7 +113,6 @@ class ProcessIncomingInstagramMessageJob implements ShouldQueue
 
             // TODO: Trigger notification to user about new message
             // TODO: Create activity log in CRM
-
         } catch (\Exception $e) {
             Log::error('Failed to process incoming Instagram message', [
                 'data' => $this->messageData,
@@ -127,6 +131,7 @@ class ProcessIncomingInstagramMessageJob implements ShouldQueue
     {
         if (isset($data['message']['attachments'])) {
             $attachmentType = $data['message']['attachments'][0]['type'] ?? 'text';
+
             return match ($attachmentType) {
                 'image' => 'image',
                 'video' => 'video',

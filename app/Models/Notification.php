@@ -10,7 +10,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Notification extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
+    use SoftDeletes;
 
     protected $fillable = [
         'company_id',
@@ -179,7 +180,7 @@ class Notification extends Model
     /**
      * Mark the notification as failed.
      */
-    public function markAsFailed(string $errorMessage = null): bool
+    public function markAsFailed(?string $errorMessage = null): bool
     {
         return $this->update([
             'status' => 'failed',

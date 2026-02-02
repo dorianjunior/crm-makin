@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Log;
 class InstagramService implements MessageServiceInterface
 {
     protected string $graphApiUrl = 'https://graph.instagram.com';
+
     protected string $graphFacebookUrl = 'https://graph.facebook.com/v18.0';
 
     /**
@@ -29,6 +30,7 @@ class InstagramService implements MessageServiceInterface
 
         if ($response->failed()) {
             Log::error('Instagram OAuth failed', ['response' => $response->json()]);
+
             throw new \Exception('Failed to obtain Instagram access token');
         }
 
@@ -110,6 +112,7 @@ class InstagramService implements MessageServiceInterface
                 'account_id' => $account->id,
                 'response' => $response->json(),
             ]);
+
             throw new \Exception('Failed to refresh access token');
         }
 
@@ -143,6 +146,7 @@ class InstagramService implements MessageServiceInterface
                 'account_id' => $account->id,
                 'response' => $response->json(),
             ]);
+
             return [];
         }
 
@@ -175,6 +179,7 @@ class InstagramService implements MessageServiceInterface
                 'account_id' => $account->id,
                 'response' => $response->json(),
             ]);
+
             return [];
         }
 
@@ -276,6 +281,7 @@ class InstagramService implements MessageServiceInterface
                 'account_id' => $account->id,
                 'response' => $response->json(),
             ]);
+
             throw new \Exception('Failed to send message');
         }
 
@@ -324,6 +330,7 @@ class InstagramService implements MessageServiceInterface
 
         if ($lead) {
             $message->update(['lead_id' => $lead->id]);
+
             return $lead->id;
         }
 

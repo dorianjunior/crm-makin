@@ -22,6 +22,8 @@ class PostController extends Controller
 
     public function index(Request $request): AnonymousResourceCollection
     {
+        $this->authorize('viewAny', Post::class);
+
         $query = Post::with(['creator', 'category']);
 
         if ($request->has('site_id')) {
@@ -47,6 +49,8 @@ class PostController extends Controller
 
     public function store(StorePostRequest $request): PostResource
     {
+        $this->authorize('create', Post::class);
+
         $data = $request->validated();
         $post = $this->contentService->createPost($data);
 
@@ -55,11 +59,15 @@ class PostController extends Controller
 
     public function show(Post $post): PostResource
     {
+        $this->authorize('view', $post);
+
         return new PostResource($post->load(['creator', 'category']));
     }
 
     public function update(UpdatePostRequest $request, Post $post): PostResource
     {
+        $this->authorize('update', $post);
+
         $data = $request->validated();
         $post = $this->contentService->updatePost($post, $data);
 
@@ -68,6 +76,8 @@ class PostController extends Controller
 
     public function destroy(Post $post): JsonResponse
     {
+        $this->authorize('delete', $post);
+
         $this->contentService->deletePost($post);
 
         return response()->json(['message' => 'Post deleted successfully']);
@@ -75,6 +85,8 @@ class PostController extends Controller
 
     public function publish(Post $post): JsonResponse
     {
+        $this->authorize('publish', $post);
+
         $this->publishingService->publish($post, auth()->id());
 
         return response()->json(['message' => 'Post published successfully']);
@@ -82,6 +94,8 @@ class PostController extends Controller
 
     public function unpublish(Post $post): JsonResponse
     {
+        $this->authorize('unpublish', $post);
+
         $this->publishingService->unpublish($post);
 
         return response()->json(['message' => 'Post unpublished successfully']);

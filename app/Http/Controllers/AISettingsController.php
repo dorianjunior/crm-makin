@@ -146,7 +146,7 @@ class AISettingsController extends Controller
                 ->where('id', '!=', $id)
                 ->exists();
 
-            if (!$otherSettings) {
+            if (! $otherSettings) {
                 return response()->json([
                     'message' => 'Cannot delete the only AI setting',
                 ], 400);

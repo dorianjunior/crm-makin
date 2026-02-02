@@ -13,7 +13,10 @@ use Illuminate\Support\Facades\Log;
 
 class ProcessAIConversationJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     /**
      * The number of times the job may be attempted.
@@ -57,7 +60,7 @@ class ProcessAIConversationJob implements ShouldQueue
                 ->orderBy('created_at', 'asc')
                 ->take(20)
                 ->get()
-                ->map(fn($msg) => $msg->toContextArray())
+                ->map(fn ($msg) => $msg->toContextArray())
                 ->toArray();
 
             // Generate AI response
@@ -80,7 +83,6 @@ class ProcessAIConversationJob implements ShouldQueue
                 'tokens' => $response['tokens'],
                 'cost' => $response['cost'],
             ]);
-
         } catch (\Exception $e) {
             Log::error('Failed to process AI conversation', [
                 'conversation_id' => $this->conversationId,

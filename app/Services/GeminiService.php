@@ -11,7 +11,9 @@ use Illuminate\Support\Facades\Log;
 class GeminiService
 {
     protected ?GeminiClient $client = null;
+
     protected ?AISetting $setting = null;
+
     protected array $conversationHistory = [];
 
     /**
@@ -31,14 +33,15 @@ class GeminiService
     {
         $this->setting = $setting;
         $this->client = new GeminiClient($setting->api_key);
+
         return $this;
     }
 
     /**
      * Generate a single response from a prompt.
      *
-     * @param string $prompt The user prompt
-     * @param string|null $systemPrompt Optional system prompt
+     * @param  string  $prompt  The user prompt
+     * @param  string|null  $systemPrompt  Optional system prompt
      * @return array ['content' => string, 'tokens' => array, 'cost' => float, 'processing_time_ms' => int]
      */
     public function generateResponse(string $prompt, ?string $systemPrompt = null): array
@@ -92,22 +95,21 @@ class GeminiService
                 'processing_time_ms' => $processingTime,
                 'model_version' => $this->setting->model,
             ];
-
         } catch (\Exception $e) {
             Log::error('Gemini API error', [
                 'message' => $e->getMessage(),
                 'setting_id' => $this->setting->id,
             ]);
 
-            throw new \RuntimeException('Failed to generate AI response: ' . $e->getMessage());
+            throw new \RuntimeException('Failed to generate AI response: '.$e->getMessage());
         }
     }
 
     /**
      * Chat with context from conversation history.
      *
-     * @param string $userMessage The user message
-     * @param array $history Optional conversation history [['role' => 'user|model', 'parts' => [['text' => '...']]]]
+     * @param  string  $userMessage  The user message
+     * @param  array  $history  Optional conversation history [['role' => 'user|model', 'parts' => [['text' => '...']]]]
      * @return array ['content' => string, 'tokens' => array, 'cost' => float, 'processing_time_ms' => int]
      */
     public function chat(string $userMessage, array $history = []): array
@@ -155,22 +157,21 @@ class GeminiService
                 'processing_time_ms' => $processingTime,
                 'model_version' => $this->setting->model,
             ];
-
         } catch (\Exception $e) {
             Log::error('Gemini chat error', [
                 'message' => $e->getMessage(),
                 'setting_id' => $this->setting->id,
             ]);
 
-            throw new \RuntimeException('Failed to generate chat response: ' . $e->getMessage());
+            throw new \RuntimeException('Failed to generate chat response: '.$e->getMessage());
         }
     }
 
     /**
      * Stream response for real-time output.
      *
-     * @param string $prompt The user prompt
-     * @param callable $callback Function to call with each chunk
+     * @param  string  $prompt  The user prompt
+     * @param  callable  $callback  Function to call with each chunk
      * @return array ['content' => string, 'tokens' => array, 'cost' => float, 'processing_time_ms' => int]
      */
     public function streamResponse(string $prompt, callable $callback): array
@@ -224,21 +225,20 @@ class GeminiService
                 'processing_time_ms' => $processingTime,
                 'model_version' => $this->setting->model,
             ];
-
         } catch (\Exception $e) {
             Log::error('Gemini stream error', [
                 'message' => $e->getMessage(),
                 'setting_id' => $this->setting->id,
             ]);
 
-            throw new \RuntimeException('Failed to stream AI response: ' . $e->getMessage());
+            throw new \RuntimeException('Failed to stream AI response: '.$e->getMessage());
         }
     }
 
     /**
      * Count tokens in a text.
      *
-     * @param string $text The text to count tokens
+     * @param  string  $text  The text to count tokens
      * @return int Token count
      */
     public function countTokens(string $text): int
@@ -248,6 +248,7 @@ class GeminiService
         try {
             $model = $this->client->generativeModel($this->setting->model);
             $result = $model->countTokens($text);
+
             return $result->totalTokens ?? 0;
         } catch (\Exception $e) {
             Log::error('Token counting error', [
@@ -295,7 +296,7 @@ class GeminiService
      */
     protected function buildSafetySettings(): array
     {
-        if (!$this->setting->safety_settings) {
+        if (! $this->setting->safety_settings) {
             return [];
         }
 
@@ -315,8 +316,8 @@ class GeminiService
      * Calculate cost based on token usage.
      * Gemini pricing (as of 2024): Free tier, then varies by model.
      *
-     * @param int $inputTokens Input token count
-     * @param int $outputTokens Output token count
+     * @param  int  $inputTokens  Input token count
+     * @param  int  $outputTokens  Output token count
      * @return float Cost in USD
      */
     protected function calculateCost(int $inputTokens, int $outputTokens): float
@@ -337,11 +338,11 @@ class GeminiService
      */
     protected function validateSetting(): void
     {
-        if (!$this->setting) {
+        if (! $this->setting) {
             throw new \RuntimeException('AI setting not configured. Call setSetting() first.');
         }
 
-        if (!$this->setting->is_active) {
+        if (! $this->setting->is_active) {
             throw new \RuntimeException('AI setting is not active.');
         }
 
@@ -357,7 +358,7 @@ class GeminiService
     {
         $setting = AISetting::getDefaultForCompany($companyId);
 
-        if (!$setting) {
+        if (! $setting) {
             throw new \RuntimeException("No active AI setting found for company {$companyId}");
         }
 

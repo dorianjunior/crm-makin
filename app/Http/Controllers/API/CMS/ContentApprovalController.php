@@ -20,6 +20,8 @@ class ContentApprovalController extends Controller
      */
     public function index(Request $request)
     {
+        $this->authorize('viewAny', ContentApproval::class);
+
         $query = ContentApproval::with(['approvable', 'requestedBy', 'reviewedBy'])
             ->latest();
 
@@ -43,6 +45,8 @@ class ContentApprovalController extends Controller
      */
     public function show(ContentApproval $approval)
     {
+        $this->authorize('view', $approval);
+
         $approval->load(['approvable', 'requestedBy', 'reviewedBy']);
 
         return new ContentApprovalResource($approval);
@@ -53,6 +57,8 @@ class ContentApprovalController extends Controller
      */
     public function approve(Request $request, ContentApproval $approval)
     {
+        $this->authorize('approve', $approval);
+
         if ($approval->status !== 'pending') {
             return response()->json([
                 'message' => 'Esta solicitação já foi processada.',
@@ -72,6 +78,8 @@ class ContentApprovalController extends Controller
      */
     public function reject(Request $request, ContentApproval $approval)
     {
+        $this->authorize('reject', $approval);
+
         $request->validate([
             'reason' => 'required|string|max:1000',
         ]);

@@ -10,7 +10,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class AIMessage extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
+    use SoftDeletes;
 
     protected $fillable = [
         'ai_conversation_id',
@@ -113,7 +114,7 @@ class AIMessage extends Model
      */
     public function hasFunctionCall(): bool
     {
-        return !empty($this->function_call);
+        return ! empty($this->function_call);
     }
 
     /**
@@ -124,6 +125,7 @@ class AIMessage extends Model
         if ($this->total_tokens === 0) {
             return 0;
         }
+
         return round($this->cost / $this->total_tokens, 8);
     }
 
@@ -149,6 +151,7 @@ class AIMessage extends Model
     public function getAverageRating(): ?float
     {
         $avg = $this->feedback()->avg('rating');
+
         return $avg ? round($avg, 2) : null;
     }
 

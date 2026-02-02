@@ -12,7 +12,7 @@ class SmsNotificationChannel implements NotificationChannelInterface
         try {
             $user = $notification->user;
 
-            if (!$user || !$user->phone) {
+            if (! $user || ! $user->phone) {
                 throw new \Exception('User phone not found');
             }
 
@@ -26,12 +26,12 @@ class SmsNotificationChannel implements NotificationChannelInterface
             ]);
 
             return true;
-
         } catch (\Exception $e) {
             Log::error('SMS notification failed', [
                 'notification_id' => $notification->id,
                 'error' => $e->getMessage(),
             ]);
+
             return false;
         }
     }

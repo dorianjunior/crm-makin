@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\AIConversationController;
+use App\Http\Controllers\AIPromptTemplateController;
+use App\Http\Controllers\AISettingsController;
 use App\Http\Controllers\API\CMS\BannerController;
 use App\Http\Controllers\API\CMS\ContentApprovalController;
 use App\Http\Controllers\API\CMS\FaqController;
@@ -32,18 +35,15 @@ use App\Http\Controllers\API\Social\InstagramWebhookController;
 use App\Http\Controllers\API\Social\WhatsAppController;
 use App\Http\Controllers\API\Social\WhatsAppWebhookController;
 use App\Http\Controllers\Auth\AuthController;
-use App\Http\Controllers\PermissionController;
-use App\Http\Controllers\RoleController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\AISettingsController;
-use App\Http\Controllers\AIPromptTemplateController;
-use App\Http\Controllers\AIConversationController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\NotificationPreferenceController;
 use App\Http\Controllers\NotificationTemplateController;
+use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ReportController;
-use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ReportScheduleController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 // ============================================
@@ -146,95 +146,95 @@ Route::middleware(['auth:sanctum', 'active'])->group(function () {
         Route::apiResource('message-templates', MessageTemplateController::class);
 
         // Files
-    // ============================================
-    // SOCIAL MEDIA INTEGRATION ROUTES
-    // ============================================
-    Route::prefix('social')->group(function () {
-        // Instagram
-        Route::prefix('instagram')->group(function () {
-            Route::get('/auth-url', [InstagramController::class, 'getAuthUrl']);
-            Route::post('/connect', [InstagramController::class, 'connect']);
-            Route::get('/accounts', [InstagramController::class, 'index']);
-            Route::get('/accounts/{account}/messages', [InstagramController::class, 'getMessages']);
-            Route::get('/accounts/{account}/posts', [InstagramController::class, 'getPosts']);
-            Route::post('/accounts/{account}/refresh-token', [InstagramController::class, 'refreshToken']);
-            Route::delete('/accounts/{account}/disconnect', [InstagramController::class, 'disconnect']);
+        // ============================================
+        // SOCIAL MEDIA INTEGRATION ROUTES
+        // ============================================
+        Route::prefix('social')->group(function () {
+            // Instagram
+            Route::prefix('instagram')->group(function () {
+                Route::get('/auth-url', [InstagramController::class, 'getAuthUrl']);
+                Route::post('/connect', [InstagramController::class, 'connect']);
+                Route::get('/accounts', [InstagramController::class, 'index']);
+                Route::get('/accounts/{account}/messages', [InstagramController::class, 'getMessages']);
+                Route::get('/accounts/{account}/posts', [InstagramController::class, 'getPosts']);
+                Route::post('/accounts/{account}/refresh-token', [InstagramController::class, 'refreshToken']);
+                Route::delete('/accounts/{account}/disconnect', [InstagramController::class, 'disconnect']);
+            });
+
+            // WhatsApp
+            Route::prefix('whatsapp')->group(function () {
+                Route::get('/accounts', [WhatsAppController::class, 'index']);
+                Route::post('/accounts', [WhatsAppController::class, 'store']);
+                Route::get('/accounts/{account}/conversations', [WhatsAppController::class, 'conversations']);
+                Route::get('/conversations/{conversation}/messages', [WhatsAppController::class, 'messages']);
+                Route::post('/accounts/{account}/send', [WhatsAppController::class, 'sendMessage']);
+                Route::post('/accounts/{account}/send-media', [WhatsAppController::class, 'sendMedia']);
+                Route::post('/conversations/{conversation}/mark-read', [WhatsAppController::class, 'markAsRead']);
+                Route::delete('/accounts/{account}/disconnect', [WhatsAppController::class, 'disconnect']);
+            });
         });
 
-        // WhatsApp
-        Route::prefix('whatsapp')->group(function () {
-            Route::get('/accounts', [WhatsAppController::class, 'index']);
-            Route::post('/accounts', [WhatsAppController::class, 'store']);
-            Route::get('/accounts/{account}/conversations', [WhatsAppController::class, 'conversations']);
-            Route::get('/conversations/{conversation}/messages', [WhatsAppController::class, 'messages']);
-            Route::post('/accounts/{account}/send', [WhatsAppController::class, 'sendMessage']);
-            Route::post('/accounts/{account}/send-media', [WhatsAppController::class, 'sendMedia']);
-            Route::post('/conversations/{conversation}/mark-read', [WhatsAppController::class, 'markAsRead']);
-            Route::delete('/accounts/{account}/disconnect', [WhatsAppController::class, 'disconnect']);
-        });
-    });
+        // ============================================
+        // AI INTEGRATION ROUTES
+        // ============================================
+        Route::prefix('ai')->group(function () {
+            // AI Settings
+            Route::apiResource('settings', AISettingsController::class);
+            Route::post('settings/{id}/set-default', [AISettingsController::class, 'setDefault']);
+            Route::post('settings/{id}/test', [AISettingsController::class, 'test']);
 
-    // ============================================
-    // AI INTEGRATION ROUTES
-    // ============================================
-    Route::prefix('ai')->group(function () {
-        // AI Settings
-        Route::apiResource('settings', AISettingsController::class);
-        Route::post('settings/{id}/set-default', [AISettingsController::class, 'setDefault']);
-        Route::post('settings/{id}/test', [AISettingsController::class, 'test']);
+            // Prompt Templates
+            Route::apiResource('templates', AIPromptTemplateController::class);
+            Route::post('templates/{id}/preview', [AIPromptTemplateController::class, 'preview']);
+            Route::get('templates/{id}/statistics', [AIPromptTemplateController::class, 'statistics']);
 
-        // Prompt Templates
-        Route::apiResource('templates', AIPromptTemplateController::class);
-        Route::post('templates/{id}/preview', [AIPromptTemplateController::class, 'preview']);
-        Route::get('templates/{id}/statistics', [AIPromptTemplateController::class, 'statistics']);
-
-        // Conversations
-        Route::apiResource('conversations', AIConversationController::class);
-        Route::post('conversations/{id}/send-message', [AIConversationController::class, 'sendMessage']);
-        Route::post('conversations/{id}/complete', [AIConversationController::class, 'complete']);
-        Route::get('conversations/statistics', [AIConversationController::class, 'statistics']);
-    });
-
-    // ============================================
-    // NOTIFICATION ROUTES
-    // ============================================
-    Route::prefix('notifications')->group(function () {
-        // Notifications
-        Route::get('/', [NotificationController::class, 'index']);
-        Route::get('/statistics', [NotificationController::class, 'statistics']);
-        Route::get('/{id}', [NotificationController::class, 'show']);
-        Route::post('/', [NotificationController::class, 'store']);
-        Route::post('/{id}/mark-as-read', [NotificationController::class, 'markAsRead']);
-        Route::post('/mark-all-as-read', [NotificationController::class, 'markAllAsRead']);
-        Route::post('/test', [NotificationController::class, 'sendTest']);
-        Route::delete('/{id}', [NotificationController::class, 'destroy']);
-
-        // Preferences
-        Route::prefix('preferences')->group(function () {
-            Route::get('/', [NotificationPreferenceController::class, 'index']);
-            Route::get('/type/{type}', [NotificationPreferenceController::class, 'getByType']);
-            Route::get('/{id}', [NotificationPreferenceController::class, 'show']);
-            Route::post('/', [NotificationPreferenceController::class, 'store']);
-            Route::put('/{id}', [NotificationPreferenceController::class, 'update']);
-            Route::post('/{id}/enable/{channel}', [NotificationPreferenceController::class, 'enableChannel']);
-            Route::post('/{id}/disable/{channel}', [NotificationPreferenceController::class, 'disableChannel']);
-            Route::post('/reset-default', [NotificationPreferenceController::class, 'resetToDefault']);
-            Route::delete('/{id}', [NotificationPreferenceController::class, 'destroy']);
+            // Conversations
+            Route::apiResource('conversations', AIConversationController::class);
+            Route::post('conversations/{id}/send-message', [AIConversationController::class, 'sendMessage']);
+            Route::post('conversations/{id}/complete', [AIConversationController::class, 'complete']);
+            Route::get('conversations/statistics', [AIConversationController::class, 'statistics']);
         });
 
-        // Templates
-        Route::prefix('templates')->group(function () {
-            Route::get('/', [NotificationTemplateController::class, 'index']);
-            Route::get('/{id}', [NotificationTemplateController::class, 'show']);
-            Route::post('/', [NotificationTemplateController::class, 'store']);
-            Route::put('/{id}', [NotificationTemplateController::class, 'update']);
-            Route::post('/{id}/preview', [NotificationTemplateController::class, 'preview']);
-            Route::get('/{id}/variables', [NotificationTemplateController::class, 'variables']);
-            Route::delete('/{id}', [NotificationTemplateController::class, 'destroy']);
-        });
-    });
+        // ============================================
+        // NOTIFICATION ROUTES
+        // ============================================
+        Route::prefix('notifications')->group(function () {
+            // Notifications
+            Route::get('/', [NotificationController::class, 'index']);
+            Route::get('/statistics', [NotificationController::class, 'statistics']);
+            Route::get('/{id}', [NotificationController::class, 'show']);
+            Route::post('/', [NotificationController::class, 'store']);
+            Route::post('/{id}/mark-as-read', [NotificationController::class, 'markAsRead']);
+            Route::post('/mark-all-as-read', [NotificationController::class, 'markAllAsRead']);
+            Route::post('/test', [NotificationController::class, 'sendTest']);
+            Route::delete('/{id}', [NotificationController::class, 'destroy']);
 
-    // ============================================
+            // Preferences
+            Route::prefix('preferences')->group(function () {
+                Route::get('/', [NotificationPreferenceController::class, 'index']);
+                Route::get('/type/{type}', [NotificationPreferenceController::class, 'getByType']);
+                Route::get('/{id}', [NotificationPreferenceController::class, 'show']);
+                Route::post('/', [NotificationPreferenceController::class, 'store']);
+                Route::put('/{id}', [NotificationPreferenceController::class, 'update']);
+                Route::post('/{id}/enable/{channel}', [NotificationPreferenceController::class, 'enableChannel']);
+                Route::post('/{id}/disable/{channel}', [NotificationPreferenceController::class, 'disableChannel']);
+                Route::post('/reset-default', [NotificationPreferenceController::class, 'resetToDefault']);
+                Route::delete('/{id}', [NotificationPreferenceController::class, 'destroy']);
+            });
+
+            // Templates
+            Route::prefix('templates')->group(function () {
+                Route::get('/', [NotificationTemplateController::class, 'index']);
+                Route::get('/{id}', [NotificationTemplateController::class, 'show']);
+                Route::post('/', [NotificationTemplateController::class, 'store']);
+                Route::put('/{id}', [NotificationTemplateController::class, 'update']);
+                Route::post('/{id}/preview', [NotificationTemplateController::class, 'preview']);
+                Route::get('/{id}/variables', [NotificationTemplateController::class, 'variables']);
+                Route::delete('/{id}', [NotificationTemplateController::class, 'destroy']);
+            });
+        });
+
+        // ============================================
         Route::apiResource('files', FileController::class)->except(['update']);
         Route::get('files/{file}/download', [FileController::class, 'download']);
 

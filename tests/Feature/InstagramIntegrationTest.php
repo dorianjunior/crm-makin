@@ -126,7 +126,7 @@ test('cannot access other company instagram accounts', function () {
 test('webhook verification returns challenge for valid token', function () {
     config(['services.instagram.webhook_verify_token' => 'my_verify_token']);
 
-    $response = $this->getJson('/api/webhooks/instagram/verify?' . http_build_query([
+    $response = $this->getJson('/api/webhooks/instagram/verify?'.http_build_query([
         'hub.mode' => 'subscribe',
         'hub.verify_token' => 'my_verify_token',
         'hub.challenge' => 'challenge_string_12345',
@@ -138,7 +138,7 @@ test('webhook verification returns challenge for valid token', function () {
 test('webhook verification fails with invalid token', function () {
     config(['services.instagram.webhook_verify_token' => 'my_verify_token']);
 
-    $response = $this->getJson('/api/webhooks/instagram/verify?' . http_build_query([
+    $response = $this->getJson('/api/webhooks/instagram/verify?'.http_build_query([
         'hub.mode' => 'subscribe',
         'hub.verify_token' => 'wrong_token',
         'hub.challenge' => 'challenge_string_12345',

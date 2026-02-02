@@ -12,7 +12,7 @@ class PushNotificationChannel implements NotificationChannelInterface
         try {
             $user = $notification->user;
 
-            if (!$user) {
+            if (! $user) {
                 throw new \Exception('User not found');
             }
 
@@ -25,12 +25,12 @@ class PushNotificationChannel implements NotificationChannelInterface
             ]);
 
             return true;
-
         } catch (\Exception $e) {
             Log::error('Push notification failed', [
                 'notification_id' => $notification->id,
                 'error' => $e->getMessage(),
             ]);
+
             return false;
         }
     }

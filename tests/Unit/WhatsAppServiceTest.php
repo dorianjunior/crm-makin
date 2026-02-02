@@ -231,7 +231,7 @@ describe('WhatsApp Service - Media Download', function () {
         Storage::fake('public');
 
         Http::fake([
-            "graph.facebook.com/v18.0/MEDIA123" => Http::response([
+            'graph.facebook.com/v18.0/MEDIA123' => Http::response([
                 'url' => 'https://media.example.com/file.jpg',
                 'mime_type' => 'image/jpeg',
             ], 200),

@@ -23,6 +23,7 @@ class InstagramWebhookController extends Controller
 
         if ($mode === 'subscribe' && $token === $verifyToken) {
             Log::info('Instagram webhook verified successfully');
+
             return $challenge;
         }
 
@@ -46,6 +47,7 @@ class InstagramWebhookController extends Controller
         // Verify signature
         if (! $this->verifySignature($request)) {
             Log::warning('Invalid Instagram webhook signature');
+
             return response()->json(['error' => 'Invalid signature'], 403);
         }
 
@@ -70,7 +72,7 @@ class InstagramWebhookController extends Controller
             return false;
         }
 
-        $expected = 'sha256=' . hash_hmac(
+        $expected = 'sha256='.hash_hmac(
             'sha256',
             $request->getContent(),
             config('services.instagram.client_secret')

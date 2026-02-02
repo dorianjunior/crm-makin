@@ -13,14 +13,14 @@ class WhatsAppNotificationChannel implements NotificationChannelInterface
         try {
             $user = $notification->user;
 
-            if (!$user || !$user->phone) {
+            if (! $user || ! $user->phone) {
                 throw new \Exception('User phone not found');
             }
 
             // Get user's WhatsApp account (if integrated)
             $whatsappAccount = $user->company->whatsappAccounts()->first();
 
-            if (!$whatsappAccount) {
+            if (! $whatsappAccount) {
                 throw new \Exception('No WhatsApp account configured for company');
             }
 
@@ -33,12 +33,12 @@ class WhatsAppNotificationChannel implements NotificationChannelInterface
             $service->sendMessage($user->phone, $message);
 
             return true;
-
         } catch (\Exception $e) {
             Log::error('WhatsApp notification failed', [
                 'notification_id' => $notification->id,
                 'error' => $e->getMessage(),
             ]);
+
             return false;
         }
     }

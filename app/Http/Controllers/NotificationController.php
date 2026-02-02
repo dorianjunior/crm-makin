@@ -68,7 +68,7 @@ class NotificationController extends Controller
         }
 
         // Auto mark as read when viewed
-        if (!$notification->isRead()) {
+        if (! $notification->isRead()) {
             $notification->markAsRead();
         }
 

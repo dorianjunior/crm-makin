@@ -317,7 +317,7 @@ describe('WhatsApp Webhooks', function () {
     test('webhook verification responds with challenge', function () {
         config(['services.whatsapp.webhook_verify_token' => 'test_verify_token']);
 
-        $response = $this->get('/api/webhooks/whatsapp/verify?' . http_build_query([
+        $response = $this->get('/api/webhooks/whatsapp/verify?'.http_build_query([
             'hub.mode' => 'subscribe',
             'hub.verify_token' => 'test_verify_token',
             'hub.challenge' => 'challenge_12345',
@@ -330,7 +330,7 @@ describe('WhatsApp Webhooks', function () {
     test('webhook verification fails with wrong token', function () {
         config(['services.whatsapp.webhook_verify_token' => 'test_verify_token']);
 
-        $response = $this->get('/api/webhooks/whatsapp/verify?' . http_build_query([
+        $response = $this->get('/api/webhooks/whatsapp/verify?'.http_build_query([
             'hub.mode' => 'subscribe',
             'hub.verify_token' => 'wrong_token',
             'hub.challenge' => 'challenge_12345',
@@ -378,7 +378,7 @@ describe('WhatsApp Webhooks', function () {
             ],
         ];
 
-        $signature = 'sha256=' . hash_hmac(
+        $signature = 'sha256='.hash_hmac(
             'sha256',
             json_encode($payload),
             config('services.whatsapp.app_secret')
@@ -448,7 +448,7 @@ describe('WhatsApp Webhooks', function () {
             ],
         ];
 
-        $signature = 'sha256=' . hash_hmac(
+        $signature = 'sha256='.hash_hmac(
             'sha256',
             json_encode($payload),
             config('services.whatsapp.app_secret')

@@ -255,7 +255,7 @@ class WhatsAppService implements MessageServiceInterface
     protected function linkConversationToLead(WhatsAppConversation $conversation): void
     {
         $lead = \App\Models\CRM\Lead::where('phone', 'like', "%{$conversation->contact_phone}%")
-            ->orWhere('phone', 'like', "%".substr($conversation->contact_phone, -10)."%") // Last 10 digits
+            ->orWhere('phone', 'like', '%'.substr($conversation->contact_phone, -10).'%') // Last 10 digits
             ->first();
 
         if ($lead) {
@@ -278,7 +278,7 @@ class WhatsAppService implements MessageServiceInterface
 
         // Add Brazil country code if not present and has 11 digits (cellphone) or 10 (landline)
         if (strlen($phone) === 11 || strlen($phone) === 10) {
-            $phone = '55' . $phone; // Brazil country code
+            $phone = '55'.$phone; // Brazil country code
         }
 
         return $phone;

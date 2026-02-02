@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ReportSchedule;
 use App\Models\Report;
-use Illuminate\Http\Request;
+use App\Models\ReportSchedule;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class ReportScheduleController extends Controller
 {

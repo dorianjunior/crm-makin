@@ -175,7 +175,7 @@ class AIPromptTemplateController extends Controller
         $variables = $request->variables;
 
         // Check if all required variables are provided
-        if (!$template->hasAllRequiredVariables($variables)) {
+        if (! $template->hasAllRequiredVariables($variables)) {
             return response()->json([
                 'message' => 'Missing required variables',
                 'required' => $template->getRequiredVariables(),

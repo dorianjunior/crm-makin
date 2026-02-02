@@ -2,6 +2,8 @@
 
 namespace App\Services\CMS;
 
+use App\Events\CMS\ContentCreated;
+use App\Events\CMS\ContentUpdated;
 use App\Models\CMS\Page;
 use App\Models\CMS\Post;
 use Illuminate\Database\Eloquent\Model;
@@ -26,6 +28,9 @@ class ContentService
         // Create initial version
         $this->versioningService->createVersion($page, $data['created_by']);
 
+        // Dispatch event
+        event(new ContentCreated($page, $data['created_by']));
+
         return $page;
     }
 
@@ -41,6 +46,9 @@ class ContentService
         // Create new version
         if (isset($data['created_by'])) {
             $this->versioningService->createVersion($page, $data['created_by'], $data['change_summary'] ?? null);
+
+            // Dispatch event
+            event(new ContentUpdated($page, $data['created_by'], $page->getChanges()));
         }
 
         return $page->fresh();
@@ -63,6 +71,9 @@ class ContentService
         // Create initial version
         $this->versioningService->createVersion($post, $data['created_by']);
 
+        // Dispatch event
+        event(new ContentCreated($post, $data['created_by']));
+
         return $post;
     }
 
@@ -78,6 +89,9 @@ class ContentService
         // Create new version
         if (isset($data['created_by'])) {
             $this->versioningService->createVersion($post, $data['created_by'], $data['change_summary'] ?? null);
+
+            // Dispatch event
+            event(new ContentUpdated($post, $data['created_by'], $post->getChanges()));
         }
 
         return $post->fresh();

@@ -24,11 +24,11 @@ class InstagramController extends Controller
         $redirectUri = urlencode(config('services.instagram.redirect_uri'));
         $scope = 'user_profile,user_media';
 
-        $authUrl = "https://api.instagram.com/oauth/authorize"
-            . "?client_id={$clientId}"
-            . "&redirect_uri={$redirectUri}"
-            . "&scope={$scope}"
-            . "&response_type=code";
+        $authUrl = 'https://api.instagram.com/oauth/authorize'
+            ."?client_id={$clientId}"
+            ."&redirect_uri={$redirectUri}"
+            ."&scope={$scope}"
+            .'&response_type=code';
 
         return response()->json([
             'auth_url' => $authUrl,

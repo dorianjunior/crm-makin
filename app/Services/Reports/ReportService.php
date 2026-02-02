@@ -2,14 +2,13 @@
 
 namespace App\Services\Reports;
 
-use App\Models\Report;
-use App\Models\Lead;
-use App\Models\Proposal;
 use App\Models\Activity;
+use App\Models\Lead;
+use App\Models\PipelineStage;
+use App\Models\Proposal;
+use App\Models\Report;
 use App\Models\Task;
 use App\Models\User;
-use App\Models\PipelineStage;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Builder;
 
 class ReportService
@@ -91,31 +90,31 @@ class ReportService
     {
         $query = Lead::query()->with(['user', 'company', 'leadSource']);
 
-        if (!empty($filters['status'])) {
+        if (! empty($filters['status'])) {
             $query->where('status', $filters['status']);
         }
 
-        if (!empty($filters['source_id'])) {
+        if (! empty($filters['source_id'])) {
             $query->where('lead_source_id', $filters['source_id']);
         }
 
-        if (!empty($filters['assigned_to_user_id'])) {
+        if (! empty($filters['assigned_to_user_id'])) {
             $query->where('assigned_to_user_id', $filters['assigned_to_user_id']);
         }
 
-        if (!empty($filters['date_from'])) {
+        if (! empty($filters['date_from'])) {
             $query->whereDate('created_at', '>=', $filters['date_from']);
         }
 
-        if (!empty($filters['date_to'])) {
+        if (! empty($filters['date_to'])) {
             $query->whereDate('created_at', '<=', $filters['date_to']);
         }
 
-        if (!empty($filters['value_min'])) {
+        if (! empty($filters['value_min'])) {
             $query->where('value', '>=', $filters['value_min']);
         }
 
-        if (!empty($filters['value_max'])) {
+        if (! empty($filters['value_max'])) {
             $query->where('value', '<=', $filters['value_max']);
         }
 
@@ -131,23 +130,23 @@ class ReportService
             ->with(['lead', 'user', 'company'])
             ->where('status', 'accepted');
 
-        if (!empty($filters['user_id'])) {
+        if (! empty($filters['user_id'])) {
             $query->where('user_id', $filters['user_id']);
         }
 
-        if (!empty($filters['date_from'])) {
+        if (! empty($filters['date_from'])) {
             $query->whereDate('accepted_at', '>=', $filters['date_from']);
         }
 
-        if (!empty($filters['date_to'])) {
+        if (! empty($filters['date_to'])) {
             $query->whereDate('accepted_at', '<=', $filters['date_to']);
         }
 
-        if (!empty($filters['value_min'])) {
+        if (! empty($filters['value_min'])) {
             $query->where('total', '>=', $filters['value_min']);
         }
 
-        if (!empty($filters['value_max'])) {
+        if (! empty($filters['value_max'])) {
             $query->where('total', '<=', $filters['value_max']);
         }
 
@@ -161,23 +160,23 @@ class ReportService
     {
         $query = Activity::query()->with(['lead', 'user']);
 
-        if (!empty($filters['type'])) {
+        if (! empty($filters['type'])) {
             $query->where('type', $filters['type']);
         }
 
-        if (!empty($filters['user_id'])) {
+        if (! empty($filters['user_id'])) {
             $query->where('user_id', $filters['user_id']);
         }
 
-        if (!empty($filters['lead_id'])) {
+        if (! empty($filters['lead_id'])) {
             $query->where('lead_id', $filters['lead_id']);
         }
 
-        if (!empty($filters['date_from'])) {
+        if (! empty($filters['date_from'])) {
             $query->whereDate('created_at', '>=', $filters['date_from']);
         }
 
-        if (!empty($filters['date_to'])) {
+        if (! empty($filters['date_to'])) {
             $query->whereDate('created_at', '<=', $filters['date_to']);
         }
 
@@ -191,23 +190,23 @@ class ReportService
     {
         $query = Task::query()->with(['assignedTo', 'createdBy', 'lead']);
 
-        if (!empty($filters['status'])) {
+        if (! empty($filters['status'])) {
             $query->where('status', $filters['status']);
         }
 
-        if (!empty($filters['priority'])) {
+        if (! empty($filters['priority'])) {
             $query->where('priority', $filters['priority']);
         }
 
-        if (!empty($filters['assigned_to_user_id'])) {
+        if (! empty($filters['assigned_to_user_id'])) {
             $query->where('assigned_to_user_id', $filters['assigned_to_user_id']);
         }
 
-        if (!empty($filters['due_date_from'])) {
+        if (! empty($filters['due_date_from'])) {
             $query->whereDate('due_date', '>=', $filters['due_date_from']);
         }
 
-        if (!empty($filters['due_date_to'])) {
+        if (! empty($filters['due_date_to'])) {
             $query->whereDate('due_date', '<=', $filters['due_date_to']);
         }
 
@@ -221,19 +220,19 @@ class ReportService
     {
         $query = Proposal::query()->with(['lead', 'user', 'company']);
 
-        if (!empty($filters['status'])) {
+        if (! empty($filters['status'])) {
             $query->where('status', $filters['status']);
         }
 
-        if (!empty($filters['user_id'])) {
+        if (! empty($filters['user_id'])) {
             $query->where('user_id', $filters['user_id']);
         }
 
-        if (!empty($filters['date_from'])) {
+        if (! empty($filters['date_from'])) {
             $query->whereDate('created_at', '>=', $filters['date_from']);
         }
 
-        if (!empty($filters['date_to'])) {
+        if (! empty($filters['date_to'])) {
             $query->whereDate('created_at', '<=', $filters['date_to']);
         }
 
@@ -250,7 +249,7 @@ class ReportService
             ->withCount('leads')
             ->withSum('leads', 'value');
 
-        if (!empty($filters['pipeline_id'])) {
+        if (! empty($filters['pipeline_id'])) {
             $query->where('pipeline_id', $filters['pipeline_id']);
         }
 
@@ -266,11 +265,11 @@ class ReportService
             ->with(['role', 'company'])
             ->withCount(['leads', 'activities']);
 
-        if (!empty($filters['role_id'])) {
+        if (! empty($filters['role_id'])) {
             $query->where('role_id', $filters['role_id']);
         }
 
-        if (!empty($filters['is_active'])) {
+        if (! empty($filters['is_active'])) {
             $query->where('is_active', $filters['is_active']);
         }
 
@@ -284,33 +283,33 @@ class ReportService
     {
         $groupField = $grouping['field'] ?? null;
 
-        if (!$groupField) {
+        if (! $groupField) {
             return $results->toArray();
         }
 
         return $results->groupBy($groupField)->map(function ($group, $key) use ($grouping) {
             $aggregations = [];
 
-            if (!empty($grouping['aggregations'])) {
+            if (! empty($grouping['aggregations'])) {
                 foreach ($grouping['aggregations'] as $agg) {
                     $field = $agg['field'];
                     $operation = $agg['operation']; // sum, avg, count, min, max
 
                     switch ($operation) {
                         case 'sum':
-                            $aggregations[$field . '_sum'] = $group->sum($field);
+                            $aggregations[$field.'_sum'] = $group->sum($field);
                             break;
                         case 'avg':
-                            $aggregations[$field . '_avg'] = $group->avg($field);
+                            $aggregations[$field.'_avg'] = $group->avg($field);
                             break;
                         case 'count':
-                            $aggregations[$field . '_count'] = $group->count();
+                            $aggregations[$field.'_count'] = $group->count();
                             break;
                         case 'min':
-                            $aggregations[$field . '_min'] = $group->min($field);
+                            $aggregations[$field.'_min'] = $group->min($field);
                             break;
                         case 'max':
-                            $aggregations[$field . '_max'] = $group->max($field);
+                            $aggregations[$field.'_max'] = $group->max($field);
                             break;
                     }
                 }
@@ -339,6 +338,7 @@ class ReportService
                     $filtered[$column] = $item->$column ?? null;
                 }
             }
+
             return $filtered;
         });
     }

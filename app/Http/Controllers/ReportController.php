@@ -3,14 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Report;
-use App\Services\Reports\ReportService;
 use App\Services\Reports\ExportService;
-use Illuminate\Http\Request;
+use App\Services\Reports\ReportService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class ReportController extends Controller
 {
     private ReportService $reportService;
+
     private ExportService $exportService;
 
     public function __construct(ReportService $reportService, ExportService $exportService)
@@ -200,7 +201,7 @@ class ReportController extends Controller
     {
         $export = $this->exportService->getExport($exportId, auth()->id());
 
-        if (!$export || $export->report_id != $reportId) {
+        if (! $export || $export->report_id != $reportId) {
             return response()->json([
                 'message' => 'Exportação não encontrada',
             ], 404);
