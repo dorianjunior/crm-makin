@@ -31,8 +31,8 @@ class UserFactory extends Factory
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
-            'role_id' => Role::factory(),
-            'company_id' => Company::factory(),
+            'role_id' => 1, // Default to admin role
+            'company_id' => 1, // Default to test company
         ];
     }
 

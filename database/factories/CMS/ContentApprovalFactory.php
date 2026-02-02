@@ -22,8 +22,8 @@ class ContentApprovalFactory extends Factory
     {
         return [
             'approvable_type' => Page::class,
-            'approvable_id' => Page::factory(),
-            'requested_by' => User::factory(),
+            'approvable_id' => 1, // Will be overridden in tests
+            'requested_by' => 1, // Default to test user
             'approved_by' => null,
             'status' => 'pending',
             'message' => fake()->sentence(10),
