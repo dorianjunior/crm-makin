@@ -1,8 +1,6 @@
 <script setup>
 import { Head } from '@inertiajs/vue3';
 import AppLayout from '@/Layouts/AppLayout.vue';
-import Card from 'primevue/card';
-import Button from 'primevue/button';
 
 defineProps({
     stats: Object,
@@ -21,83 +19,75 @@ defineProps({
             </div>
 
             <!-- Stats Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <Card>
-                    <template #title>
-                        <div class="flex items-center justify-between">
-                            <span class="text-lg">Leads</span>
-                            <i class="pi pi-users text-blue-500 text-2xl"></i>
-                        </div>
-                    </template>
-                    <template #content>
-                        <p class="text-3xl font-bold text-gray-900">{{ stats?.leads || 0 }}</p>
-                        <p class="text-sm text-gray-500 mt-1">Total de leads</p>
-                    </template>
-                </Card>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Leads Card -->
+                <div class="bg-white rounded-lg shadow p-6 border border-gray-200">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold text-gray-700">Leads</h3>
+                        <span class="text-3xl">👥</span>
+                    </div>
+                    <p class="text-3xl font-bold text-gray-900">{{ stats?.leads || 0 }}</p>
+                    <p class="text-sm text-gray-500 mt-1">Total de leads</p>
+                </div>
 
-                <Card>
-                    <template #title>
-                        <div class="flex items-center justify-between">
-                            <span class="text-lg">Páginas</span>
-                            <i class="pi pi-file text-green-500 text-2xl"></i>
-                        </div>
-                    </template>
-                    <template #content>
-                        <p class="text-3xl font-bold text-gray-900">{{ stats?.pages || 0 }}</p>
-                        <p class="text-sm text-gray-500 mt-1">Páginas criadas</p>
-                    </template>
-                </Card>
+                <!-- Pages Card -->
+                <div class="bg-white rounded-lg shadow p-6 border border-gray-200">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold text-gray-700">Páginas</h3>
+                        <span class="text-3xl">📄</span>
+                    </div>
+                    <p class="text-3xl font-bold text-gray-900">{{ stats?.pages || 0 }}</p>
+                    <p class="text-sm text-gray-500 mt-1">Páginas criadas</p>
+                </div>
 
-                <Card>
-                    <template #title>
-                        <div class="flex items-center justify-between">
-                            <span class="text-lg">Posts</span>
-                            <i class="pi pi-book text-purple-500 text-2xl"></i>
-                        </div>
-                    </template>
-                    <template #content>
-                        <p class="text-3xl font-bold text-gray-900">{{ stats?.posts || 0 }}</p>
-                        <p class="text-sm text-gray-500 mt-1">Posts publicados</p>
-                    </template>
-                </Card>
+                <!-- Posts Card -->
+                <div class="bg-white rounded-lg shadow p-6 border border-gray-200">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold text-gray-700">Posts</h3>
+                        <span class="text-3xl">📝</span>
+                    </div>
+                    <p class="text-3xl font-bold text-gray-900">{{ stats?.posts || 0 }}</p>
+                    <p class="text-sm text-gray-500 mt-1">Posts publicados</p>
+                </div>
 
-                <Card>
-                    <template #title>
-                        <div class="flex items-center justify-between">
-                            <span class="text-lg">Mensagens</span>
-                            <i class="pi pi-comments text-orange-500 text-2xl"></i>
-                        </div>
-                    </template>
-                    <template #content>
-                        <p class="text-3xl font-bold text-gray-900">{{ stats?.messages || 0 }}</p>
-                        <p class="text-sm text-gray-500 mt-1">Não lidas</p>
-                    </template>
-                </Card>
+                <!-- Messages Card -->
+                <div class="bg-white rounded-lg shadow p-6 border border-gray-200">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold text-gray-700">Mensagens</h3>
+                        <span class="text-3xl">💬</span>
+                    </div>
+                    <p class="text-3xl font-bold text-gray-900">{{ stats?.messages || 0 }}</p>
+                    <p class="text-sm text-gray-500 mt-1">Não lidas</p>
+                </div>
             </div>
 
             <!-- Quick Actions -->
-            <Card>
-                <template #title>Ações Rápidas</template>
-                <template #content>
-                    <div class="flex flex-wrap gap-3">
-                        <Button label="Novo Lead" icon="pi pi-plus" />
-                        <Button label="Nova Página" icon="pi pi-file-plus" severity="secondary" />
-                        <Button label="Novo Post" icon="pi pi-pencil" severity="secondary" />
-                        <Button label="Ver Mensagens" icon="pi pi-envelope" severity="secondary" />
-                    </div>
-                </template>
-            </Card>
+            <div class="bg-white rounded-lg shadow p-6 border border-gray-200">
+                <h2 class="text-xl font-semibold text-gray-900 mb-4">Ações Rápidas</h2>
+                <div class="flex flex-wrap gap-3">
+                    <button class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition">
+                        + Novo Lead
+                    </button>
+                    <button class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition">
+                        + Nova Página
+                    </button>
+                    <button class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition">
+                        + Novo Post
+                    </button>
+                    <button class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition">
+                        📧 Ver Mensagens
+                    </button>
+                </div>
+            </div>
 
             <!-- Recent Activity -->
-            <Card>
-                <template #title>Atividade Recente</template>
-                <template #content>
-                    <div class="text-center py-8 text-gray-500">
-                        <i class="pi pi-inbox text-4xl mb-3"></i>
-                        <p>Nenhuma atividade recente</p>
-                    </div>
-                </template>
-            </Card>
+            <div class="bg-white rounded-lg shadow p-6 border border-gray-200">
+                <h2 class="text-xl font-semibold text-gray-900 mb-4">Atividade Recente</h2>
+                <div class="text-center py-12 text-gray-500">
+                    <div class="text-6xl mb-4">📭</div>
+                    <p class="text-lg">Nenhuma atividade recente</p>
+                </div>
+            </div>
         </div>
     </AppLayout>
 </template>

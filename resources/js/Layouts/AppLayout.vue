@@ -1,126 +1,82 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 import { Link, usePage } from '@inertiajs/vue3';
-import Menubar from 'primevue/menubar';
-import Avatar from 'primevue/avatar';
-import Menu from 'primevue/menu';
-import Toast from 'primevue/toast';
-import { useToast } from 'primevue/usetoast';
 
 const page = usePage();
-const toast = useToast();
-const userMenu = ref();
+const showUserMenu = ref(false);
 
-const user = computed(() => page.props.auth.user);
+const user = page.props.auth.user;
 
-const menuItems = ref([
-    {
-        label: 'Dashboard',
-        icon: 'pi pi-home',
-        to: '/dashboard',
-    },
-    {
-        label: 'Leads',
-        icon: 'pi pi-users',
-        to: '/leads',
-    },
-    {
-        label: 'CMS',
-        icon: 'pi pi-file-edit',
-        items: [
-            { label: 'Sites', icon: 'pi pi-globe', to: '/cms/sites' },
-            { label: 'Páginas', icon: 'pi pi-file', to: '/cms/pages' },
-            { label: 'Posts', icon: 'pi pi-book', to: '/cms/posts' },
-            { label: 'Menus', icon: 'pi pi-bars', to: '/cms/menus' },
-        ],
-    },
-    {
-        label: 'Social',
-        icon: 'pi pi-comments',
-        items: [
-            { label: 'Instagram', icon: 'pi pi-instagram', to: '/social/instagram' },
-            { label: 'WhatsApp', icon: 'pi pi-whatsapp', to: '/social/whatsapp' },
-        ],
-    },
-]);
-
-const userMenuItems = ref([
-    {
-        label: 'Perfil',
-        icon: 'pi pi-user',
-        command: () => {
-            // Navigate to profile
-        },
-    },
-    {
-        label: 'Configurações',
-        icon: 'pi pi-cog',
-        command: () => {
-            // Navigate to settings
-        },
-    },
-    {
-        separator: true,
-    },
-    {
-        label: 'Sair',
-        icon: 'pi pi-sign-out',
-        command: () => {
-            // Logout
-        },
-    },
-]);
-
-const toggleUserMenu = (event) => {
-    userMenu.value.toggle(event);
-};
+const navigation = [
+    { name: 'Dashboard', href: '/test-dashboard', icon: '🏠' },
+    { name: 'Leads', href: '/leads', icon: '👥' },
+    { name: 'CMS', href: '/cms', icon: '📝' },
+    { name: 'Social', href: '/social', icon: '💬' },
+];
 </script>
 
 <template>
     <div class="min-h-screen bg-gray-50">
-        <Toast />
-
         <!-- Navbar -->
-        <Menubar :model="menuItems" class="border-b border-gray-200">
-            <template #start>
-                <Link href="/dashboard" class="flex items-center gap-2 mr-4">
-                    <i class="pi pi-bolt text-primary text-2xl"></i>
-                    <span class="text-xl font-bold text-gray-800">CRM Makin</span>
-                </Link>
-            </template>
+        <nav class="bg-white border-b border-gray-200">
+            <div class="mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between h-16">
+                    <!-- Logo e Menu -->
+                    <div class="flex">
+                        <!-- Logo -->
+                        <Link href="/test-dashboard" class="flex items-center px-2">
+                            <span class="text-2xl font-bold text-indigo-600">CRM Makin</span>
+                        </Link>
+                        
+                        <!-- Navigation Links -->
+                        <div class="hidden sm:ml-6 sm:flex sm:space-x-4">
+                            <Link 
+                                v-for="item in navigation" 
+                                :key="item.name"
+                                :href="item.href"
+                                class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-md"
+                            >
+                                <span class="mr-2">{{ item.icon }}</span>
+                                {{ item.name }}
+                            </Link>
+                        </div>
+                    </div>
 
-            <template #item="{ item, props }">
-                <Link v-if="item.to" :href="item.to" v-bind="props.action" class="flex items-center gap-2">
-                    <i :class="item.icon"></i>
-                    <span>{{ item.label }}</span>
-                </Link>
-                <a v-else v-bind="props.action" class="flex items-center gap-2">
-                    <i :class="item.icon"></i>
-                    <span>{{ item.label }}</span>
-                </a>
-            </template>
+                    <!-- User Menu -->
+                    <div class="flex items-center">
+                        <div class="relative">
+                            <button 
+                                @click="showUserMenu = !showUserMenu"
+                                class="flex items-center space-x-3 focus:outline-none"
+                            >
+                                <span class="text-sm text-gray-700">{{ user?.name || 'Usuário' }}</span>
+                                <div class="h-8 w-8 rounded-full bg-indigo-600 flex items-center justify-center text-white font-semibold">
+                                    {{ (user?.name || 'U').charAt(0).toUpperCase() }}
+                                </div>
+                            </button>
 
-            <template #end>
-                <div class="flex items-center gap-3">
-                    <span class="text-sm text-gray-600">{{ user?.name }}</span>
-                    <Avatar
-                        :label="user?.name.charAt(0).toUpperCase()"
-                        class="cursor-pointer bg-primary text-white"
-                        shape="circle"
-                        @click="toggleUserMenu"
-                    />
-                    <Menu ref="userMenu" :model="userMenuItems" popup />
+                            <!-- Dropdown -->
+                            <div 
+                                v-show="showUserMenu"
+                                @click="showUserMenu = false"
+                                class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 ring-1 ring-black ring-opacity-5 z-10"
+                            >
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Perfil</a>
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Configurações</a>
+                                <hr class="my-1">
+                                <a href="#" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100">Sair</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </template>
-        </Menubar>
+            </div>
+        </nav>
 
         <!-- Main Content -->
-        <main class="container mx-auto p-6">
-            <slot />
+        <main class="py-6">
+            <div class="mx-auto px-4 sm:px-6 lg:px-8">
+                <slot />
+            </div>
         </main>
     </div>
 </template>
-
-<style scoped>
-/* PrimeVue custom styles if needed */
-</style>

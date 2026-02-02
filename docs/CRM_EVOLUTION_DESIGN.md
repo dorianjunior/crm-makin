@@ -2387,7 +2387,7 @@ onMounted(() => {
 - [x] **Setup Frontend** <!-- ✅ Implementado -->
   - [x] Instalar Inertia Laravel
   - [x] Instalar @inertiajs/vue3
-  - [x] Instalar PrimeVue + PrimeIcons
+  - [x] Instalar Tailwind
   - [x] Configurar Vite
   - [x] Hot reload funcionando
 
