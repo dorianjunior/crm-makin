@@ -2012,11 +2012,11 @@ onMounted(() => {
     - [x] Comparação de versões (diff)
     - [x] Interface de versionamento
 
-- [ ] **SDK JavaScript** <!-- TODO: FALTA SDK JAVASCRIPT -->
-    - [ ] Criar pacote cms-client-sdk
-    - [ ] Métodos: getPages, getPage, getPosts, etc.
-    - [ ] Autenticação via API key
-    - [ ] README com exemplos
+- [x] **SDK JavaScript** <!-- ✅ Implementado -->
+    - [x] Criar pacote cms-client-sdk
+    - [x] Métodos: getPages, getPage, getPosts, etc.
+    - [x] Autenticação via API key
+    - [x] README com exemplos
     - [ ] Testar integração com site Vue.js
 
 **Tempo estimado:** 10-15 horas
