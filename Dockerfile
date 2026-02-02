@@ -88,6 +88,7 @@ RUN apk add --no-cache \
     mysql-client \
     redis \
     supervisor \
+    $PHPIZE_DEPS \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) \
         pdo \
@@ -98,8 +99,9 @@ RUN apk add --no-cache \
         mbstring \
         bcmath \
         opcache \
-    && pecl install redis \
+    && pecl install redis-6.0.2 \
     && docker-php-ext-enable redis \
+    && apk del $PHPIZE_DEPS \
     && rm -rf /tmp/pear
 
 # Configurações PHP otimizadas
@@ -112,8 +114,10 @@ COPY docker/php/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
 FROM runtime-base AS development
 
 # Instalar Xdebug para debugging
-RUN pecl install xdebug \
-    && docker-php-ext-enable xdebug
+RUN apk add --no-cache $PHPIZE_DEPS linux-headers \
+    && pecl install xdebug-3.5.0 \
+    && docker-php-ext-enable xdebug \
+    && apk del $PHPIZE_DEPS linux-headers
 
 COPY docker/php/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 
@@ -122,6 +126,9 @@ RUN addgroup -g 1000 laravel && \
     adduser -D -u 1000 -G laravel laravel
 
 WORKDIR /var/www/html
+
+# Copiar o composer para uso no desenvolvimento
+COPY --from=composer:2.7 /usr/bin/composer /usr/bin/composer
 
 # Copiar dependências
 COPY --from=composer-deps-dev --chown=laravel:laravel /app/vendor ./vendor
@@ -160,11 +167,15 @@ COPY --from=composer-deps --chown=laravel:laravel /app/vendor ./vendor
 # Copiar assets buildados
 COPY --from=assets-build --chown=laravel:laravel /app/public ./public
 
+# Copiar o composer temporariamente
+COPY --from=composer:2.7 /usr/bin/composer /usr/bin/composer
+
 # Copiar código da aplicação
 COPY --chown=laravel:laravel . .
 
 # Gerar autoload otimizado
-RUN composer dump-autoload --optimize --classmap-authoritative
+RUN composer dump-autoload --optimize --classmap-authoritative \
+    && rm -f /usr/bin/composer
 
 # Criar diretórios necessários e configurar permissões
 RUN mkdir -p storage/framework/{sessions,views,cache} \
