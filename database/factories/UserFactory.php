@@ -33,6 +33,7 @@ class UserFactory extends Factory
             'remember_token' => Str::random(10),
             'role_id' => 1, // Default to admin role
             'company_id' => 1, // Default to test company
+            'active' => true, // Users are active by default
         ];
     }
 

@@ -23,6 +23,11 @@ class ContentService
             $data['slug'] = $this->generateUniqueSlug($data['title'], Page::class);
         }
 
+        // Ensure created_by is set
+        if (empty($data['created_by'])) {
+            $data['created_by'] = auth()->id();
+        }
+
         $page = Page::create($data);
 
         // Create initial version
@@ -64,6 +69,11 @@ class ContentService
     {
         if (empty($data['slug'])) {
             $data['slug'] = $this->generateUniqueSlug($data['title'], Post::class);
+        }
+
+        // Ensure created_by is set
+        if (empty($data['created_by'])) {
+            $data['created_by'] = auth()->id();
         }
 
         $post = Post::create($data);
