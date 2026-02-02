@@ -8,10 +8,10 @@ const showUserMenu = ref(false);
 const user = page.props.auth.user;
 
 const navigation = [
-    { name: 'Dashboard', href: '/test-dashboard', icon: '🏠' },
-    { name: 'Leads', href: '/leads', icon: '👥' },
-    { name: 'CMS', href: '/cms', icon: '📝' },
-    { name: 'Social', href: '/social', icon: '💬' },
+    { name: 'Dashboard', href: '/test-dashboard', icon: 'fas fa-home' },
+    { name: 'Leads', href: '/leads', icon: 'fas fa-users' },
+    { name: 'CMS', href: '/cms', icon: 'fas fa-file-alt' },
+    { name: 'Social', href: '/social', icon: 'fas fa-comments' },
 ];
 </script>
 
@@ -24,19 +24,20 @@ const navigation = [
                     <!-- Logo e Menu -->
                     <div class="flex">
                         <!-- Logo -->
-                        <Link href="/test-dashboard" class="flex items-center px-2">
-                            <span class="text-2xl font-bold text-indigo-600">CRM Makin</span>
+                        <Link href="/test-dashboard" class="flex items-center px-2 space-x-2">
+                            <i class="fas fa-rocket text-2xl text-[#1160b7]"></i>
+                            <span class="text-2xl font-bold text-[#002050]">CRM Makin</span>
                         </Link>
-                        
+
                         <!-- Navigation Links -->
                         <div class="hidden sm:ml-6 sm:flex sm:space-x-4">
-                            <Link 
-                                v-for="item in navigation" 
+                            <Link
+                                v-for="item in navigation"
                                 :key="item.name"
                                 :href="item.href"
-                                class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-md"
+                                class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 hover:text-[#1160b7] hover:bg-[#dfe2e8] rounded-md transition-colors"
                             >
-                                <span class="mr-2">{{ item.icon }}</span>
+                                <i :class="item.icon" class="mr-2"></i>
                                 {{ item.name }}
                             </Link>
                         </div>
@@ -45,18 +46,18 @@ const navigation = [
                     <!-- User Menu -->
                     <div class="flex items-center">
                         <div class="relative">
-                            <button 
+                            <button
                                 @click="showUserMenu = !showUserMenu"
                                 class="flex items-center space-x-3 focus:outline-none"
                             >
                                 <span class="text-sm text-gray-700">{{ user?.name || 'Usuário' }}</span>
-                                <div class="h-8 w-8 rounded-full bg-indigo-600 flex items-center justify-center text-white font-semibold">
+                                <div class="h-8 w-8 rounded-full bg-[#1160b7] flex items-center justify-center text-white font-semibold">
                                     {{ (user?.name || 'U').charAt(0).toUpperCase() }}
                                 </div>
                             </button>
 
                             <!-- Dropdown -->
-                            <div 
+                            <div
                                 v-show="showUserMenu"
                                 @click="showUserMenu = false"
                                 class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 ring-1 ring-black ring-opacity-5 z-10"

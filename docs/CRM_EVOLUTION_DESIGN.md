@@ -2390,13 +2390,14 @@ onMounted(() => {
   - [x] Instalar Tailwind
   - [x] Configurar Vite
   - [x] Hot reload funcionando
+  - [x] Adicionar FontAwesome Icons
 
 - [ ] **Layout Base**
   - [ ] AppLayout.vue (sidebar, navbar, breadcrumbs)
   - [ ] Sidebar.vue (menu navegação)
   - [ ] Navbar.vue (user dropdown)
-  - [ ] PrimeVue theme aplicado
-  - [ ] Responsivo
+  - [ ] Themes Dark e Light 
+  - [ ] Responsivo, elegante
 
 - [ ] **Páginas CRM**
   - [ ] Dashboard.vue (refatorar)
