@@ -2384,12 +2384,12 @@ onMounted(() => {
 
 #### ✅ Checklist Completo
 
-- [ ] **Setup Frontend**
-  - [ ] Instalar Inertia Laravel
-  - [ ] Instalar @inertiajs/vue3
-  - [ ] Instalar PrimeVue + PrimeIcons
-  - [ ] Configurar Vite
-  - [ ] Hot reload funcionando
+- [x] **Setup Frontend** <!-- ✅ Implementado -->
+  - [x] Instalar Inertia Laravel
+  - [x] Instalar @inertiajs/vue3
+  - [x] Instalar PrimeVue + PrimeIcons
+  - [x] Configurar Vite
+  - [x] Hot reload funcionando
 
 - [ ] **Layout Base**
   - [ ] AppLayout.vue (sidebar, navbar, breadcrumbs)
