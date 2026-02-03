@@ -175,7 +175,17 @@ php artisan migrate
 php artisan db:seed
 ```
 
-#### 9. Acesse a aplicação
+#### 9. Compile os assets do frontend
+
+```bash
+# Instalar dependências do Node.js
+npm install
+
+# Compilar os assets
+npm run build
+```
+
+#### 10. Acesse a aplicação
 
 - **API:** http://localhost:8000
 - **phpMyAdmin:** http://localhost:8080
@@ -196,6 +206,12 @@ docker exec -it crm-app php artisan migrate:fresh --seed
 
 # Acessar MySQL
 docker exec -it crm-db mysql -u crm_user -p crm_makin
+
+# Recompilar assets (executar no host)
+npm run build
+
+# Modo desenvolvimento (hot reload - executar no host)
+npm run dev
 ```
 
 ---
@@ -247,7 +263,17 @@ php artisan migrate
 php artisan db:seed
 ```
 
-#### 7. Inicie o servidor
+#### 7. Compile os assets do frontend
+
+```bash
+# Instalar dependências do Node.js (no host, fora do container)
+npm install
+
+# Compilar os assets
+npm run build
+```
+
+#### 8. Inicie o servidor
 
 ```bash
 php artisan serve
