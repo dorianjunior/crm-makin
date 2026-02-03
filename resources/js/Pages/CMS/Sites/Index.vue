@@ -1,161 +1,182 @@
 <template>
-  <MainLayout>
-    <div class="sites-index">
+  <MainLayout title="Sites CMS">
+    <template #breadcrumbs>
+      <Breadcrumbs :items="breadcrumbs" />
+    </template>
+
+    <div class="sites-page">
       <!-- Header -->
-      <div class="page-header">
-        <div>
-          <h1 class="page-title">Sites</h1>
-          <Breadcrumbs :items="breadcrumbs" />
+      <div class="sites-page__header">
+        <div class="sites-page__header-content">
+          <h1 class="sites-page__title">Sites</h1>
+          <p class="sites-page__subtitle">Gerencie seus sites e conteúdos</p>
         </div>
         <Button
-          label="Novo Site"
-          icon="fa fa-plus"
+          variant="accent"
+          icon="fa-plus"
           @click="createSite"
-          severity="success"
-        />
+        >
+          Novo Site
+        </Button>
       </div>
 
       <!-- Stats -->
-      <div class="stats-grid">
+      <div class="sites-page__stats">
         <StatCard
           title="Total de Sites"
           :value="stats.total"
-          icon="fa fa-globe"
-          color="blue"
+          icon="fa-globe"
         />
         <StatCard
           title="Sites Ativos"
           :value="stats.active"
-          icon="fa fa-check-circle"
-          color="green"
+          icon="fa-check-circle"
         />
         <StatCard
           title="Total de Páginas"
           :value="stats.total_pages"
-          icon="fa fa-file-alt"
-          color="purple"
+          icon="fa-file-alt"
         />
         <StatCard
           title="Conteúdos Publicados"
           :value="stats.published_content"
-          icon="fa fa-paper-plane"
-          color="orange"
+          icon="fa-paper-plane"
         />
       </div>
 
       <!-- Sites Grid -->
-      <div v-if="sites.length === 0" class="empty-state">
-        <i class="fa fa-globe"></i>
-        <h3>Nenhum site criado</h3>
-        <p>Crie seu primeiro site para começar a gerenciar conteúdo</p>
-        <Button
-          label="Criar Primeiro Site"
-          icon="fa fa-plus"
-          @click="createSite"
-          severity="success"
-        />
+      <div v-if="sites.length === 0" class="sites-page__empty">
+        <Card padding="lg">
+          <div class="sites-page__empty-content">
+            <i class="fas fa-globe"></i>
+            <h3>Nenhum site criado</h3>
+            <p>Crie seu primeiro site para começar a gerenciar conteúdo</p>
+            <Button
+              variant="accent"
+              icon="fa-plus"
+              @click="createSite"
+            >
+              Criar Primeiro Site
+            </Button>
+          </div>
+        </Card>
       </div>
 
-      <div v-else class="sites-grid">
-        <div v-for="site in sites" :key="site.id" class="site-card">
-          <div class="site-card-header">
-            <div class="site-info">
-              <h3 class="site-name">{{ site.name }}</h3>
-              <a :href="site.domain" target="_blank" class="site-domain">
-                <i class="fa fa-external-link-alt"></i>
-                {{ site.domain }}
-              </a>
-            </div>
-            <div class="site-status">
-              <span :class="['badge', site.is_active ? 'badge-success' : 'badge-danger']">
+      <div v-else class="sites-page__grid">
+        <Card
+          v-for="site in sites"
+          :key="site.id"
+          hoverable
+          padding="md"
+        >
+          <template #header>
+            <div class="site-card__header">
+              <div class="site-card__info">
+                <h3 class="site-card__name">{{ site.name }}</h3>
+                <a :href="site.domain" target="_blank" class="site-card__domain">
+                  <i class="fas fa-external-link-alt"></i>
+                  {{ site.domain }}
+                </a>
+              </div>
+              <Badge :variant="site.is_active ? 'success' : 'danger'">
                 {{ site.is_active ? 'Ativo' : 'Inativo' }}
-              </span>
+              </Badge>
+            </div>
+          </template>
+
+          <div class="site-card__body">
+            <p v-if="site.description" class="site-card__description">
+              {{ site.description }}
+            </p>
+
+            <div class="site-card__meta">
+              <div class="site-card__meta-item">
+                <i class="fas fa-file-alt"></i>
+                <span>{{ site.pages_count }} páginas</span>
+              </div>
+              <div class="site-card__meta-item">
+                <i class="fas fa-blog"></i>
+                <span>{{ site.posts_count }} posts</span>
+              </div>
+              <div class="site-card__meta-item">
+                <i class="fas fa-briefcase"></i>
+                <span>{{ site.portfolios_count }} portfólios</span>
+              </div>
+            </div>
+
+            <div class="site-card__settings">
+              <div class="site-card__setting">
+                <span class="site-card__setting-label">Idioma:</span>
+                <Badge variant="default" size="sm">{{ site.default_language || 'pt-BR' }}</Badge>
+              </div>
+              <div class="site-card__setting">
+                <span class="site-card__setting-label">Timezone:</span>
+                <Badge variant="default" size="sm">{{ site.timezone || 'America/Sao_Paulo' }}</Badge>
+              </div>
             </div>
           </div>
 
-          <div v-if="site.description" class="site-description">
-            {{ site.description }}
-          </div>
+          <template #footer>
+            <div class="site-card__footer">
+              <div class="site-card__footer-info">
+                <div class="site-card__footer-item">
+                  <i class="fas fa-calendar"></i>
+                  {{ formatDate(site.created_at) }}
+                </div>
+                <div class="site-card__footer-item">
+                  <i class="fas fa-clock"></i>
+                  {{ formatRelativeDate(site.updated_at) }}
+                </div>
+              </div>
 
-          <div class="site-meta">
-            <div class="meta-item">
-              <i class="fa fa-file-alt"></i>
-              <span>{{ site.pages_count }} páginas</span>
+              <div class="site-card__actions">
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  @click="manageSite(site)"
+                >
+                  Gerenciar
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  icon="fa-edit"
+                  @click="editSite(site)"
+                />
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  :icon="site.is_active ? 'fa-toggle-on' : 'fa-toggle-off'"
+                  @click="toggleActive(site)"
+                />
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  icon="fa-cog"
+                  @click="viewSettings(site)"
+                />
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  icon="fa-trash"
+                  @click="deleteSite(site)"
+                />
+              </div>
             </div>
-            <div class="meta-item">
-              <i class="fa fa-blog"></i>
-              <span>{{ site.posts_count }} posts</span>
-            </div>
-            <div class="meta-item">
-              <i class="fa fa-briefcase"></i>
-              <span>{{ site.portfolios_count }} portfólios</span>
-            </div>
-          </div>
-
-          <div class="site-settings">
-            <div class="setting-item">
-              <span class="setting-label">Idioma:</span>
-              <span class="setting-value">{{ site.default_language || 'pt-BR' }}</span>
-            </div>
-            <div class="setting-item">
-              <span class="setting-label">Timezone:</span>
-              <span class="setting-value">{{ site.timezone || 'America/Sao_Paulo' }}</span>
-            </div>
-          </div>
-
-          <div class="site-actions">
-            <Button
-              label="Gerenciar Conteúdo"
-              icon="fa fa-cog"
-              @click="manageSite(site)"
-              outlined
-              size="small"
-            />
-            <button @click="editSite(site)" class="btn-icon" title="Editar">
-              <i class="fa fa-edit"></i>
-            </button>
-            <button @click="toggleActive(site)" class="btn-icon" :title="site.is_active ? 'Desativar' : 'Ativar'">
-              <i :class="site.is_active ? 'fa fa-toggle-on' : 'fa fa-toggle-off'"></i>
-            </button>
-            <button @click="viewSettings(site)" class="btn-icon" title="Configurações">
-              <i class="fa fa-cog"></i>
-            </button>
-            <button @click="deleteSite(site)" class="btn-icon btn-danger" title="Excluir">
-              <i class="fa fa-trash"></i>
-            </button>
-          </div>
-
-          <div class="site-footer">
-            <div class="footer-item">
-              <i class="fa fa-calendar"></i>
-              Criado em {{ formatDate(site.created_at) }}
-            </div>
-            <div class="footer-item">
-              <i class="fa fa-clock"></i>
-              Atualizado {{ formatRelativeDate(site.updated_at) }}
-            </div>
-          </div>
-        </div>
+          </template>
+        </Card>
       </div>
     </div>
 
-    <!-- Modal de confirmação de exclusão -->
-    <Modal
-      v-model:visible="showDeleteModal"
-      title="Confirmar Exclusão"
-      @confirm="confirmDelete"
-    >
-      <p>Tem certeza que deseja excluir o site <strong>{{ siteToDelete?.name }}</strong>?</p>
-      <p class="text-danger">⚠️ Todo o conteúdo associado (páginas, posts, menus, etc.) será permanentemente excluído.</p>
-      <p class="text-muted">Esta ação não pode ser desfeita.</p>
-    </Modal>
-
     <!-- Modal de Form Site -->
     <Modal
-      v-model:visible="showSiteModal"
+      :show="showSiteModal"
       :title="editingSite ? 'Editar Site' : 'Novo Site'"
-      size="large"
+      size="lg"
+      show-footer
+      @close="showSiteModal = false"
       @confirm="saveSite"
+      @cancel="showSiteModal = false"
     >
       <div class="modal-form">
         <div class="form-group">
@@ -257,9 +278,13 @@ import { router } from '@inertiajs/vue3';
 import MainLayout from '@/Layouts/MainLayout.vue';
 import Button from '@/Components/Button.vue';
 import Input from '@/Components/Input.vue';
+import Badge from '@/Components/Badge.vue';
+import Card from '@/Components/Card.vue';
 import StatCard from '@/Components/StatCard.vue';
 import Breadcrumbs from '@/Components/Breadcrumbs.vue';
-import Modal from '@/Components/Modal.vue';
+import { useAlert } from '@/composables/useAlert';
+
+const alert = useAlert();
 
 const props = defineProps({
   sites: Array,
@@ -267,13 +292,11 @@ const props = defineProps({
 });
 
 const breadcrumbs = [
-  { label: 'Dashboard', to: '/dashboard' },
-  { label: 'CMS', to: '/cms' },
-  { label: 'Sites', active: true }
+  { name: 'Dashboard', href: '/dashboard' },
+  { name: 'CMS', href: '/cms' },
+  { name: 'Sites' }
 ];
 
-const showDeleteModal = ref(false);
-const siteToDelete = ref(null);
 const showSiteModal = ref(false);
 const editingSite = ref(null);
 
@@ -354,21 +377,34 @@ const viewSettings = (site) => {
 const toggleActive = (site) => {
   router.patch(`/cms/sites/${site.id}`, {
     is_active: !site.is_active
-  });
-};
-
-const deleteSite = (site) => {
-  siteToDelete.value = site;
-  showDeleteModal.value = true;
-};
-
-const confirmDelete = () => {
-  router.delete(`/cms/sites/${siteToDelete.value.id}`, {
+  }, {
     onSuccess: () => {
-      showDeleteModal.value = false;
-      siteToDelete.value = null;
+      alert.toast(site.is_active ? 'Site ativado!' : 'Site desativado!');
     },
   });
+};
+
+const deleteSite = async (site) => {
+  const confirmed = await alert.confirm(
+    `Tem certeza que deseja excluir o site <strong>${site.name}</strong>?`,
+    'warning',
+    {
+      html: '⚠️ Todo o conteúdo associado (páginas, posts, menus, etc.) será permanentemente excluído.<br><br>Esta ação não pode ser desfeita.',
+      confirmButtonText: 'Sim, excluir site',
+      cancelButtonText: 'Cancelar',
+    }
+  );
+
+  if (confirmed) {
+    router.delete(`/cms/sites/${site.id}`, {
+      onSuccess: () => {
+        alert.success('Site excluído com sucesso!');
+      },
+      onError: () => {
+        alert.error('Erro ao excluir site. Tente novamente.');
+      },
+    });
+  }
 };
 
 const formatDate = (date) => {
@@ -382,16 +418,245 @@ const formatDate = (date) => {
 const formatRelativeDate = (date) => {
   const now = new Date();
   const then = new Date(date);
-  const diffMs = now - then;
-  const diffMins = Math.floor(diffMs / 60000);
-  const diffHours = Math.floor(diffMs / 3600000);
-  const diffDays = Math.floor(diffMs / 86400000);
+  const diffInHours = Math.floor((now - then) / (1000 * 60 * 60));
 
-  if (diffMins < 1) return 'agora';
-  if (diffMins < 60) return `há ${diffMins} min`;
-  if (diffHours < 24) return `há ${diffHours}h`;
-  if (diffDays < 30) return `há ${diffDays}d`;
-  return formatDate(date);
+  if (diffInHours < 24) {
+    return 'Hoje';
+  } else if (diffInHours < 48) {
+    return 'Ontem';
+  } else if (diffInHours < 168) {
+    return `há ${Math.floor(diffInHours / 24)} dias`;
+  } else {
+    return formatDate(date);
+  }
 };
 </script>
 
+<style scoped>
+.sites-page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Header */
+.sites-page__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.sites-page__header-content {
+  flex: 1;
+}
+
+.sites-page__title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-primary);
+  margin: 0 0 8px;
+}
+
+.sites-page__subtitle {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* Stats */
+.sites-page__stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+/* Empty State */
+.sites-page__empty-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 48px 24px;
+  text-align: center;
+}
+
+.sites-page__empty-content i {
+  font-size: 64px;
+  color: var(--text-muted);
+}
+
+.sites-page__empty-content h3 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.sites-page__empty-content p {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* Grid */
+.sites-page__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 20px;
+}
+
+/* Site Card */
+.site-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.site-card__info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.site-card__name {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.site-card__domain {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--color-accent);
+  text-decoration: none;
+  transition: opacity 120ms ease;
+}
+
+.site-card__domain:hover {
+  opacity: 0.8;
+}
+
+.site-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.site-card__description {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.site-card__meta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.site-card__meta-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.site-card__meta-item i {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.site-card__settings {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.site-card__setting {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.site-card__setting-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.site-card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.site-card__footer-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.site-card__footer-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.site-card__footer-item i {
+  font-size: 10px;
+}
+
+.site-card__actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+  .sites-page__header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .sites-page__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .site-card__footer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .site-card__actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
+</style> 

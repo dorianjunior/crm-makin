@@ -1,229 +1,192 @@
 <template>
-  <MainLayout>
-    <div class="leads-index">
+  <MainLayout title="Leads">
+    <template #breadcrumbs>
+      <Breadcrumbs :items="breadcrumbs" />
+    </template>
+
+    <div class="leads-page">
       <!-- Header -->
-      <div class="page-header">
-        <div>
-          <h1 class="page-title">Leads</h1>
-          <Breadcrumbs :items="breadcrumbs" />
+      <div class="leads-page__header">
+        <div class="leads-page__header-content">
+          <h1 class="leads-page__title">Leads</h1>
+          <p class="leads-page__subtitle">Gerencie seus leads e oportunidades</p>
         </div>
         <Button
-          label="Novo Lead"
-          icon="fa fa-plus"
+          variant="accent"
+          icon="fa-plus"
           @click="createLead"
-          severity="success"
-        />
-      </div>
-
-      <!-- Filters -->
-      <div class="filters-card">
-        <div class="filters-grid">
-          <div class="filter-item">
-            <label>Buscar</label>
-            <Input
-              v-model="filters.search"
-              placeholder="Nome, email ou telefone..."
-              icon="fa fa-search"
-              @input="debouncedSearch"
-            />
-          </div>
-
-          <div class="filter-item">
-            <label>Status</label>
-            <select v-model="filters.status" @change="loadLeads" class="form-select">
-              <option value="">Todos</option>
-              <option value="new">Novo</option>
-              <option value="contacted">Contatado</option>
-              <option value="qualified">Qualificado</option>
-              <option value="negotiation">Negociação</option>
-              <option value="won">Ganho</option>
-              <option value="lost">Perdido</option>
-            </select>
-          </div>
-
-          <div class="filter-item">
-            <label>Fonte</label>
-            <select v-model="filters.source_id" @change="loadLeads" class="form-select">
-              <option value="">Todas</option>
-              <option v-for="source in sources" :key="source.id" :value="source.id">
-                {{ source.name }}
-              </option>
-            </select>
-          </div>
-
-          <div class="filter-item">
-            <label>Responsável</label>
-            <select v-model="filters.assigned_to" @change="loadLeads" class="form-select">
-              <option value="">Todos</option>
-              <option v-for="user in users" :key="user.id" :value="user.id">
-                {{ user.name }}
-              </option>
-            </select>
-          </div>
-        </div>
-
-        <div class="filters-actions">
-          <Button
-            label="Limpar Filtros"
-            @click="clearFilters"
-            severity="secondary"
-            size="small"
-            outlined
-          />
-        </div>
+        >
+          Novo Lead
+        </Button>
       </div>
 
       <!-- Stats Cards -->
-      <div class="stats-grid">
+      <div class="leads-page__stats">
         <StatCard
           title="Total de Leads"
           :value="stats.total"
-          icon="fa fa-users"
-          color="blue"
+          icon="fa-users"
         />
         <StatCard
           title="Novos (este mês)"
           :value="stats.new_this_month"
-          icon="fa fa-user-plus"
-          color="green"
+          icon="fa-user-plus"
         />
         <StatCard
           title="Qualificados"
           :value="stats.qualified"
-          icon="fa fa-star"
-          color="purple"
+          icon="fa-star"
         />
         <StatCard
           title="Taxa de Conversão"
           :value="stats.conversion_rate + '%'"
-          icon="fa fa-chart-line"
-          color="orange"
+          icon="fa-chart-line"
         />
       </div>
 
+      <!-- Filters -->
+      <Card padding="md">
+        <div class="leads-page__filters">
+          <Input
+            v-model="filters.search"
+            placeholder="Buscar por nome, email ou telefone..."
+            icon="fa-search"
+            @input="debouncedSearch"
+          />
+
+          <Select
+            v-model="filters.status"
+            label="Status"
+            :options="statusOptions"
+            placeholder="Todos os status"
+            @update:modelValue="loadLeads"
+          />
+
+          <Select
+            v-model="filters.source_id"
+            label="Fonte"
+            :options="sourceOptions"
+            placeholder="Todas as fontes"
+            @update:modelValue="loadLeads"
+          />
+
+          <Select
+            v-model="filters.assigned_to"
+            label="Responsável"
+            :options="userOptions"
+            placeholder="Todos os responsáveis"
+            @update:modelValue="loadLeads"
+          />
+
+          <Button
+            variant="ghost"
+            icon="fa-times"
+            @click="clearFilters"
+          >
+            Limpar
+          </Button>
+        </div>
+      </Card>
+
       <!-- Table -->
-      <div class="table-card">
-        <div class="table-header">
-          <h2>Lista de Leads</h2>
-          <div class="table-actions">
+      <Card padding="none">
+        <template #header>
+          <div class="leads-page__table-header">
+            <h2 class="leads-page__table-title">Lista de Leads</h2>
             <Button
-              label="Exportar"
-              icon="fa fa-download"
+              variant="ghost"
+              size="sm"
+              icon="fa-download"
               @click="exportLeads"
-              size="small"
-              outlined
-            />
-          </div>
-        </div>
-
-        <div v-if="loading" class="table-loading">
-          <i class="fa fa-spinner fa-spin"></i> Carregando...
-        </div>
-
-        <div v-else-if="leads.data.length === 0" class="table-empty">
-          <i class="fa fa-inbox"></i>
-          <p>Nenhum lead encontrado</p>
-        </div>
-
-        <table v-else class="data-table">
-          <thead>
-            <tr>
-              <th @click="sort('name')">
-                Nome
-                <i v-if="sortField === 'name'" :class="sortIcon"></i>
-              </th>
-              <th @click="sort('email')">
-                Email
-                <i v-if="sortField === 'email'" :class="sortIcon"></i>
-              </th>
-              <th>Telefone</th>
-              <th @click="sort('status')">
-                Status
-                <i v-if="sortField === 'status'" :class="sortIcon"></i>
-              </th>
-              <th>Fonte</th>
-              <th>Responsável</th>
-              <th @click="sort('created_at')">
-                Criado em
-                <i v-if="sortField === 'created_at'" :class="sortIcon"></i>
-              </th>
-              <th class="text-center">Ações</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="lead in leads.data" :key="lead.id">
-              <td>
-                <div class="lead-name">
-                  <strong>{{ lead.name }}</strong>
-                  <span v-if="lead.company" class="lead-company">{{ lead.company }}</span>
-                </div>
-              </td>
-              <td>{{ lead.email }}</td>
-              <td>{{ lead.phone || '-' }}</td>
-              <td>
-                <span :class="['badge', 'badge-' + lead.status]">
-                  {{ statusLabel(lead.status) }}
-                </span>
-              </td>
-              <td>
-                <span class="source-badge">
-                  {{ lead.source?.name || '-' }}
-                </span>
-              </td>
-              <td>
-                <div v-if="lead.assigned_user" class="user-badge">
-                  <i class="fa fa-user-circle"></i>
-                  {{ lead.assigned_user.name }}
-                </div>
-                <span v-else class="text-muted">-</span>
-              </td>
-              <td>{{ formatDate(lead.created_at) }}</td>
-              <td class="text-center">
-                <div class="action-buttons">
-                  <button @click="viewLead(lead)" class="btn-icon" title="Ver">
-                    <i class="fa fa-eye"></i>
-                  </button>
-                  <button @click="editLead(lead)" class="btn-icon" title="Editar">
-                    <i class="fa fa-edit"></i>
-                  </button>
-                  <button @click="deleteLead(lead)" class="btn-icon btn-danger" title="Excluir">
-                    <i class="fa fa-trash"></i>
-                  </button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-
-        <!-- Pagination -->
-        <div v-if="leads.data.length > 0" class="pagination">
-          <div class="pagination-info">
-            Mostrando {{ leads.from }} a {{ leads.to }} de {{ leads.total }} registros
-          </div>
-          <div class="pagination-buttons">
-            <button
-              @click="changePage(page)"
-              v-for="page in paginationPages"
-              :key="page"
-              :class="['pagination-btn', { active: page === leads.current_page }]"
-              :disabled="page === '...'"
             >
-              {{ page }}
-            </button>
+              Exportar
+            </Button>
           </div>
-        </div>
-      </div>
-    </div>
+        </template>
 
-    <!-- Modal de confirmação de exclusão -->
-    <Modal
-      v-model:visible="showDeleteModal"
-      title="Confirmar Exclusão"
-      @confirm="confirmDelete"
-    >
-      <p>Tem certeza que deseja excluir o lead <strong>{{ leadToDelete?.name }}</strong>?</p>
-      <p class="text-muted">Esta ação não pode ser desfeita.</p>
-    </Modal>
+        <Table
+          :columns="columns"
+          :data="leads.data"
+          :loading="loading"
+          empty-text="Nenhum lead encontrado"
+          hoverable
+        >
+          <template #cell-name="{ row }">
+            <div class="leads-page__cell-name">
+              <strong>{{ row.name }}</strong>
+              <span v-if="row.company" class="leads-page__cell-company">{{ row.company }}</span>
+            </div>
+          </template>
+
+          <template #cell-status="{ row }">
+            <Badge :variant="getStatusVariant(row.status)">
+              {{ statusLabel(row.status) }}
+            </Badge>
+          </template>
+
+          <template #cell-source="{ row }">
+            <Badge variant="default">
+              {{ row.source?.name || '-' }}
+            </Badge>
+          </template>
+
+          <template #cell-assigned="{ row }">
+            <div v-if="row.assigned_user" class="leads-page__cell-user">
+              <i class="fas fa-user-circle"></i>
+              {{ row.assigned_user.name }}
+            </div>
+            <span v-else class="leads-page__cell-empty">-</span>
+          </template>
+
+          <template #cell-created="{ row }">
+            {{ formatDate(row.created_at) }}
+          </template>
+
+          <template #cell-actions="{ row }">
+            <div class="leads-page__actions">
+              <Button
+                variant="ghost"
+                size="sm"
+                icon="fa-eye"
+                @click="viewLead(row)"
+              />
+              <Button
+                variant="ghost"
+                size="sm"
+                icon="fa-edit"
+                @click="editLead(row)"
+              />
+              <Button
+                variant="ghost"
+                size="sm"
+                icon="fa-trash"
+                @click="deleteLead(row)"
+              />
+            </div>
+          </template>
+        </Table>
+
+        <template #footer>
+          <div class="leads-page__pagination">
+            <div class="leads-page__pagination-info">
+              Mostrando {{ leads.from }} a {{ leads.to }} de {{ leads.total }} registros
+            </div>
+            <div class="leads-page__pagination-buttons">
+              <Button
+                v-for="page in paginationPages"
+                :key="page"
+                :variant="page === leads.current_page ? 'accent' : 'ghost'"
+                size="sm"
+                :disabled="page === '...'"
+                @click="changePage(page)"
+              >
+                {{ page }}
+              </Button>
+            </div>
+          </div>
+        </template>
+      </Card>
+    </div>
   </MainLayout>
 </template>
 
@@ -259,12 +222,39 @@ const filters = ref({
 
 const sortField = ref('created_at');
 const sortDirection = ref('desc');
-const showDeleteModal = ref(false);
-const leadToDelete = ref(null);
 
-const sortIcon = computed(() => {
-  return sortDirection.value === 'asc' ? 'fa fa-sort-up' : 'fa fa-sort-down';
-});
+// Table columns
+const columns = [
+  { field: 'name', label: 'Nome', align: 'left' },
+  { field: 'email', label: 'Email', align: 'left' },
+  { field: 'phone', label: 'Telefone', align: 'left', field: (row) => row.phone || '-' },
+  { field: 'status', label: 'Status', align: 'center', width: '120px' },
+  { field: 'source', label: 'Fonte', align: 'center', width: '120px' },
+  { field: 'assigned', label: 'Responsável', align: 'left', width: '150px' },
+  { field: 'created', label: 'Criado em', align: 'center', width: '120px' },
+  { field: 'actions', label: 'Ações', align: 'center', width: '140px' },
+];
+
+// Select options
+const statusOptions = computed(() => [
+  { value: '', label: 'Todos os status' },
+  { value: 'new', label: 'Novo' },
+  { value: 'contacted', label: 'Contatado' },
+  { value: 'qualified', label: 'Qualificado' },
+  { value: 'negotiation', label: 'Negociação' },
+  { value: 'won', label: 'Ganho' },
+  { value: 'lost', label: 'Perdido' },
+]);
+
+const sourceOptions = computed(() => [
+  { value: '', label: 'Todas as fontes' },
+  ...props.sources.map(source => ({ value: source.id, label: source.name }))
+]);
+
+const userOptions = computed(() => [
+  { value: '', label: 'Todos os responsáveis' },
+  ...props.users.map(user => ({ value: user.id, label: user.name }))
+]);
 
 const paginationPages = computed(() => {
   const pages = [];
@@ -284,21 +274,35 @@ const paginationPages = computed(() => {
       pages.push(1, '...', current - 1, current, current + 1, '...', last);
     }
   }
+};
+</script>
 
-  return pages;
+<script setup>
+import { ref, computed, onMounted } from 'vue';
+import { router } from '@inertiajs/vue3';
+import MainLayout from '@/Layouts/MainLayout.vue';
+import Button from '@/Components/Button.vue';
+import Input from '@/Components/Input.vue';
+import Select from '@/Components/Select.vue';
+import Badge from '@/Components/Badge.vue';
+import Card from '@/Components/Card.vue';
+import Table from '@/Components/Table.vue';
+import StatCard from '@/Components/StatCard.vue';
+import Breadcrumbs from '@/Components/Breadcrumbs.vue';
+import { useAlert } from '@/composables/useAlert';
+
+const alert = useAlert();
+
+const props = defineProps({
+  leads: Object,
+  sources: Array,
+  users: Array,
+  stats: Object,
 });
 
-let searchTimeout = null;
-const debouncedSearch = () => {
-  clearTimeout(searchTimeout);
-  searchTimeout = setTimeout(() => {
-    loadLeads();
-  }, 500);
-};
-
-const loadLeads = () => {
-  loading.value = true;
-  router.get('/leads', {
+const breadcrumbs = [
+  { name: 'Dashboard', href: '/dashboard' },
+  { name: 'Leads'
     ...filters.value,
     sort: sortField.value,
     direction: sortDirection.value,
@@ -315,18 +319,31 @@ const sort = (field) => {
   } else {
     sortField.value = field;
     sortDirection.value = 'asc';
+  }async (lead) => {
+  const confirmed = await alert.confirmDelete('lead', lead.name);
+
+  if (confirmed) {
+    router.delete(`/leads/${lead.id}`, {
+      onSuccess: () => {
+        alert.success('Lead deletado com sucesso!');
+      },
+      onError: () => {
+        alert.error('Erro ao deletar lead. Tente novamente.');
+      },
+    });
   }
-  loadLeads();
 };
 
-const clearFilters = () => {
-  filters.value = {
-    search: '',
-    status: '',
-    source_id: '',
-    assigned_to: '',
+const getStatusVariant = (status) => {
+  const variants = {
+    new: 'info',
+    contacted: 'primary',
+    qualified: 'success',
+    negotiation: 'warning',
+    won: 'success',
+    lost: 'danger',
   };
-  loadLeads();
+  return variants[status] || 'default'adLeads();
 };
 
 const changePage = (page) => {
@@ -391,3 +408,162 @@ onMounted(() => {
 });
 </script>
 
+<style scoped>
+.leads-page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Header */
+.leads-page__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.leads-page__header-content {
+  flex: 1;
+}
+
+.leads-page__title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-primary);
+  margin: 0 0 8px;
+}
+
+.leads-page__subtitle {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* Stats */
+.leads-page__stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+/* Filters */
+.leads-page__filters {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr auto;
+  gap: 16px;
+  align-items: end;
+}
+
+@media (max-width: 1200px) {
+  .leads-page__filters {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .leads-page__filters {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Table Header */
+.leads-page__table-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.leads-page__table-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+/* Table Cells */
+.leads-page__cell-name {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.leads-page__cell-company {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.leads-page__cell-user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-primary);
+}
+
+.leads-page__cell-user i {
+  color: var(--text-secondary);
+}
+
+.leads-page__cell-empty {
+  color: var(--text-muted);
+}
+
+/* Actions */
+.leads-page__actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+/* Pagination */
+.leads-page__pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px 24px;
+}
+
+.leads-page__pagination-info {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.leads-page__pagination-buttons {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+@media (max-width: 768px) {
+  .leads-page__header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .leads-page__stats {
+    grid-template-columns: 1fr;
+  }
+
+  .leads-page__pagination {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .leads-page__pagination-buttons {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+}
+</style>
