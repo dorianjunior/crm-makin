@@ -235,24 +235,3 @@ function formatDate(date){
 }
 </script>
 
-<style scoped lang="scss">
-.page-header {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:1.5rem;
-
-  h1{margin:0}
-  .subtitle{color:var(--text-secondary)}
-}
-
-.stats-row{display:flex;gap:1rem;margin-bottom:1rem}
-.filters-card{margin-bottom:1rem}
-.list-card{background:var(--bg-primary);padding:1rem;border-radius:8px}
-.data-table{width:100%;border-collapse:collapse}
-.data-table th, .data-table td{padding:0.75rem;text-align:left;border-bottom:1px solid var(--border-color)}
-.chip{display:inline-block;background:var(--bg-secondary);padding:0.25rem 0.5rem;border-radius:16px;margin-right:0.25rem;font-size:0.85rem}
-.var{background:rgba(59,130,246,0.12);padding:0.15rem 0.35rem;border-radius:4px}
-.empty{text-align:center;color:var(--text-secondary);padding:2rem}
-.actions{display:flex;gap:0.5rem}
-</style>

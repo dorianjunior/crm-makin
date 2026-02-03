@@ -6,7 +6,11 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
     plugins: [
         laravel({
-            input: ['resources/scss/app.scss', 'resources/js/app.js'],
+            input: [
+                'resources/css/tailwind.css',  // Tailwind CSS v4 (pure CSS for @source directives)
+                'resources/scss/app.scss',     // Custom SCSS styles
+                'resources/js/app.js'
+            ],
             refresh: true,
         }),
         vue({
@@ -23,11 +27,7 @@ export default defineConfig({
         preprocessorOptions: {
             scss: {
                 api: 'modern-compiler',
-                additionalData: `
-                    @use "sass:math";
-                    @import "/resources/scss/_variables.scss";
-                    @import "/resources/scss/_mixins.scss";
-                `
+                additionalData: `@use "sass:math";`,
             }
         }
     },
@@ -39,7 +39,6 @@ export default defineConfig({
     resolve: {
         alias: {
             '@': '/resources/js',
-            '@scss': '/resources/scss',
         },
     },
 });

@@ -126,15 +126,3 @@ function renderCharts(){
 }
 </script>
 
-<style scoped lang="scss">
-.analytics-page{padding:1rem}
-.header-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
-.kpis{display:flex;gap:1rem;margin-bottom:1rem}
-.charts-row{display:grid;grid-template-columns:1fr 380px;gap:1rem;margin-bottom:1rem}
-.chart-card{background:var(--bg-primary);padding:1rem;border-radius:8px}
-.top-list{list-style:none;padding:0;margin:0}
-.top-list li{padding:0.5rem 0;border-bottom:1px solid var(--border-color)}
-.table-card{background:var(--bg-primary);padding:1rem;border-radius:8px}
-.data-table{width:100%;border-collapse:collapse}
-.data-table th,.data-table td{padding:0.5rem;border-bottom:1px solid var(--border-color)}
-</style>

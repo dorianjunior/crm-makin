@@ -106,14 +106,3 @@ async function save(){
 }
 </script>
 
-<style scoped lang="scss">
-.prompt-form{display:flex;flex-direction:column;gap:1rem}
-.form-row{display:grid;grid-template-columns:2fr 1fr 1fr;gap:1rem}
-.form-group{display:flex;flex-direction:column}
-.form-card{background:var(--bg-primary);padding:1rem;border-radius:8px}
-.content-card textarea{width:100%;padding:0.75rem;border:1px solid var(--border-color);border-radius:6px;background:var(--bg-secondary);color:var(--text-primary)}
-.variables-palette{margin-top:0.75rem}
-.var-btn{margin:0.25rem;padding:0.35rem 0.5rem;border-radius:4px;border:1px solid var(--border-color);background:var(--bg-primary);cursor:pointer}
-.preview-area{margin-top:1rem}
-.form-actions{display:flex;gap:0.5rem;justify-content:flex-end}
-</style>

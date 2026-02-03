@@ -9,9 +9,7 @@
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
-        <!-- Theme Script (antes do Vite) -->
         <script>
-            // Aplicar tema antes do carregamento para evitar flash
             (function() {
                 const darkMode = localStorage.getItem('darkMode') === 'true';
                 if (darkMode) {
@@ -24,7 +22,7 @@
         </script>
 
         <!-- Scripts -->
-        @vite(['resources/scss/app.scss', 'resources/js/app.js'])
+        @vite(['resources/css/tailwind.css', 'resources/scss/app.scss', 'resources/js/app.js'])
         @inertiaHead
     </head>
     <body class="font-sans antialiased">

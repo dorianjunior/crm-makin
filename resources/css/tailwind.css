@@ -1,0 +1,26 @@
+/* Tailwind CSS v4 - Entry Point */
+/* This file must be pure CSS for @source directives to work properly */
+
+/* Configure which files Tailwind should scan for class names */
+@source "../**/*.vue";
+@source "../**/*.js";
+@source "../../resources/views/**/*.blade.php";
+
+/* Custom theme configuration */
+@theme {
+  /* Brand Colors */
+  --color-primary-dark: #002050;
+  --color-primary: #1160b7;
+  --color-primary-light: #b1d6f0;
+  --color-secondary: #dfe2e8;
+  --color-accent: #d24726;
+
+  /* Semantic Colors */
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+  --color-info: #3b82f6;
+}
+
+/* Import Tailwind CSS utilities */
+@import "tailwindcss";

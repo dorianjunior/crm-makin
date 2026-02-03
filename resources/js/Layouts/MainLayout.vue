@@ -88,9 +88,30 @@ onMounted(() => {
     </div>
 </template>
 
-<style scoped lang="scss">
+<style scoped>
 /* Scrollbar customizado */
+main::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+main::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+main::-webkit-scrollbar-thumb {
+    background: #cbd5e0;
+    border-radius: 4px;
+}
+
+main::-webkit-scrollbar-thumb:hover {
+    background: #a0aec0;
+}
+
+/* Firefox */
 main {
-    @include custom-scrollbar;
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e0 transparent;
 }
 </style>
+
