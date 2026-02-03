@@ -186,6 +186,7 @@ Route::middleware(['auth:sanctum', 'active'])->group(function () {
             // Prompt Templates
             Route::apiResource('templates', AIPromptTemplateController::class);
             Route::post('templates/{id}/preview', [AIPromptTemplateController::class, 'preview']);
+            Route::post('templates/{template}/duplicate', [AIPromptTemplateController::class, 'duplicate']);
             Route::get('templates/{id}/statistics', [AIPromptTemplateController::class, 'statistics']);
 
             // Conversations

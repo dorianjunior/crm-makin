@@ -2398,49 +2398,55 @@ onMounted(() => {
   - [x] Navbar.vue (user dropdown, notificações, busca)
   - [x] Responsivo e elegante
   - [x] Componentes auxiliares (Button, Input, Modal, Alert, StatCard, Breadcrumbs)
-  - [] Themes Dark e Light funcionando (O claro não fica claro)
-  - [] Adicione SCSS ao  projeto e crie os arquivos base
+  - [x] Themes Dark e Light funcionando
+  - [x] Adicione SCSS ao  projeto e crie os arquivos base
 
 - [x] **Páginas CRM**
   - [x] Dashboard.vue (refatorado com novo layout)
-  - [ ] Leads/Index.vue (DataTable)
-  - [ ] Leads/Form.vue
-  - [ ] Pipelines/Index.vue
-  - [ ] Activities/Index.vue
-  - [ ] Tasks/Index.vue
+  - [x] Leads/Index.vue (DataTable)
+  - [x] Leads/Form.vue
+  - [x] Pipelines/Index.vue
+  - [x] Activities/Index.vue
+  - [x] Tasks/Index.vue
+  - [x] Companies/Index.vue (multi-tenancy)
+  - [x] Products/Index.vue (catálogo)
+  - [ ] Products/Form.vue
+  - [ ] Proposals/Index.vue + Form.vue
 
-- [ ] **Páginas CMS**
-  - [ ] Sites/Index.vue + Form.vue
-  - [ ] Pages/Index.vue + Form.vue + Preview.vue
-  - [ ] Posts/Index.vue + Form.vue
-  - [ ] Portfolios/Index.vue + Form.vue
-  - [ ] Menus/Index.vue + Form.vue
-  - [ ] Editor WYSIWYG (TinyMCE/Tiptap)
-  - [ ] Upload de imagens
-  - [ ] Preview iframe
+- [x] **Páginas CMS**
+  - [x] Sites/Index.vue + Form inline
+  - [x] Pages/Index.vue + Preview modal
+  - [x] Pages/Form.vue (editor completo)
+  - [x] Posts/Index.vue + Form.vue
+  - [x] Portfolios/Index.vue + Form.vue
+  - [x] Menus/Index.vue + Form.vue
+  - [x] Editor WYSIWYG (TinyMCE/Tiptap)
+  - [x] Upload de imagens
+  - [x] Preview iframe
 
-- [ ] **Páginas Social**
-  - [ ] Instagram/Index.vue (contas)
-  - [ ] Instagram/Messages.vue
-  - [ ] WhatsApp/Index.vue (conversas)
-  - [ ] WhatsApp/Chat.vue (interface chat)
-  - [ ] ChatInterface.vue (componente reutilizável)
-  - [ ] Real-time updates (polling)
+- [x] **Páginas Social**
+  - [x] Instagram/Index.vue (contas)
+  - [x] Instagram/Messages.vue
+  - [x] WhatsApp/Index.vue (conversas)
+  - [x] WhatsApp/Chat.vue (interface chat)
+  - [x] ChatInterface.vue (componente reutilizável)
+  - [x] Real-time updates (polling)
 
-- [ ] **Páginas IA**
-  - [ ] AI/Settings.vue (configurações)
-  - [ ] AI/Conversations.vue (histórico)
+- [x] **Páginas IA**
+  - [x] AI/Settings.vue (configurações)
+  - [x] AI/Conversations.vue (histórico)
   - [ ] AI/PromptTemplates/Index.vue + Form.vue
-  - [ ] AI/Analytics.vue (dashboard uso)
+ - [x] AI/PromptTemplates/Index.vue + Form.vue
+    - [x] AI/Analytics.vue (dashboard uso)
 
-- [ ] **Páginas Notificações**
-  - [ ] Notifications/Index.vue
+- [x] **Páginas Notificações**
+  - [x] Notifications/Index.vue
   - [ ] Notifications/Preferences.vue
   - [ ] Notifications/Templates.vue
 
-- [ ] **Páginas Relatórios**
+- [x] **Páginas Relatórios**
   - [ ] Reports/Index.vue
-  - [ ] Reports/Builder.vue (construtor visual)
+  - [x] Reports/Builder.vue (construtor visual)
   - [ ] Reports/View.vue (visualização)
   - [ ] Dashboards/Main.vue
 

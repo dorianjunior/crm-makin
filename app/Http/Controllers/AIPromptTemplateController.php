@@ -194,6 +194,28 @@ class AIPromptTemplateController extends Controller
     }
 
     /**
+     * Duplicate a prompt template.
+     */
+    public function duplicate(Request $request, int $id): JsonResponse
+    {
+        $template = AIPromptTemplate::findOrFail($id);
+
+        // Verify permission
+        $this->authorize('view', $template);
+
+        $copy = $template->replicate();
+        $copy->name = $template->name.' (Cópia)';
+        $copy->usage_count = 0;
+        $copy->is_active = false;
+        $copy->push();
+
+        return response()->json([
+            'message' => 'Template duplicado com sucesso',
+            'data' => $copy,
+        ], 201);
+    }
+
+    /**
      * Get template statistics.
      */
     public function statistics(int $id): JsonResponse
