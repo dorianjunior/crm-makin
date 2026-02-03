@@ -18,14 +18,14 @@ defineProps({
                     Dashboard
                 </Link>
             </li>
-            
+
             <li
                 v-for="(item, index) in items"
                 :key="index"
                 class="breadcrumbs-brutalist__item"
             >
                 <i class="fas fa-chevron-right breadcrumbs-brutalist__separator"></i>
-                
+
                 <Link
                     v-if="item.href"
                     :href="item.href"
