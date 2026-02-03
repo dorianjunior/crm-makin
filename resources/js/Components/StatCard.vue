@@ -36,8 +36,8 @@ defineProps({
 <style scoped>
 .stat {
     position: relative;
-    background: #fff;
-    border: 2px solid #e5e7eb;
+    background: var(--bg-primary);
+    border: 2px solid var(--border-color);
     padding: 32px;
     overflow: hidden;
     transition: border-color 180ms ease, transform 180ms ease;
@@ -66,9 +66,9 @@ defineProps({
     right: 24px;
     width: 48px;
     height: 48px;
-    border: 2px solid #e5e7eb;
-    background: #f9fafb;
-    color: #9ca3af;
+    border: 2px solid var(--border-color);
+    background: var(--bg-secondary);
+    color: var(--text-tertiary);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -87,7 +87,7 @@ defineProps({
     font-weight: 700;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: #6b7280;
+    color: var(--text-secondary);
     margin-bottom: 8px;
 }
 
@@ -96,7 +96,7 @@ defineProps({
     font-size: 64px;
     font-weight: 800;
     line-height: 1;
-    color: #111827;
+    color: var(--text-primary);
     transition: color 180ms ease;
 }
 
@@ -122,5 +122,5 @@ defineProps({
 .stat__trend-value.is-up { color: #16a34a; }
 .stat__trend-value.is-down { color: #dc2626; }
 
-.stat__trend-label { color: #9ca3af; font-weight: 500; }
+.stat__trend-label { color: var(--text-tertiary); font-weight: 500; }
 </style>

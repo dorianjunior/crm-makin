@@ -180,7 +180,7 @@ const recentActivities = [
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: -0.02em;
-    color: #111827;
+    color: var(--text-primary);
     line-height: 1;
 }
 
@@ -190,7 +190,7 @@ const recentActivities = [
     text-transform: uppercase;
     letter-spacing: 0.12em;
     font-family: 'JetBrains Mono', monospace;
-    color: #6b7280;
+    color: var(--text-secondary);
 }
 
 .dash__cta {
@@ -199,14 +199,14 @@ const recentActivities = [
     align-items: center;
     gap: 12px;
     padding: 14px 18px;
-    border: 2px solid #e5e7eb;
-    background: #fff;
+    border: 2px solid var(--border-color);
+    background: var(--bg-primary);
     overflow: hidden;
     text-transform: uppercase;
     font-weight: 700;
     font-size: 13px;
     letter-spacing: 0.06em;
-    color: #111827;
+    color: var(--text-primary);
     transition: transform 180ms ease, border-color 180ms ease;
 }
 
@@ -230,12 +230,12 @@ const recentActivities = [
     z-index: 1;
     width: 40px;
     height: 40px;
-    border: 2px solid #e5e7eb;
-    background: #f9fafb;
+    border: 2px solid var(--border-color);
+    background: var(--bg-secondary);
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    color: #111827;
+    color: var(--text-primary);
 }
 
 .dash__cta-text { position: relative; z-index: 1; font-family: 'Space Grotesk', sans-serif; }
@@ -247,8 +247,8 @@ const recentActivities = [
 }
 
 .dash__card {
-    background: #fff;
-    border: 2px solid #e5e7eb;
+    background: var(--bg-primary);
+    border: 2px solid var(--border-color);
     padding: 32px;
 }
 
@@ -265,8 +265,8 @@ const recentActivities = [
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background: #f3f4f6;
-    color: #111827;
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
 }
 
 .section-header__icon--accent { background: #ff6b35; color: #fff; }
@@ -277,7 +277,7 @@ const recentActivities = [
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: -0.01em;
-    color: #111827;
+    color: var(--text-primary);
 }
 
 .quick-grid {
@@ -293,8 +293,8 @@ const recentActivities = [
     align-items: flex-start;
     gap: 16px;
     padding: 24px;
-    border: 2px solid #e5e7eb;
-    background: #fff;
+    border: 2px solid var(--border-color);
+    background: var(--bg-primary);
     overflow: hidden;
     transition: transform 180ms ease, border-color 180ms ease;
 }
@@ -319,13 +319,13 @@ const recentActivities = [
     z-index: 1;
     width: 56px;
     height: 56px;
-    border: 2px solid #e5e7eb;
-    background: #f9fafb;
+    border: 2px solid var(--border-color);
+    background: var(--bg-secondary);
     display: inline-flex;
     align-items: center;
     justify-content: center;
     font-size: 22px;
-    color: #111827;
+    color: var(--text-primary);
 }
 
 .quick-card__label {
@@ -336,7 +336,7 @@ const recentActivities = [
     text-transform: uppercase;
     letter-spacing: 0.08em;
     font-size: 15px;
-    color: #111827;
+    color: var(--text-primary);
 }
 
 .dash__grid {
@@ -346,8 +346,8 @@ const recentActivities = [
 }
 
 .dash__panel {
-    background: #fff;
-    border: 2px solid #e5e7eb;
+    background: var(--bg-primary);
+    border: 2px solid var(--border-color);
     padding: 32px;
 }
 
@@ -367,7 +367,7 @@ const recentActivities = [
     top: 0;
     bottom: 0;
     width: 2px;
-    background: #e5e7eb;
+    background: var(--border-color);
 }
 
 .timeline__item {
@@ -384,9 +384,9 @@ const recentActivities = [
     width: 10px;
     height: 10px;
     background: #ff6b35;
-    border: 2px solid #fff;
+    border: 2px solid var(--bg-primary);
     border-radius: 50%;
-    box-shadow: 0 0 0 2px #e5e7eb;
+    box-shadow: 0 0 0 2px var(--border-color);
 }
 
 .timeline__icon {
@@ -395,23 +395,23 @@ const recentActivities = [
     top: 0;
     width: 44px;
     height: 44px;
-    border: 2px solid #e5e7eb;
-    background: #f9fafb;
+    border: 2px solid var(--border-color);
+    background: var(--bg-secondary);
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #6b7280;
+    color: var(--text-secondary);
     transition: all 150ms ease;
 }
 
 .timeline__content { display: flex; flex-direction: column; gap: 4px; }
-.timeline__title { font-weight: 700; color: #111827; font-size: 14px; }
-.timeline__time { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #9ca3af; }
+.timeline__title { font-weight: 700; color: var(--text-primary); font-size: 14px; }
+.timeline__time { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-tertiary); }
 
 .timeline__item:hover .timeline__icon { background: #ff6b35; color: #fff; border-color: #ff6b35; transform: translateY(-2px); }
 
 .metrics {
-    border: 2px dashed #e5e7eb;
+    border: 2px dashed var(--border-color);
     height: 320px;
     display: flex;
     flex-direction: column;
@@ -420,25 +420,25 @@ const recentActivities = [
     gap: 10px;
 }
 
-.metrics__icon { font-size: 56px; color: #d1d5db; }
+.metrics__icon { font-size: 56px; color: var(--text-tertiary); }
 .metrics__title {
     font-family: 'Space Grotesk', sans-serif;
     font-size: 18px;
     font-weight: 700;
     text-transform: uppercase;
-    color: #111827;
+    color: var(--text-primary);
 }
 
 .metrics__subtitle {
     font-family: 'JetBrains Mono', monospace;
     font-size: 13px;
     text-transform: uppercase;
-    color: #9ca3af;
+    color: var(--text-tertiary);
 }
 
 .status-bar {
-    background: #fff;
-    border: 2px solid #e5e7eb;
+    background: var(--bg-primary);
+    border: 2px solid var(--border-color);
     padding: 16px 20px;
     display: flex;
     align-items: center;
@@ -463,7 +463,7 @@ const recentActivities = [
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: #111827;
+    color: var(--text-primary);
     font-size: 14px;
 }
 
@@ -473,7 +473,7 @@ const recentActivities = [
     font-size: 12px;
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    color: #6b7280;
+    color: var(--text-secondary);
 }
 
 @media (max-width: 1100px) {

@@ -196,9 +196,15 @@ import { router } from '@inertiajs/vue3';
 import MainLayout from '@/Layouts/MainLayout.vue';
 import Button from '@/Components/Button.vue';
 import Input from '@/Components/Input.vue';
+import Select from '@/Components/Select.vue';
+import Badge from '@/Components/Badge.vue';
+import Card from '@/Components/Card.vue';
+import Table from '@/Components/Table.vue';
 import StatCard from '@/Components/StatCard.vue';
 import Breadcrumbs from '@/Components/Breadcrumbs.vue';
-import Modal from '@/Components/Modal.vue';
+import { useAlert } from '@/composables/useAlert';
+
+const alert = useAlert();
 
 const props = defineProps({
   leads: Object,
@@ -208,8 +214,8 @@ const props = defineProps({
 });
 
 const breadcrumbs = [
-  { label: 'Dashboard', to: '/dashboard' },
-  { label: 'Leads', active: true }
+  { name: 'Dashboard', href: '/dashboard' },
+  { name: 'Leads' }
 ];
 
 const loading = ref(false);
@@ -227,7 +233,7 @@ const sortDirection = ref('desc');
 const columns = [
   { field: 'name', label: 'Nome', align: 'left' },
   { field: 'email', label: 'Email', align: 'left' },
-  { field: 'phone', label: 'Telefone', align: 'left', field: (row) => row.phone || '-' },
+  { field: 'phone', label: 'Telefone', align: 'left' },
   { field: 'status', label: 'Status', align: 'center', width: '120px' },
   { field: 'source', label: 'Fonte', align: 'center', width: '120px' },
   { field: 'assigned', label: 'Responsável', align: 'left', width: '150px' },
@@ -274,35 +280,23 @@ const paginationPages = computed(() => {
       pages.push(1, '...', current - 1, current, current + 1, '...', last);
     }
   }
-};
-</script>
 
-<script setup>
-import { ref, computed, onMounted } from 'vue';
-import { router } from '@inertiajs/vue3';
-import MainLayout from '@/Layouts/MainLayout.vue';
-import Button from '@/Components/Button.vue';
-import Input from '@/Components/Input.vue';
-import Select from '@/Components/Select.vue';
-import Badge from '@/Components/Badge.vue';
-import Card from '@/Components/Card.vue';
-import Table from '@/Components/Table.vue';
-import StatCard from '@/Components/StatCard.vue';
-import Breadcrumbs from '@/Components/Breadcrumbs.vue';
-import { useAlert } from '@/composables/useAlert';
-
-const alert = useAlert();
-
-const props = defineProps({
-  leads: Object,
-  sources: Array,
-  users: Array,
-  stats: Object,
+  return pages;
 });
 
-const breadcrumbs = [
-  { name: 'Dashboard', href: '/dashboard' },
-  { name: 'Leads'
+// Debounced search
+let searchTimeout;
+const debouncedSearch = () => {
+  clearTimeout(searchTimeout);
+  searchTimeout = setTimeout(() => {
+    loadLeads();
+  }, 500);
+};
+
+// Load leads with filters
+const loadLeads = () => {
+  loading.value = true;
+  router.get('/leads', {
     ...filters.value,
     sort: sortField.value,
     direction: sortDirection.value,
@@ -313,13 +307,19 @@ const breadcrumbs = [
   });
 };
 
-const sort = (field) => {
-  if (sortField.value === field) {
-    sortDirection.value = sortDirection.value === 'asc' ? 'desc' : 'asc';
-  } else {
-    sortField.value = field;
-    sortDirection.value = 'asc';
-  }async (lead) => {
+// Clear filters
+const clearFilters = () => {
+  filters.value = {
+    search: '',
+    status: '',
+    source_id: '',
+    assigned_to: '',
+  };
+  loadLeads();
+};
+
+// Delete lead
+const deleteLead = async (lead) => {
   const confirmed = await alert.confirmDelete('lead', lead.name);
 
   if (confirmed) {
@@ -334,6 +334,7 @@ const sort = (field) => {
   }
 };
 
+// Get status variant
 const getStatusVariant = (status) => {
   const variants = {
     new: 'info',
@@ -343,7 +344,7 @@ const getStatusVariant = (status) => {
     won: 'success',
     lost: 'danger',
   };
-  return variants[status] || 'default'adLeads();
+  return variants[status] || 'default';
 };
 
 const changePage = (page) => {
@@ -363,20 +364,6 @@ const viewLead = (lead) => {
 
 const editLead = (lead) => {
   router.visit(`/leads/${lead.id}/edit`);
-};
-
-const deleteLead = (lead) => {
-  leadToDelete.value = lead;
-  showDeleteModal.value = true;
-};
-
-const confirmDelete = () => {
-  router.delete(`/leads/${leadToDelete.value.id}`, {
-    onSuccess: () => {
-      showDeleteModal.value = false;
-      leadToDelete.value = null;
-    },
-  });
 };
 
 const exportLeads = () => {

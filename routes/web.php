@@ -2,28 +2,18 @@
 
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\Auth\LoginController;
 
-// Rota temporária sem autenticação para testar
-Route::get('/test-dashboard', function () {
-    $stats = [
-        'leads' => 0,
-        'pages' => 0,
-        'posts' => 0,
-        'messages' => 0,
-    ];
+// Guest routes (unauthenticated)
+Route::middleware('guest')->group(function () {
+    Route::get('/login', [LoginController::class, 'create'])->name('login');
+    Route::post('/login', [LoginController::class, 'store']);
+});
 
-    return Inertia::render('Dashboard', ['stats' => $stats]);
-})->name('test.dashboard');
-
-// Rota de login temporária
-Route::get('/login', function () {
-    return response()->json([
-        'message' => 'Login page - TODO: implement authentication',
-        'tip' => 'Use /test-dashboard for now',
-    ]);
-})->name('login');
-
+// Authenticated routes
 Route::middleware(['auth', 'active'])->group(function () {
+    Route::post('/logout', [LoginController::class, 'destroy'])->name('logout');
+    
     Route::get('/dashboard', function () {
         $stats = [
             'leads' => 0,
@@ -36,6 +26,7 @@ Route::middleware(['auth', 'active'])->group(function () {
     })->name('dashboard');
 });
 
+// Root route
 Route::get('/', function () {
-    return redirect()->route('test.dashboard');
+    return redirect()->route('dashboard');
 });
