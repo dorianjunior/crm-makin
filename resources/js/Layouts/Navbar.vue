@@ -5,6 +5,10 @@ import { Link, router } from '@inertiajs/vue3';
 const props = defineProps({
     user: Object,
     darkMode: Boolean,
+    sidebarOpen: {
+        type: Boolean,
+        default: true,
+    },
 });
 
 const emit = defineEmits(['toggle-sidebar', 'toggle-dark-mode']);
@@ -24,198 +28,485 @@ const logout = () => {
 </script>
 
 <template>
-    <nav class="fixed top-0 right-0 left-0 lg:left-64 z-40 bg-primary border-b border-color transition-all duration-300">
-        <div class="px-4 py-3">
-            <div class="flex items-center justify-between">
-                <!-- Mobile Menu Button & Search -->
-                <div class="flex items-center space-x-4">
-                    <button
-                        @click="emit('toggle-sidebar')"
-                        class="lg:hidden p-2 text-secondary rounded-lg hover:bg-tertiary"
-                    >
-                        <i class="fas fa-bars"></i>
-                    </button>
+    <nav class="navbar" :class="sidebarOpen ? 'navbar--open' : 'navbar--closed'">
+        <!-- Fixed Brand in Sidebar Space -->
+        <div class="navbar__brand-area" :class="sidebarOpen ? 'navbar__brand-area--open' : 'navbar__brand-area--closed'">
+            <Link href="/dashboard" class="navbar__brand">
+                <span class="navbar__brand-mark">
+                    <i class="fas fa-rocket"></i>
+                </span>
+                <span v-if="sidebarOpen" class="navbar__brand-text">MAKIN</span>
+            </Link>
+        </div>
 
-                    <!-- Search Bar -->
-                    <div class="hidden md:block">
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                <i class="fas fa-search text-gray-400 text-xs"></i>
-                            </div>
-                            <input
-                                type="text"
-                                placeholder="Buscar leads, páginas, conversas..."
-                                class="w-80 pl-9 pr-4 py-2 text-sm bg-secondary border border-color rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-primary placeholder:text-gray-400"
-                            />
-                        </div>
+        <div class="navbar__inner">
+            <!-- Search Bar -->
+            <div class="navbar__left">
+                <div class="navbar__search">
+                    <div class="navbar__search-icon">
+                        <i class="fas fa-search"></i>
                     </div>
+                    <input
+                        type="text"
+                        placeholder="Buscar leads, páginas, conversas..."
+                        class="navbar__search-input"
+                    />
                 </div>
+            </div>
 
-                <!-- Right Side Actions -->
-                <div class="flex items-center space-x-3">
-                    <!-- Dark Mode Toggle -->
+            <!-- Right Side Actions -->
+            <div class="navbar__right">
+                <!-- Dark Mode Toggle -->
+                <button
+                    @click="emit('toggle-dark-mode')"
+                    class="navbar__icon-btn"
+                    :title="darkMode ? 'Modo Claro' : 'Modo Escuro'"
+                >
+                    <i :class="darkMode ? 'fas fa-sun' : 'fas fa-moon'"></i>
+                </button>
+
+                <!-- Notifications -->
+                <div class="navbar__dropdown">
                     <button
-                        @click="emit('toggle-dark-mode')"
-                        class="p-2 text-secondary rounded-lg hover:bg-tertiary transition-colors"
-                        :title="darkMode ? 'Modo Claro' : 'Modo Escuro'"
+                        @click="showNotifications = !showNotifications"
+                        class="navbar__icon-btn"
                     >
-                        <i :class="darkMode ? 'fa-sun' : 'fa-moon'" class="fas"></i>
+                        <i class="fas fa-bell"></i>
+                        <span class="navbar__badge"></span>
                     </button>
 
-                    <!-- Notifications -->
-                    <div class="relative">
-                        <button
-                            @click="showNotifications = !showNotifications"
-                            class="relative p-2 text-secondary rounded-lg hover:bg-tertiary transition-colors"
+                    <transition
+                        enter-active-class="fade-in"
+                        enter-from-class="fade-in--from"
+                        enter-to-class="fade-in--to"
+                        leave-active-class="fade-out"
+                        leave-from-class="fade-out--from"
+                        leave-to-class="fade-out--to"
+                    >
+                        <div
+                            v-show="showNotifications"
+                            @click.away="showNotifications = false"
+                            class="dropdown dropdown--right dropdown--wide"
                         >
-                            <i class="fas fa-bell"></i>
-                            <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
-                        </button>
+                            <div class="dropdown__header">
+                                <h3>Notificações</h3>
+                                <Link href="/notifications" class="dropdown__link">Ver todas</Link>
+                            </div>
 
-                        <!-- Notifications Dropdown -->
-                        <transition
-                            enter-active-class="transition ease-out duration-100"
-                            enter-from-class="transform opacity-0 scale-95"
-                            enter-to-class="transform opacity-100 scale-100"
-                            leave-active-class="transition ease-in duration-75"
-                            leave-from-class="transform opacity-100 scale-100"
-                            leave-to-class="transform opacity-0 scale-95"
-                        >
-                            <div
-                                v-show="showNotifications"
-                                @click.away="showNotifications = false"
-                                class="absolute right-0 mt-2 w-80 bg-primary rounded-lg shadow-lg border border-color overflow-hidden"
-                            >
-                                <!-- Header -->
-                                <div class="px-4 py-3 border-b border-color">
-                                    <div class="flex items-center justify-between">
-                                        <h3 class="font-semibold text-primary">Notificações</h3>
-                                        <Link
-                                            href="/notifications"
-                                            class="text-xs text-blue-600 hover:text-blue-700"
-                                        >
-                                            Ver todas
-                                        </Link>
+                            <div class="dropdown__list">
+                                <Link
+                                    v-for="notification in notifications"
+                                    :key="notification.id"
+                                    href="#"
+                                    class="dropdown__item"
+                                >
+                                    <div :class="['dropdown__icon', `dropdown__icon--${notification.color}`]">
+                                        <i :class="`fas ${notification.icon}`"></i>
                                     </div>
-                                </div>
-
-                                <!-- Notifications List -->
-                                <div class="max-h-96 overflow-y-auto">
-                                    <Link
-                                        v-for="notification in notifications"
-                                        :key="notification.id"
-                                        href="#"
-                                        class="block px-4 py-3 hover:bg-tertiary transition-colors border-b border-color last:border-0"
-                                    >
-                                        <div class="flex items-start space-x-3">
-                                            <div
-                                                :class="[
-                                                    'flex items-center justify-center w-10 h-10 rounded-full',
-                                                    {
-                                                        'bg-blue-100 text-blue-600': notification.color === 'blue',
-                                                        'bg-green-100 text-green-600': notification.color === 'green',
-                                                        'bg-purple-100 text-purple-600': notification.color === 'purple',
-                                                    }
-                                                ]"
-                                            >
-                                                <i :class="`fas ${notification.icon} text-sm`"></i>
-                                            </div>
-                                            <div class="flex-1 min-w-0">
-                                                <p class="text-sm font-medium text-primary">
-                                                    {{ notification.title }}
-                                                </p>
-                                                <p class="text-xs text-tertiary">
-                                                    {{ notification.time }}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </Link>
-                                </div>
+                                    <div class="dropdown__content">
+                                        <p class="dropdown__title">{{ notification.title }}</p>
+                                        <p class="dropdown__subtitle">{{ notification.time }}</p>
+                                    </div>
+                                </Link>
                             </div>
-                        </transition>
-                    </div>
-
-                    <!-- User Menu -->
-                    <div class="relative">
-                        <button
-                            @click="showUserMenu = !showUserMenu"
-                            class="flex items-center space-x-3 p-2 rounded-lg hover:bg-tertiary transition-colors"
-                        >
-                            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-600 to-blue-800 flex items-center justify-center text-white font-semibold">
-                                {{ user?.name?.charAt(0)?.toUpperCase() || 'U' }}
-                            </div>
-                            <div class="hidden md:block text-left">
-                                <p class="text-sm font-medium text-primary">
-                                    {{ user?.name || 'Usuário' }}
-                                </p>
-                                <p class="text-xs text-tertiary">
-                                    {{ user?.email || 'email@example.com' }}
-                                </p>
-                            </div>
-                            <i class="fas fa-chevron-down text-xs text-secondary"></i>
-                        </button>
-
-                        <!-- User Dropdown -->
-                        <transition
-                            enter-active-class="transition ease-out duration-100"
-                            enter-from-class="transform opacity-0 scale-95"
-                            enter-to-class="transform opacity-100 scale-100"
-                            leave-active-class="transition ease-in duration-75"
-                            leave-from-class="transform opacity-100 scale-100"
-                            leave-to-class="transform opacity-0 scale-95"
-                        >
-                            <div
-                                v-show="showUserMenu"
-                                @click.away="showUserMenu = false"
-                                class="absolute right-0 mt-2 w-56 bg-primary rounded-lg shadow-lg border border-color overflow-hidden"
-                            >
-                                <div class="px-4 py-3 border-b border-color">
-                                    <p class="text-sm font-medium text-primary">
-                                        {{ user?.name }}
-                                    </p>
-                                    <p class="text-xs text-tertiary truncate">
-                                        {{ user?.email }}
-                                    </p>
-                                </div>
-
-                                <div class="py-2">
-                                    <Link
-                                        href="/profile"
-                                        class="flex items-center px-4 py-2 text-sm text-secondary hover:bg-tertiary"
-                                    >
-                                        <i class="fas fa-user w-5"></i>
-                                        <span class="ml-3">Meu Perfil</span>
-                                    </Link>
-                                    <Link
-                                        href="/settings"
-                                        class="flex items-center px-4 py-2 text-sm text-secondary hover:bg-tertiary"
-                                    >
-                                        <i class="fas fa-cog w-5"></i>
-                                        <span class="ml-3">Configurações</span>
-                                    </Link>
-                                    <Link
-                                        href="/help"
-                                        class="flex items-center px-4 py-2 text-sm text-secondary hover:bg-tertiary"
-                                    >
-                                        <i class="fas fa-question-circle w-5"></i>
-                                        <span class="ml-3">Ajuda</span>
-                                    </Link>
-                                </div>
-
-                                <div class="border-t border-color">
-                                    <button
-                                        @click="logout"
-                                        class="w-full flex items-center px-4 py-2 text-sm text-red-600 hover:bg-tertiary"
-                                    >
-                                        <i class="fas fa-sign-out-alt w-5"></i>
-                                        <span class="ml-3">Sair</span>
-                                    </button>
-                                </div>
-                            </div>
-                        </transition>
-                    </div>
+                        </div>
+                    </transition>
                 </div>
+
+                <!-- User Menu -->
+                <div class="navbar__dropdown">
+                    <button
+                        @click="showUserMenu = !showUserMenu"
+                        class="navbar__user"
+                    >
+                        <div class="navbar__avatar">
+                            {{ user?.name?.charAt(0)?.toUpperCase() || 'U' }}
+                        </div>
+                        <div class="navbar__user-info">
+                            <p class="navbar__user-name">{{ user?.name || 'Usuário' }}</p>
+                            <p class="navbar__user-email">{{ user?.email || 'email@example.com' }}</p>
+                        </div>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+
+                    <transition
+                        enter-active-class="fade-in"
+                        enter-from-class="fade-in--from"
+                        enter-to-class="fade-in--to"
+                        leave-active-class="fade-out"
+                        leave-from-class="fade-out--from"
+                        leave-to-class="fade-out--to"
+                    >
+                        <div
+                            v-show="showUserMenu"
+                            @click.away="showUserMenu = false"
+                            class="dropdown dropdown--right"
+                        >
+                            <div class="dropdown__header dropdown__header--compact">
+                                <p class="dropdown__title">{{ user?.name }}</p>
+                                <p class="dropdown__subtitle dropdown__subtitle--truncate">{{ user?.email }}</p>
+                            </div>
+
+                            <div class="dropdown__list dropdown__list--flush">
+                                <Link href="/profile" class="dropdown__item dropdown__item--row">
+                                    <i class="fas fa-user"></i>
+                                    <span>Meu Perfil</span>
+                                </Link>
+                                <Link href="/settings" class="dropdown__item dropdown__item--row">
+                                    <i class="fas fa-cog"></i>
+                                    <span>Configurações</span>
+                                </Link>
+                                <Link href="/help" class="dropdown__item dropdown__item--row">
+                                    <i class="fas fa-question-circle"></i>
+                                    <span>Ajuda</span>
+                                </Link>
+                            </div>
+
+                            <div class="dropdown__footer">
+                                <button @click="logout" class="dropdown__item dropdown__item--row dropdown__item--danger">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                    <span>Sair</span>
+                                </button>
+                            </div>
+                        </div>
+                    </transition>
+                </div>
+
+                <!-- Mobile Menu Toggle -->
+                <button
+                    @click="emit('toggle-sidebar')"
+                    class="navbar__icon-btn navbar__icon-btn--mobile"
+                    aria-label="Menu"
+                >
+                    <i class="fas fa-ellipsis-v"></i>
+                </button>
             </div>
         </div>
     </nav>
 </template>
+
+<style scoped>
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--navbar-height);
+    background: var(--bg-primary);
+    border-bottom: 2px solid var(--border-color);
+    z-index: var(--z-navbar, 30);
+    transition: all 300ms ease;
+}
+
+.navbar--open {
+    padding-left: var(--sidebar-open);
+}
+
+.navbar--closed {
+    padding-left: var(--sidebar-closed);
+}
+
+.navbar__brand-area {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: var(--navbar-height);
+    background: var(--bg-primary);
+    border-right: 2px solid var(--border-color);
+    border-bottom: 2px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 16px;
+    transition: width 300ms ease;
+    z-index: 50;
+}
+
+.navbar__brand-area--open {
+    width: 256px;
+}
+
+.navbar__brand-area--closed {
+    width: 80px;
+}
+
+.navbar__brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    line-height: 1.1;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 200ms ease;
+}
+
+.navbar__brand-mark {
+    width: 36px;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #ff6b35;
+    color: var(--bg-primary);
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+.navbar__brand-text {
+    font-size: 40px;
+    font-weight: 800;
+    font-family: 'Space Grotesk', sans-serif;
+    letter-spacing: 0.12em;
+    white-space: nowrap;
+}
+
+.navbar__inner {
+    margin: 0 auto;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    gap: 16px;
+}
+
+.navbar__left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+}
+
+.navbar__right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.navbar__icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    /* border-radius: 6px; */
+    border: 2px solid var(--border-color);
+    background: var(--bg-primary);
+    color: var(--text-secondary);
+    transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease;
+}
+
+.navbar__icon-btn--ghost {
+    background: transparent;
+}
+
+.navbar__icon-btn:hover {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border-color: var(--border-bold, #262626);
+}
+
+.navbar__icon-btn--mobile {
+    display: none;
+}
+
+.navbar__search {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 360px;
+}
+
+.navbar__search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-tertiary);
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+}
+
+.navbar__search-input {
+    width: 100%;
+    height: 42px;
+    padding: 10px 14px 10px 36px;
+    /* border-radius: 6px; */
+    border: 2px solid var(--border-color);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-size: 14px;
+    line-height: 1.4;
+    transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.navbar__search-input::placeholder {
+    color: var(--text-tertiary);
+}
+
+.navbar__search-input:focus {
+    outline: none;
+    border-color: var(--color-info);
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
+}
+
+.navbar__dropdown { position: relative; }
+
+.navbar__badge {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #ef4444;
+}
+
+.dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    min-width: 220px;
+    z-index: var(--z-dropdown, 1000);
+}
+
+.dropdown--wide { width: 320px; }
+.dropdown--right { right: 0; }
+
+.dropdown__header {
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.dropdown__header h3 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.dropdown__link {
+    font-size: 12px;
+    color: var(--color-info);
+}
+
+.dropdown__list {
+    max-height: 340px;
+    overflow-y: auto;
+}
+
+.dropdown__item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 14px;
+    color: var(--text-primary);
+    border-bottom: 1px solid var(--border-color);
+    transition: background 150ms ease;
+}
+
+.dropdown__item:last-child { border-bottom: none; }
+
+.dropdown__item:hover { background: var(--bg-secondary); }
+
+.dropdown__icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+}
+
+.dropdown__icon--blue { background: #e0edff; color: #2563eb; }
+.dropdown__icon--green { background: #dcfce7; color: #16a34a; }
+.dropdown__icon--purple { background: #ede9fe; color: #7c3aed; }
+
+.dropdown__content { flex: 1; min-width: 0; }
+.dropdown__title { margin: 0; font-size: 14px; font-weight: 600; }
+.dropdown__subtitle { margin: 2px 0 0; font-size: 12px; color: var(--text-tertiary); }
+.dropdown__subtitle--truncate { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.dropdown__header--compact { align-items: flex-start; flex-direction: column; gap: 2px; }
+
+.dropdown__list--flush .dropdown__item { border-bottom: none; padding: 10px 14px; gap: 10px; align-items: center; }
+.dropdown__item--row { align-items: center; gap: 10px; font-size: 14px; }
+.dropdown__item--danger { color: #dc2626; }
+.dropdown__footer { border-top: 1px solid var(--border-color); }
+
+.navbar__user {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 12px;
+    /* border-radius: 6px; */
+    background: var(--bg-primary);
+    border: 2px solid var(--border-color);
+    color: var(--text-primary);
+    transition: background 150ms ease, border-color 150ms ease;
+}
+
+.navbar__user:hover { background: var(--bg-tertiary); }
+
+.navbar__avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 6px;
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    border: 2px solid var(--border-color);
+}
+
+.navbar__user-info { display: none; flex-direction: column; line-height: 1.2; }
+.navbar__user-name { margin: 0; font-size: 14px; font-weight: 600; }
+.navbar__user-email { margin: 0; font-size: 12px; color: var(--text-tertiary); }
+
+.fade-in { transition: opacity 120ms ease, transform 120ms ease; }
+.fade-in--from { opacity: 0; transform: translateY(-4px); }
+.fade-in--to { opacity: 1; transform: translateY(0); }
+.fade-out { transition: opacity 120ms ease, transform 120ms ease; }
+.fade-out--from { opacity: 1; transform: translateY(0); }
+.fade-out--to { opacity: 0; transform: translateY(-4px); }
+
+@media (max-width: 1024px) {
+    .navbar--open,
+    .navbar--closed {
+        padding-left: 0;
+    }
+
+    .navbar__brand-area {
+        display: none;
+    }
+
+    .navbar__inner { padding: 0 16px; }
+    .navbar__user-info { display: none; }
+}
+
+@media (max-width: 768px) {
+    .navbar__icon-btn--mobile { display: inline-flex; }
+    .navbar__search { display: none; }
+}
+
+@media (min-width: 1024px) {
+    .navbar__user-info { display: flex; }
+}
+</style>

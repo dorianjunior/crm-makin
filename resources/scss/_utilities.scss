@@ -2,6 +2,10 @@
 // Utilities - Helper Classes
 // =============================================================================
 
+// Import dependencies
+@use 'variables' as *;
+@use 'mixins' as *;
+
 // Display utilities
 .d-block { display: block; }
 .d-inline { display: inline; }
@@ -33,27 +37,27 @@
     .mr-#{$size} { margin-right: $size * 0.25rem; }
     .mb-#{$size} { margin-bottom: $size * 0.25rem; }
     .ml-#{$size} { margin-left: $size * 0.25rem; }
-    .mx-#{$size} { 
-        margin-left: $size * 0.25rem; 
-        margin-right: $size * 0.25rem; 
+    .mx-#{$size} {
+        margin-left: $size * 0.25rem;
+        margin-right: $size * 0.25rem;
     }
-    .my-#{$size} { 
-        margin-top: $size * 0.25rem; 
-        margin-bottom: $size * 0.25rem; 
+    .my-#{$size} {
+        margin-top: $size * 0.25rem;
+        margin-bottom: $size * 0.25rem;
     }
-    
+
     .p-#{$size} { padding: $size * 0.25rem; }
     .pt-#{$size} { padding-top: $size * 0.25rem; }
     .pr-#{$size} { padding-right: $size * 0.25rem; }
     .pb-#{$size} { padding-bottom: $size * 0.25rem; }
     .pl-#{$size} { padding-left: $size * 0.25rem; }
-    .px-#{$size} { 
-        padding-left: $size * 0.25rem; 
-        padding-right: $size * 0.25rem; 
+    .px-#{$size} {
+        padding-left: $size * 0.25rem;
+        padding-right: $size * 0.25rem;
     }
-    .py-#{$size} { 
-        padding-top: $size * 0.25rem; 
-        padding-bottom: $size * 0.25rem; 
+    .py-#{$size} {
+        padding-top: $size * 0.25rem;
+        padding-bottom: $size * 0.25rem;
     }
 }
 

@@ -2,22 +2,25 @@
 // Variables - Theme Colors & Configuration
 // =============================================================================
 
-// Brand Colors
-$primary-dark: #002050;
-$primary: #1160b7;
-$primary-light: #b1d6f0;
-$secondary: #dfe2e8;
-$accent: #d24726;
+// Brand Colors - Data Brutalism Palette
+$primary-dark: #0a0a0a;
+$primary: #1a1a1a;
+$primary-light: #2a2a2a;
+$secondary: #3a3a3a;
+$accent: #FF6B35; // Vibrant Orange - The only color that pops
+$accent-dark: #E85A28;
+$accent-light: #FFB3A0;
 
-// Light Theme Colors
+// Light Theme Colors - Monochromatic
 $light-bg-primary: #ffffff;
-$light-bg-secondary: #f9fafb;
-$light-bg-tertiary: #f3f4f6;
-$light-text-primary: #111827;
-$light-text-secondary: #6b7280;
-$light-text-tertiary: #9ca3af;
-$light-border: #e5e7eb;
-$light-border-light: #f3f4f6;
+$light-bg-secondary: #fafafa;
+$light-bg-tertiary: #f5f5f5;
+$light-text-primary: #0a0a0a;
+$light-text-secondary: #525252;
+$light-text-tertiary: #a3a3a3;
+$light-border: #e5e5e5;
+$light-border-light: #f5f5f5;
+$light-border-bold: #262626;
 
 // Dark Theme Colors
 $dark-bg-primary: #1f2937;
@@ -66,6 +69,10 @@ $transition-normal: 300ms;
 $transition-slow: 500ms;
 
 // Z-index
+$z-base: 0;
+$z-sidebar: 20;
+$z-navbar: 30;
+$z-content: 10;
 $z-dropdown: 1000;
 $z-sticky: 1020;
 $z-fixed: 1030;
@@ -80,3 +87,16 @@ $breakpoint-md: 768px;
 $breakpoint-lg: 1024px;
 $breakpoint-xl: 1280px;
 $breakpoint-2xl: 1536px;
+
+// Typography Scale - Data Brutalism
+$font-display: 'Space Grotesk', system-ui, sans-serif;
+$font-body: 'Inter', system-ui, sans-serif;
+$font-mono: 'JetBrains Mono', monospace;
+
+// Oversized numbers for stats
+$stat-number-size: 4rem; // 64px
+$stat-number-weight: 800;
+$stat-number-line-height: 1;
+$stat-label-size: 0.6875rem; // 11px
+$stat-label-weight: 600;
+$stat-label-spacing: 0.1em;

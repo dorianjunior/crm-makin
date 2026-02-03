@@ -2,22 +2,18 @@
 // App SCSS - Main Entry Point
 // =============================================================================
 // Note: Tailwind CSS is now loaded separately from resources/css/tailwind.css
-// This allows proper @source directive processing in pure CSS context
+// This allows proper source directive processing in pure CSS context
 
 // Import Font Awesome
-@import '@fortawesome/fontawesome-free/css/all.css';
+@use '@fortawesome/fontawesome-free/css/all.css';
 
 // Import SCSS partials
-@import 'variables';
-@import 'mixins';
-@import 'base';
-@import 'theme';
-@import 'components';
-@import 'utilities';
-
-// =============================================================================
-// Custom Global Styles (complementar ao Tailwind)
-// =============================================================================
+@use 'variables' as *;
+@use 'mixins' as *;
+@use 'base';
+@use 'theme';
+@use 'components';
+@use 'utilities';
 
 // Smooth scroll
 html {
@@ -27,4 +23,43 @@ html {
 // Custom scrollbar global
 body {
     @include custom-scrollbar;
+}
+
+// =============================================================================
+// Data Brutalism - Global Animations
+// =============================================================================
+
+// Stagger animation for stat cards
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.grid-brutalist.stats > * {
+    animation: slideInUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) backwards;
+
+    &:nth-child(1) { animation-delay: 0.05s; }
+    &:nth-child(2) { animation-delay: 0.1s; }
+    &:nth-child(3) { animation-delay: 0.15s; }
+    &:nth-child(4) { animation-delay: 0.2s; }
+}
+
+// Pulse animation for status indicators
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+.animate-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }

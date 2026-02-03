@@ -31,10 +31,34 @@ export default defineConfig({
             }
         }
     },
+    build: {
+        // Production optimizations
+        target: 'es2020',
+        cssCodeSplit: true,
+        minify: 'esbuild',
+        rollupOptions: {
+            output: {
+                manualChunks: {
+                    'vendor': ['vue', '@inertiajs/vue3'],
+                    'fontawesome': ['@fortawesome/fontawesome-free'],
+                },
+            },
+        },
+        // Improve build performance
+        chunkSizeWarningLimit: 1000,
+        reportCompressedSize: false,
+    },
     server: {
         watch: {
             ignored: ['**/storage/framework/views/**'],
         },
+        // Better HMR performance
+        hmr: {
+            overlay: true,
+        },
+    },
+    optimizeDeps: {
+        include: ['vue', '@inertiajs/vue3'],
     },
     resolve: {
         alias: {

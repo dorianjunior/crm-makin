@@ -6,6 +6,10 @@ import Navbar from './Navbar.vue';
 
 const props = defineProps({
     title: String,
+    noWrapper: {
+        type: Boolean,
+        default: false,
+    },
 });
 
 const page = usePage();
@@ -43,7 +47,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="min-h-screen bg-secondary">
+    <div class="layout-root">
         <!-- Sidebar -->
         <Sidebar
             :open="sidebarOpen"
@@ -52,35 +56,41 @@ onMounted(() => {
 
         <!-- Main Content -->
         <div
-            :class="{ 'lg:ml-64': sidebarOpen, 'lg:ml-20': !sidebarOpen }"
-            class="transition-all duration-300 min-h-screen"
+            :class="[
+                'layout-shell',
+                sidebarOpen ? 'layout-shell--open' : 'layout-shell--closed'
+            ]"
         >
             <!-- Navbar -->
             <Navbar
                 :user="user"
                 :dark-mode="darkMode"
+                :sidebar-open="sidebarOpen"
                 @toggle-sidebar="toggleSidebar"
                 @toggle-dark-mode="toggleDarkMode"
             />
 
             <!-- Page Content -->
-            <main class="p-6 pt-20 relative z-0">
+            <main class="layout-main">
                 <!-- Breadcrumbs -->
-                <div v-if="$slots.breadcrumbs" class="mb-4">
+                <div v-if="$slots.breadcrumbs" class="layout-breadcrumbs">
                     <slot name="breadcrumbs" />
                 </div>
 
                 <!-- Page Header -->
-                <div v-if="title || $slots.header" class="mb-6">
+                <div v-if="title || $slots.header" class="layout-header">
                     <slot name="header">
-                        <h1 class="text-2xl font-bold text-primary">
+                        <h1 class="layout-title">
                             {{ title }}
                         </h1>
                     </slot>
                 </div>
 
                 <!-- Main Content -->
-                <div class="bg-primary rounded-lg shadow-sm p-6">
+                <div v-if="!noWrapper" class="layout-content">
+                    <slot />
+                </div>
+                <div v-else>
                     <slot />
                 </div>
             </main>
@@ -89,6 +99,74 @@ onMounted(() => {
 </template>
 
 <style scoped>
+/* Layout metrics */
+:global(:root) {
+    --sidebar-open: 16rem;   /* 256px */
+    --sidebar-closed: 5rem;  /* 80px */
+    --navbar-height: 64px;   /* 4rem */
+}
+
+
+.layout-root {
+    min-height: 100vh;
+    background-color: var(--bg-secondary);
+    position: relative;
+}
+
+.layout-shell {
+    min-height: 100vh;
+    padding-left: var(--sidebar-open);
+    padding-top: calc(var(--navbar-height) + 16px);
+    transition: padding 300ms ease;
+    width: 100%;
+}
+
+.layout-shell--closed {
+    padding-left: var(--sidebar-closed);
+}
+
+.layout-main {
+    position: relative;
+    z-index: var(--z-content, 10);
+    padding: 0 24px 40px;
+    overflow-x: hidden;
+}
+
+.layout-breadcrumbs {
+    margin-bottom: 16px;
+}
+
+.layout-header {
+    margin-bottom: 24px;
+}
+
+.layout-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.2;
+}
+
+.layout-content {
+    background: var(--bg-primary);
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+    padding: 24px;
+    border: 1px solid var(--border-color);
+}
+
+@media (max-width: 1024px) {
+    .layout-shell,
+    .layout-shell--closed {
+        padding-left: 0;
+        padding-top: calc(var(--navbar-height) + 12px);
+    }
+
+    .layout-main {
+        padding: 0 16px 32px;
+    }
+}
+
 /* Scrollbar customizado */
 main::-webkit-scrollbar {
     width: 8px;

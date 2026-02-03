@@ -2,6 +2,9 @@
 // Mixins - Reusable Style Patterns
 // =============================================================================
 
+// Import dependencies
+@use 'variables' as *;
+
 // Flexbox centering
 @mixin flex-center {
     display: flex;
@@ -57,7 +60,7 @@
     border-radius: $radius-md;
     cursor: pointer;
     @include transition(background-color, color, border-color);
-    
+
     &:disabled {
         opacity: 0.5;
         cursor: not-allowed;
@@ -70,15 +73,15 @@
         width: $width;
         height: $width;
     }
-    
+
     &::-webkit-scrollbar-track {
         background: var(--bg-secondary);
     }
-    
+
     &::-webkit-scrollbar-thumb {
         background: var(--border-color);
         border-radius: $radius-sm;
-        
+
         &:hover {
             background: var(--text-tertiary);
         }

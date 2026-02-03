@@ -6,14 +6,21 @@
 @source "../**/*.js";
 @source "../../resources/views/**/*.blade.php";
 
-/* Custom theme configuration */
+/* Custom theme configuration - Data Brutalism Palette */
 @theme {
-  /* Brand Colors */
-  --color-primary-dark: #002050;
-  --color-primary: #1160b7;
-  --color-primary-light: #b1d6f0;
-  --color-secondary: #dfe2e8;
-  --color-accent: #d24726;
+  /* Brand Colors - Monochromatic + Orange Accent */
+  --color-primary-dark: #0a0a0a;
+  --color-primary: #1a1a1a;
+  --color-primary-light: #2a2a2a;
+  --color-secondary: #3a3a3a;
+  --color-accent: #FF6B35;
+  --color-accent-dark: #E85A28;
+  --color-accent-light: #FFB3A0;
+
+  /* Typography */
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
 
   /* Semantic Colors */
   --color-success: #10b981;

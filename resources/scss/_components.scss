@@ -2,68 +2,72 @@
 // Components - Reusable UI Components
 // =============================================================================
 
+// Import dependencies
+@use 'variables' as *;
+@use 'mixins' as *;
+
 // Button variants
 .btn {
     @include button-base;
-    
+
     &-primary {
         background-color: var(--color-primary);
         color: white;
         border: 1px solid var(--color-primary);
-        
+
         &:hover:not(:disabled) {
             background-color: var(--color-primary-dark);
             border-color: var(--color-primary-dark);
         }
     }
-    
+
     &-secondary {
         background-color: var(--color-secondary);
         color: var(--text-primary);
         border: 1px solid var(--border-color);
-        
+
         &:hover:not(:disabled) {
             background-color: var(--bg-tertiary);
         }
     }
-    
+
     &-success {
         background-color: var(--color-success);
         color: white;
         border: 1px solid var(--color-success);
-        
+
         &:hover:not(:disabled) {
             opacity: 0.9;
         }
     }
-    
+
     &-danger {
         background-color: var(--color-error);
         color: white;
         border: 1px solid var(--color-error);
-        
+
         &:hover:not(:disabled) {
             opacity: 0.9;
         }
     }
-    
+
     &-outline {
         background-color: transparent;
         color: var(--color-primary);
         border: 1px solid var(--color-primary);
-        
+
         &:hover:not(:disabled) {
             background-color: var(--color-primary);
             color: white;
         }
     }
-    
+
     // Sizes
     &-sm {
         padding: $spacing-xs $spacing-md;
         font-size: 0.875rem;
     }
-    
+
     &-lg {
         padding: $spacing-md $spacing-xl;
         font-size: 1.125rem;
@@ -75,13 +79,13 @@
     &-hover {
         @include card;
         @include transition(transform, box-shadow);
-        
+
         &:hover {
             transform: translateY(-2px);
             box-shadow: $shadow-lg;
         }
     }
-    
+
     &-bordered {
         @include card;
         border-width: 2px;
@@ -96,22 +100,22 @@
     font-size: 0.75rem;
     font-weight: 600;
     border-radius: $radius-full;
-    
+
     &-primary {
         background-color: var(--color-info-light);
         color: var(--color-info);
     }
-    
+
     &-success {
         background-color: var(--color-success-light);
         color: var(--color-success);
     }
-    
+
     &-warning {
         background-color: var(--color-warning-light);
         color: var(--color-warning);
     }
-    
+
     &-danger {
         background-color: var(--color-error-light);
         color: var(--color-error);
@@ -123,25 +127,25 @@
     padding: $spacing-lg;
     border-radius: $radius-md;
     border-left: 4px solid;
-    
+
     &-info {
         background-color: var(--color-info-light);
         border-color: var(--color-info);
         color: var(--color-info);
     }
-    
+
     &-success {
         background-color: var(--color-success-light);
         border-color: var(--color-success);
         color: var(--color-success);
     }
-    
+
     &-warning {
         background-color: var(--color-warning-light);
         border-color: var(--color-warning);
         color: var(--color-warning);
     }
-    
+
     &-error {
         background-color: var(--color-error-light);
         border-color: var(--color-error);
@@ -158,21 +162,21 @@
     border: 1px solid var(--border-color);
     border-radius: $radius-md;
     @include transition(border-color, box-shadow);
-    
+
     &:focus {
         border-color: var(--color-primary);
         box-shadow: 0 0 0 3px rgba(17, 96, 183, 0.1);
     }
-    
+
     &:disabled {
         background-color: var(--bg-tertiary);
         cursor: not-allowed;
         opacity: 0.6;
     }
-    
+
     &-error {
         border-color: var(--color-error);
-        
+
         &:focus {
             box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
         }
@@ -199,7 +203,7 @@
 // Tooltip
 .tooltip {
     position: relative;
-    
+
     &::after {
         content: attr(data-tooltip);
         position: absolute;
@@ -216,9 +220,271 @@
         pointer-events: none;
         transition: opacity $transition-fast, transform $transition-fast;
     }
-    
+
     &:hover::after {
         opacity: 1;
         transform: translateX(-50%) translateY(-4px);
+    }
+}
+
+// =============================================================================
+// Data Brutalism Components
+// =============================================================================
+
+// Oversized Stat Card
+.stat-card-brutalist {
+    position: relative;
+    padding: $spacing-xl;
+    background-color: var(--bg-primary);
+    border: 2px solid var(--border-color);
+    transition: all $transition-normal cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 0;
+        background: var(--color-accent);
+        transition: height $transition-normal cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    &:hover {
+        border-color: var(--color-accent);
+        transform: translateY(-2px);
+
+        &::before {
+            height: 100%;
+        }
+
+        .stat-number {
+            color: var(--color-accent);
+        }
+    }
+
+    .stat-label {
+        font-family: $font-body;
+        font-size: $stat-label-size;
+        font-weight: $stat-label-weight;
+        letter-spacing: $stat-label-spacing;
+        text-transform: uppercase;
+        color: var(--text-secondary);
+        margin-bottom: $spacing-sm;
+    }
+
+    .stat-number {
+        font-family: $font-display;
+        font-size: $stat-number-size;
+        font-weight: $stat-number-weight;
+        line-height: $stat-number-line-height;
+        color: var(--text-primary);
+        transition: color $transition-normal;
+        letter-spacing: -0.02em;
+    }
+
+    .stat-trend {
+        margin-top: $spacing-md;
+        font-family: $font-mono;
+        font-size: 0.75rem;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: $spacing-xs;
+    }
+
+    .stat-icon {
+        position: absolute;
+        top: $spacing-xl;
+        right: $spacing-xl;
+        width: 48px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--bg-secondary);
+        border: 2px solid var(--border-color);
+        font-size: 1.25rem;
+        color: var(--text-tertiary);
+        transition: all $transition-normal;
+    }
+
+    &:hover .stat-icon {
+        background: var(--color-accent);
+        border-color: var(--color-accent);
+        color: white;
+        transform: rotate(5deg) scale(1.1);
+    }
+}
+
+// Asymmetric Grid System
+.grid-brutalist {
+    display: grid;
+    gap: $spacing-lg;
+
+    &.stats {
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+
+        // Create asymmetry with nth-child
+        .stat-card-brutalist:nth-child(2) {
+            grid-row: span 1;
+        }
+    }
+}
+
+// Quick Action Block
+.action-block-brutalist {
+    position: relative;
+    padding: $spacing-xl;
+    background: var(--bg-primary);
+    border: 2px solid var(--border-color);
+    transition: all $transition-normal cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: $spacing-md;
+
+    &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: var(--color-accent);
+        opacity: 0;
+        transition: opacity $transition-normal;
+        z-index: 0;
+    }
+
+    &:hover {
+        border-color: var(--color-accent);
+        transform: translateX(4px);
+
+        &::after {
+            opacity: 1;
+        }
+
+        .action-icon,
+        .action-label {
+            color: white;
+            position: relative;
+            z-index: 1;
+        }
+    }
+
+    .action-icon {
+        width: 56px;
+        height: 56px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--bg-secondary);
+        border: 2px solid var(--border-color);
+        font-size: 1.5rem;
+        color: var(--text-primary);
+        transition: all $transition-normal;
+    }
+
+    .action-label {
+        font-family: $font-display;
+        font-size: 1rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--text-primary);
+        transition: color $transition-normal;
+    }
+}
+
+// Activity Feed Brutalist
+.activity-item-brutalist {
+    position: relative;
+    padding: $spacing-lg;
+    padding-left: calc($spacing-lg + 56px);
+    border-left: 2px solid var(--border-color);
+    transition: border-color $transition-fast;
+
+    &::before {
+        content: '';
+        position: absolute;
+        left: -6px;
+        top: $spacing-lg;
+        width: 10px;
+        height: 10px;
+        background: var(--color-accent);
+        border: 2px solid var(--bg-primary);
+        border-radius: 50%;
+    }
+
+    &:hover {
+        border-color: var(--color-accent);
+
+        .activity-icon {
+            background: var(--color-accent);
+            border-color: var(--color-accent);
+            color: white;
+            transform: scale(1.1);
+        }
+    }
+
+    .activity-icon {
+        position: absolute;
+        left: $spacing-lg;
+        top: $spacing-lg;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--bg-secondary);
+        border: 2px solid var(--border-color);
+        font-size: 1rem;
+        color: var(--text-secondary);
+        transition: all $transition-normal;
+    }
+
+    .activity-title {
+        font-family: $font-body;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: $spacing-xs;
+    }
+
+    .activity-time {
+        font-family: $font-mono;
+        font-size: 0.6875rem;
+        color: var(--text-tertiary);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+}
+
+// Section Header Brutalist
+.section-header-brutalist {
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+    margin-bottom: $spacing-xl;
+
+    .section-icon {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--color-accent);
+        color: white;
+        font-size: 1.25rem;
+    }
+
+    .section-title {
+        font-family: $font-display;
+        font-size: 1.5rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: -0.01em;
+        color: var(--text-primary);
     }
 }
