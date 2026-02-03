@@ -1,0 +1,219 @@
+/* =============================================================================
+   SweetAlert2 Brutalist Theme
+   ============================================================================= */
+
+/* Popup Container */
+.brutalist-popup {
+    border: 2px solid var(--border-color) !important;
+    border-radius: 0 !important;
+    padding: 32px !important;
+    background: var(--bg-primary) !important;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Title */
+.brutalist-title {
+    font-family: 'Space Grotesk', sans-serif !important;
+    font-size: 28px !important;
+    font-weight: 800 !important;
+    text-transform: uppercase !important;
+    letter-spacing: -0.01em !important;
+    color: var(--text-primary) !important;
+    padding: 0 !important;
+    margin-bottom: 16px !important;
+    line-height: 1.2 !important;
+}
+
+/* Content Text */
+.brutalist-content {
+    font-family: 'Inter', sans-serif !important;
+    font-size: 14px !important;
+    color: var(--text-secondary) !important;
+    line-height: 1.6 !important;
+    padding: 0 !important;
+    margin: 0 0 24px 0 !important;
+}
+
+/* Icon */
+.swal2-icon {
+    border-width: 2px !important;
+    margin: 0 auto 20px !important;
+}
+
+/* Buttons */
+.brutalist-btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 12px 24px !important;
+    font-family: 'Space Grotesk', sans-serif !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.08em !important;
+    border: 2px solid var(--border-color) !important;
+    background: var(--bg-primary) !important;
+    color: var(--text-primary) !important;
+    cursor: pointer !important;
+    transition: all 180ms ease !important;
+    margin: 0 8px !important;
+    min-width: 120px !important;
+}
+
+.brutalist-btn:hover {
+    transform: translateX(2px) !important;
+}
+
+.brutalist-btn--confirm {
+    background: #FF6B35 !important;
+    border-color: #FF6B35 !important;
+    color: #fff !important;
+}
+
+.brutalist-btn--confirm:hover {
+    background: #E85A28 !important;
+    border-color: #E85A28 !important;
+}
+
+.brutalist-btn--cancel {
+    background: var(--bg-secondary) !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-secondary) !important;
+}
+
+.brutalist-btn--cancel:hover {
+    background: var(--bg-tertiary) !important;
+    border-color: var(--border-bold, #262626) !important;
+    color: var(--text-primary) !important;
+}
+
+.brutalist-btn--deny {
+    background: #ef4444 !important;
+    border-color: #ef4444 !important;
+    color: #fff !important;
+}
+
+.brutalist-btn--deny:hover {
+    background: #dc2626 !important;
+    border-color: #dc2626 !important;
+}
+
+/* Button Focus */
+.brutalist-btn:focus {
+    outline: 2px solid #FF6B35 !important;
+    outline-offset: 2px !important;
+}
+
+/* Animation */
+.brutalist-show {
+    animation: brutalistSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.brutalist-hide {
+    animation: brutalistSlideOut 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+@keyframes brutalistSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes brutalistSlideOut {
+    from {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.95);
+    }
+}
+
+/* Toast Notifications */
+.brutalist-toast {
+    border: 2px solid var(--border-color) !important;
+    background: var(--bg-primary) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15) !important;
+    padding: 16px 20px !important;
+    min-width: 300px !important;
+}
+
+.brutalist-toast-title {
+    font-family: 'Inter', sans-serif !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    color: var(--text-primary) !important;
+    margin: 0 !important;
+}
+
+.brutalist-toast .swal2-icon {
+    width: 28px !important;
+    height: 28px !important;
+    margin: 0 12px 0 0 !important;
+    border-width: 2px !important;
+}
+
+/* Timer Progress Bar */
+.swal2-timer-progress-bar {
+    background: #FF6B35 !important;
+    height: 3px !important;
+}
+
+/* Backdrop */
+.swal2-container {
+    background: rgba(0, 0, 0, 0.6) !important;
+}
+
+/* Loading Spinner */
+.swal2-loader {
+    border-color: #FF6B35 transparent #FF6B35 transparent !important;
+    border-width: 3px !important;
+}
+
+/* Validation Input */
+.swal2-input,
+.swal2-textarea {
+    border: 2px solid var(--border-color) !important;
+    border-radius: 0 !important;
+    padding: 12px !important;
+    font-family: 'Inter', sans-serif !important;
+    font-size: 14px !important;
+    background: var(--bg-primary) !important;
+    color: var(--text-primary) !important;
+}
+
+.swal2-input:focus,
+.swal2-textarea:focus {
+    border-color: #FF6B35 !important;
+    box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.15) !important;
+}
+
+/* Actions Container */
+.swal2-actions {
+    margin-top: 24px !important;
+    padding: 0 !important;
+}
+
+/* Close Button */
+.swal2-close {
+    width: 36px !important;
+    height: 36px !important;
+    border: 2px solid var(--border-color) !important;
+    background: var(--bg-primary) !important;
+    color: var(--text-secondary) !important;
+    font-size: 20px !important;
+    transition: all 150ms ease !important;
+}
+
+.swal2-close:hover {
+    background: var(--bg-secondary) !important;
+    border-color: var(--border-bold, #262626) !important;
+    color: var(--text-primary) !important;
+    transform: rotate(90deg) !important;
+}

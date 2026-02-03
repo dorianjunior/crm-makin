@@ -3,7 +3,7 @@ const props = defineProps({
     variant: {
         type: String,
         default: 'primary',
-        validator: (value) => ['primary', 'secondary', 'success', 'danger', 'warning', 'info'].includes(value),
+        validator: (value) => ['primary', 'secondary', 'accent', 'success', 'danger', 'warning', 'ghost'].includes(value),
     },
     size: {
         type: String,
@@ -24,39 +24,205 @@ const props = defineProps({
         type: Boolean,
         default: false,
     },
+    type: {
+        type: String,
+        default: 'button',
+    },
 });
 
-const variants = {
-    primary: 'bg-blue-600 hover:bg-blue-700 text-white border-transparent',
-    secondary: 'bg-gray-600 hover:bg-gray-700 text-white border-transparent',
-    success: 'bg-green-600 hover:bg-green-700 text-white border-transparent',
-    danger: 'bg-red-600 hover:bg-red-700 text-white border-transparent',
-    warning: 'bg-yellow-600 hover:bg-yellow-700 text-white border-transparent',
-    info: 'bg-cyan-600 hover:bg-cyan-700 text-white border-transparent',
-};
+const emit = defineEmits(['click']);
 
-const sizes = {
-    sm: 'px-3 py-1.5 text-sm',
-    md: 'px-4 py-2 text-base',
-    lg: 'px-6 py-3 text-lg',
+const handleClick = (event) => {
+    if (!props.disabled && !props.loading) {
+        emit('click', event);
+    }
 };
 </script>
 
 <template>
     <button
+        :type="type"
         :class="[
-            'inline-flex items-center justify-center font-medium rounded-lg border transition-colors duration-200',
-            'focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500',
-            'disabled:opacity-50 disabled:cursor-not-allowed',
-            variants[variant],
-            sizes[size],
-            fullWidth ? 'w-full' : '',
+            'btn-brutalist',
+            `btn-brutalist--${variant}`,
+            `btn-brutalist--${size}`,
+            { 'btn-brutalist--full': fullWidth },
+            { 'btn-brutalist--loading': loading },
         ]"
         :disabled="disabled || loading"
+        @click="handleClick"
     >
-        <i v-if="loading" class="fas fa-spinner fa-spin mr-2"></i>
-        <i v-else-if="icon" :class="`fas ${icon}`" class="mr-2"></i>
-        <slot />
-        <i v-if="iconRight" :class="`fas ${iconRight}`" class="ml-2"></i>
+        <i v-if="loading" class="fas fa-spinner fa-spin btn-brutalist__icon"></i>
+        <i v-else-if="icon" :class="`fas ${icon}`" class="btn-brutalist__icon"></i>
+
+        <span class="btn-brutalist__text">
+            <slot />
+        </span>
+
+        <i v-if="iconRight && !loading" :class="`fas ${iconRight}`" class="btn-brutalist__icon-right"></i>
     </button>
 </template>
+
+<style scoped>
+.btn-brutalist {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 12px 24px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    line-height: 1;
+    border: 2px solid var(--border-color);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all 180ms ease;
+    overflow: hidden;
+}
+
+.btn-brutalist::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--color-accent);
+    opacity: 0;
+    transition: opacity 180ms ease;
+    z-index: 0;
+}
+
+.btn-brutalist:hover::before {
+    opacity: 0.08;
+}
+
+.btn-brutalist:active {
+    transform: translateY(1px);
+}
+
+.btn-brutalist:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+.btn-brutalist__icon,
+.btn-brutalist__icon-right,
+.btn-brutalist__text {
+    position: relative;
+    z-index: 1;
+}
+
+/* Variants */
+.btn-brutalist--primary {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: #fff;
+}
+
+.btn-brutalist--primary:hover:not(:disabled) {
+    background: var(--color-primary-dark);
+    border-color: var(--color-primary-dark);
+    transform: translateX(2px);
+}
+
+.btn-brutalist--secondary {
+    background: var(--bg-secondary);
+    border-color: var(--border-color);
+    color: var(--text-primary);
+}
+
+.btn-brutalist--secondary:hover:not(:disabled) {
+    background: var(--bg-tertiary);
+    border-color: var(--border-bold, #262626);
+}
+
+.btn-brutalist--accent {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+    color: #fff;
+}
+
+.btn-brutalist--accent:hover:not(:disabled) {
+    background: var(--color-accent-dark);
+    border-color: var(--color-accent-dark);
+    transform: translateX(3px);
+}
+
+.btn-brutalist--accent::before {
+    background: #fff;
+}
+
+.btn-brutalist--success {
+    background: var(--color-success);
+    border-color: var(--color-success);
+    color: #fff;
+}
+
+.btn-brutalist--success:hover:not(:disabled) {
+    opacity: 0.9;
+}
+
+.btn-brutalist--danger {
+    background: var(--color-error);
+    border-color: var(--color-error);
+    color: #fff;
+}
+
+.btn-brutalist--danger:hover:not(:disabled) {
+    opacity: 0.9;
+}
+
+.btn-brutalist--warning {
+    background: var(--color-warning);
+    border-color: var(--color-warning);
+    color: #fff;
+}
+
+.btn-brutalist--warning:hover:not(:disabled) {
+    opacity: 0.9;
+}
+
+.btn-brutalist--ghost {
+    background: transparent;
+    border-color: var(--border-color);
+    color: var(--text-primary);
+}
+
+.btn-brutalist--ghost:hover:not(:disabled) {
+    background: var(--bg-secondary);
+    border-color: var(--border-bold, #262626);
+}
+
+/* Sizes */
+.btn-brutalist--sm {
+    padding: 8px 16px;
+    font-size: 11px;
+    gap: 8px;
+}
+
+.btn-brutalist--lg {
+    padding: 16px 32px;
+    font-size: 15px;
+    gap: 12px;
+}
+
+/* Full width */
+.btn-brutalist--full {
+    width: 100%;
+}
+
+/* Loading state */
+.btn-brutalist--loading {
+    pointer-events: none;
+}
+
+/* Focus */
+.btn-brutalist:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+}
+</style>

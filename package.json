@@ -23,7 +23,7 @@
         "@primeuix/themes": "^2.0.3",
         "@vitejs/plugin-vue": "^6.0.4",
         "chart.js": "^4.5.1",
-        "sweetalert2": "^11.7.27",
+        "sweetalert2": "^11.26.18",
         "vue": "^3.5.27",
         "vuedraggable": "^2.24.3"
     }

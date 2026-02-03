@@ -2,7 +2,6 @@
 import { Head, Link } from '@inertiajs/vue3';
 import MainLayout from '@/Layouts/MainLayout.vue';
 import StatCard from '@/Components/StatCard.vue';
-import Alert from '@/Components/Alert.vue';
 
 defineProps({
     stats: Object,

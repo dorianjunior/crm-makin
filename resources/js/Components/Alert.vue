@@ -14,54 +14,117 @@ defineProps({
 
 const emit = defineEmits(['close']);
 
-const variants = {
-    info: {
-        bg: 'bg-blue-50 dark:bg-blue-900/20',
-        border: 'border-blue-200 dark:border-blue-800',
-        text: 'text-blue-800 dark:text-blue-400',
-        icon: 'fa-info-circle',
-    },
-    success: {
-        bg: 'bg-green-50 dark:bg-green-900/20',
-        border: 'border-green-200 dark:border-green-800',
-        text: 'text-green-800 dark:text-green-400',
-        icon: 'fa-check-circle',
-    },
-    warning: {
-        bg: 'bg-yellow-50 dark:bg-yellow-900/20',
-        border: 'border-yellow-200 dark:border-yellow-800',
-        text: 'text-yellow-800 dark:text-yellow-400',
-        icon: 'fa-exclamation-triangle',
-    },
-    error: {
-        bg: 'bg-red-50 dark:bg-red-900/20',
-        border: 'border-red-200 dark:border-red-800',
-        text: 'text-red-800 dark:text-red-400',
-        icon: 'fa-exclamation-circle',
-    },
+const defaultIcons = {
+    info: 'fa-info-circle',
+    success: 'fa-check-circle',
+    warning: 'fa-exclamation-triangle',
+    error: 'fa-exclamation-circle',
 };
 </script>
 
 <template>
-    <div
-        :class="[
-            'flex items-start p-4 rounded-lg border',
-            variants[variant].bg,
-            variants[variant].border,
-        ]"
-    >
-        <div :class="['flex-shrink-0', variants[variant].text]">
-            <i :class="`fas ${icon || variants[variant].icon}`"></i>
+    <div :class="['alert-brutalist', `alert-brutalist--${variant}`]">
+        <div class="alert-brutalist__icon">
+            <i :class="`fas ${icon || defaultIcons[variant]}`"></i>
         </div>
-        <div :class="['ml-3 flex-1', variants[variant].text]">
+        <div class="alert-brutalist__content">
             <slot />
         </div>
         <button
             v-if="closeable"
+            type="button"
+            class="alert-brutalist__close"
             @click="emit('close')"
-            :class="['flex-shrink-0 ml-3 opacity-70 hover:opacity-100', variants[variant].text]"
         >
             <i class="fas fa-times"></i>
         </button>
     </div>
 </template>
+
+<style scoped>
+.alert-brutalist {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px;
+    border: 2px solid var(--border-color);
+    background: var(--bg-secondary);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.alert-brutalist__icon {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    font-size: 16px;
+}
+
+.alert-brutalist__content {
+    flex: 1;
+}
+
+.alert-brutalist__close {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 120ms ease;
+}
+
+.alert-brutalist__close:hover {
+    opacity: 1;
+}
+
+/* Variants */
+.alert-brutalist--info {
+    background: color-mix(in srgb, var(--color-info) 8%, var(--bg-secondary));
+    border-color: var(--color-info);
+    color: var(--color-info);
+}
+
+.alert-brutalist--success {
+    background: color-mix(in srgb, var(--color-success) 8%, var(--bg-secondary));
+    border-color: var(--color-success);
+    color: var(--color-success);
+}
+
+.alert-brutalist--warning {
+    background: color-mix(in srgb, var(--color-warning) 8%, var(--bg-secondary));
+    border-color: var(--color-warning);
+    color: var(--color-warning);
+}
+
+.alert-brutalist--error {
+    background: color-mix(in srgb, var(--color-error) 8%, var(--bg-secondary));
+    border-color: var(--color-error);
+    color: var(--color-error);
+}
+
+/* Dark mode adjustments */
+:root[data-theme='dark'] .alert-brutalist--info {
+    background: color-mix(in srgb, var(--color-info) 12%, var(--bg-secondary));
+}
+
+:root[data-theme='dark'] .alert-brutalist--success {
+    background: color-mix(in srgb, var(--color-success) 12%, var(--bg-secondary));
+}
+
+:root[data-theme='dark'] .alert-brutalist--warning {
+    background: color-mix(in srgb, var(--color-warning) 12%, var(--bg-secondary));
+}
+
+:root[data-theme='dark'] .alert-brutalist--error {
+    background: color-mix(in srgb, var(--color-error) 12%, var(--bg-secondary));
+}
+</style>

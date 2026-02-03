@@ -1,6 +1,7 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed } from 'vue';
 import { usePage } from '@inertiajs/vue3';
+import { useTheme } from '@/composables/useTheme';
 import Sidebar from './Sidebar.vue';
 import Navbar from './Navbar.vue';
 
@@ -14,36 +15,13 @@ const props = defineProps({
 
 const page = usePage();
 const sidebarOpen = ref(true);
-const darkMode = ref(false);
+const { isDark, toggleTheme } = useTheme();
 
 const user = computed(() => page.props.auth?.user);
 
 const toggleSidebar = () => {
     sidebarOpen.value = !sidebarOpen.value;
 };
-
-const toggleDarkMode = () => {
-    darkMode.value = !darkMode.value;
-    localStorage.setItem('darkMode', darkMode.value.toString());
-    applyTheme();
-};
-
-const applyTheme = () => {
-    if (darkMode.value) {
-        document.documentElement.classList.add('dark');
-        document.documentElement.setAttribute('data-theme', 'dark');
-    } else {
-        document.documentElement.classList.remove('dark');
-        document.documentElement.setAttribute('data-theme', 'light');
-    }
-};
-
-// Aplicar tema no carregamento
-onMounted(() => {
-    const savedTheme = localStorage.getItem('darkMode');
-    darkMode.value = savedTheme === 'true';
-    applyTheme();
-});
 </script>
 
 <template>
@@ -64,10 +42,10 @@ onMounted(() => {
             <!-- Navbar -->
             <Navbar
                 :user="user"
-                :dark-mode="darkMode"
+                :dark-mode="isDark()"
                 :sidebar-open="sidebarOpen"
                 @toggle-sidebar="toggleSidebar"
-                @toggle-dark-mode="toggleDarkMode"
+                @toggle-dark-mode="toggleTheme"
             />
 
             <!-- Page Content -->
