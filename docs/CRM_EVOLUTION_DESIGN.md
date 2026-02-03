@@ -2392,15 +2392,17 @@ onMounted(() => {
   - [x] Hot reload funcionando
   - [x] Adicionar FontAwesome Icons
 
-- [ ] **Layout Base**
-  - [ ] AppLayout.vue (sidebar, navbar, breadcrumbs)
-  - [ ] Sidebar.vue (menu navegação)
-  - [ ] Navbar.vue (user dropdown)
-  - [ ] Themes Dark e Light 
-  - [ ] Responsivo, elegante
+- [x] **Layout Base**
+  - [x] MainLayout.vue (sidebar, navbar, breadcrumbs)
+  - [x] Sidebar.vue (menu navegação completo)
+  - [x] Navbar.vue (user dropdown, notificações, busca)
+  - [x] Responsivo e elegante
+  - [x] Componentes auxiliares (Button, Input, Modal, Alert, StatCard, Breadcrumbs)
+  - [] Themes Dark e Light funcionando (O claro não fica claro)
+  - [] Adicione SCSS ao  projeto e crie os arquivos base
 
-- [ ] **Páginas CRM**
-  - [ ] Dashboard.vue (refatorar)
+- [x] **Páginas CRM**
+  - [x] Dashboard.vue (refatorado com novo layout)
   - [ ] Leads/Index.vue (DataTable)
   - [ ] Leads/Form.vue
   - [ ] Pipelines/Index.vue

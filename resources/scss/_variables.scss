@@ -1,0 +1,82 @@
+// =============================================================================
+// Variables - Theme Colors & Configuration
+// =============================================================================
+
+// Brand Colors
+$primary-dark: #002050;
+$primary: #1160b7;
+$primary-light: #b1d6f0;
+$secondary: #dfe2e8;
+$accent: #d24726;
+
+// Light Theme Colors
+$light-bg-primary: #ffffff;
+$light-bg-secondary: #f9fafb;
+$light-bg-tertiary: #f3f4f6;
+$light-text-primary: #111827;
+$light-text-secondary: #6b7280;
+$light-text-tertiary: #9ca3af;
+$light-border: #e5e7eb;
+$light-border-light: #f3f4f6;
+
+// Dark Theme Colors
+$dark-bg-primary: #1f2937;
+$dark-bg-secondary: #111827;
+$dark-bg-tertiary: #374151;
+$dark-text-primary: #f9fafb;
+$dark-text-secondary: #d1d5db;
+$dark-text-tertiary: #9ca3af;
+$dark-border: #374151;
+$dark-border-light: #4b5563;
+
+// Semantic Colors
+$success: #10b981;
+$success-light: #d1fae5;
+$warning: #f59e0b;
+$warning-light: #fef3c7;
+$error: #ef4444;
+$error-light: #fee2e2;
+$info: #3b82f6;
+$info-light: #dbeafe;
+
+// Spacing
+$spacing-xs: 0.25rem;
+$spacing-sm: 0.5rem;
+$spacing-md: 1rem;
+$spacing-lg: 1.5rem;
+$spacing-xl: 2rem;
+$spacing-2xl: 3rem;
+
+// Border Radius
+$radius-sm: 0.25rem;
+$radius-md: 0.5rem;
+$radius-lg: 0.75rem;
+$radius-xl: 1rem;
+$radius-full: 9999px;
+
+// Shadows
+$shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+$shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+$shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+$shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+// Transitions
+$transition-fast: 150ms;
+$transition-normal: 300ms;
+$transition-slow: 500ms;
+
+// Z-index
+$z-dropdown: 1000;
+$z-sticky: 1020;
+$z-fixed: 1030;
+$z-modal-backdrop: 1040;
+$z-modal: 1050;
+$z-popover: 1060;
+$z-tooltip: 1070;
+
+// Breakpoints
+$breakpoint-sm: 640px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 1024px;
+$breakpoint-xl: 1280px;
+$breakpoint-2xl: 1536px;

@@ -6,7 +6,7 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
     plugins: [
         laravel({
-            input: ['resources/css/app.css', 'resources/js/app.js'],
+            input: ['resources/scss/app.scss', 'resources/js/app.js'],
             refresh: true,
         }),
         vue({
@@ -19,6 +19,18 @@ export default defineConfig({
         }),
         tailwindcss(),
     ],
+    css: {
+        preprocessorOptions: {
+            scss: {
+                api: 'modern-compiler',
+                additionalData: `
+                    @use "sass:math";
+                    @import "/resources/scss/_variables.scss";
+                    @import "/resources/scss/_mixins.scss";
+                `
+            }
+        }
+    },
     server: {
         watch: {
             ignored: ['**/storage/framework/views/**'],
@@ -27,6 +39,7 @@ export default defineConfig({
     resolve: {
         alias: {
             '@': '/resources/js',
+            '@scss': '/resources/scss',
         },
     },
 });

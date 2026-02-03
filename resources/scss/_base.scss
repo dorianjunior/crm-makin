@@ -1,0 +1,159 @@
+// =============================================================================
+// Base - Global Styles
+// =============================================================================
+
+// Box sizing
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+// Remove default margin and padding
+* {
+    margin: 0;
+    padding: 0;
+}
+
+// HTML & Body
+html {
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+    font-family: 'Figtree', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 
+                 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    line-height: 1.5;
+    min-height: 100vh;
+}
+
+// Links
+a {
+    color: inherit;
+    text-decoration: none;
+    @include transition(color, opacity);
+    
+    &:hover {
+        opacity: 0.8;
+    }
+}
+
+// Buttons
+button {
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    border: none;
+    background: none;
+    cursor: pointer;
+    
+    &:focus {
+        outline: none;
+    }
+}
+
+// Images
+img,
+svg {
+    display: block;
+    max-width: 100%;
+}
+
+// Forms
+input,
+textarea,
+select {
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    
+    &:focus {
+        outline: none;
+    }
+}
+
+// Headings
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--text-primary);
+}
+
+h1 {
+    font-size: 2.25rem;
+}
+
+h2 {
+    font-size: 1.875rem;
+}
+
+h3 {
+    font-size: 1.5rem;
+}
+
+h4 {
+    font-size: 1.25rem;
+}
+
+h5 {
+    font-size: 1.125rem;
+}
+
+h6 {
+    font-size: 1rem;
+}
+
+// Paragraphs
+p {
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+// Lists
+ul,
+ol {
+    list-style: none;
+}
+
+// HR
+hr {
+    border: none;
+    border-top: 1px solid var(--border-color);
+}
+
+// Code
+code {
+    font-family: 'Courier New', monospace;
+    font-size: 0.875em;
+    padding: 0.125rem 0.25rem;
+    background-color: var(--bg-tertiary);
+    border-radius: $radius-sm;
+}
+
+pre {
+    font-family: 'Courier New', monospace;
+    font-size: 0.875rem;
+    padding: $spacing-md;
+    background-color: var(--bg-tertiary);
+    border-radius: $radius-md;
+    overflow-x: auto;
+    
+    code {
+        padding: 0;
+        background: none;
+    }
+}
+
+// Selection
+::selection {
+    background-color: var(--color-primary-light);
+    color: var(--color-primary-dark);
+}
+
+// Focus visible
+:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
