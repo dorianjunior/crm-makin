@@ -178,11 +178,14 @@ php artisan db:seed
 #### 9. Compile os assets do frontend
 
 ```bash
-# Instalar dependências do Node.js
+# Instalar dependências do Node.js (dentro do container)
 npm install
 
-# Compilar os assets
+# Compilar os assets para produção
 npm run build
+
+# OU executar em modo desenvolvimento (hot reload)
+npm run dev
 ```
 
 #### 10. Acesse a aplicação
@@ -207,10 +210,16 @@ docker exec -it crm-app php artisan migrate:fresh --seed
 # Acessar MySQL
 docker exec -it crm-db mysql -u crm_user -p crm_makin
 
-# Recompilar assets (executar no host)
-npm run build
+# Executar comandos npm dentro do container
+docker exec -it crm-app npm install
+docker exec -it crm-app npm run build
+docker exec -it crm-app npm run dev
 
-# Modo desenvolvimento (hot reload - executar no host)
+# OU entrar no container e executar os comandos
+docker exec -it crm-app bash
+# Dentro do container:
+npm install
+npm run build
 npm run dev
 ```
 

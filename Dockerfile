@@ -113,9 +113,12 @@ COPY docker/php/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
 # -----------------------------------------------------------------------------
 FROM runtime-base AS development
 
+# Instalar Node.js e npm
+RUN apk add --no-cache nodejs npm
+
 # Instalar Xdebug para debugging
 RUN apk add --no-cache $PHPIZE_DEPS linux-headers \
-    && pecl install xdebug-3.5.0 \
+    && pecl install xdebug \
     && docker-php-ext-enable xdebug \
     && apk del $PHPIZE_DEPS linux-headers
 
