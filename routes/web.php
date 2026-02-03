@@ -1,8 +1,8 @@
 <?php
 
+use App\Http\Controllers\Auth\LoginController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use App\Http\Controllers\Auth\LoginController;
 
 // Guest routes (unauthenticated)
 Route::middleware('guest')->group(function () {
@@ -13,7 +13,7 @@ Route::middleware('guest')->group(function () {
 // Authenticated routes
 Route::middleware(['auth', 'active'])->group(function () {
     Route::post('/logout', [LoginController::class, 'destroy'])->name('logout');
-    
+
     Route::get('/dashboard', function () {
         $stats = [
             'leads' => 0,

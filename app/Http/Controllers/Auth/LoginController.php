@@ -35,7 +35,7 @@ class LoginController extends Controller
             $request->session()->regenerate();
 
             // Check if user is active
-            if (!Auth::user()->active) {
+            if (! Auth::user()->active) {
                 Auth::logout();
 
                 throw ValidationException::withMessages([
