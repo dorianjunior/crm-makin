@@ -45,7 +45,6 @@
 @mixin card($padding: $spacing-lg) {
     background-color: var(--bg-primary);
     border: 1px solid var(--border-color);
-    border-radius: $radius-lg;
     box-shadow: $shadow-sm;
     padding: $padding;
 }
@@ -57,7 +56,6 @@
     justify-content: center;
     padding: $spacing-sm $spacing-lg;
     font-weight: 500;
-    border-radius: $radius-md;
     cursor: pointer;
     @include transition(background-color, color, border-color);
 
@@ -80,7 +78,6 @@
 
     &::-webkit-scrollbar-thumb {
         background: var(--border-color);
-        border-radius: $radius-sm;
 
         &:hover {
             background: var(--text-tertiary);

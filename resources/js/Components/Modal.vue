@@ -80,7 +80,7 @@ onUnmounted(() => {
         <Transition name="modal-fade">
             <div
                 v-if="show"
-                class="modal-brutalist"
+                class="modal"
                 @click="handleClickOutside"
             >
                 <Transition name="modal-slide">
@@ -88,14 +88,14 @@ onUnmounted(() => {
                         v-if="show"
                         ref="modalRef"
                         :class="[
-                            'modal-brutalist__content',
-                            `modal-brutalist__content--${size}`,
+                            'modal__content',
+                            `modal__content--${size}`,
                         ]"
                         @click.stop
                     >
                         <!-- Header -->
-                        <div v-if="title || $slots.header || closeable" class="modal-brutalist__header">
-                            <h2 v-if="title" class="modal-brutalist__title">
+                        <div v-if="title || $slots.header || closeable" class="modal__header">
+                            <h2 v-if="title" class="modal__title">
                                 {{ title }}
                             </h2>
                             <slot name="header" />
@@ -103,7 +103,7 @@ onUnmounted(() => {
                             <button
                                 v-if="closeable"
                                 type="button"
-                                class="modal-brutalist__close"
+                                class="modal__close"
                                 @click="close"
                             >
                                 <i class="fas fa-times"></i>
@@ -111,25 +111,25 @@ onUnmounted(() => {
                         </div>
 
                         <!-- Body -->
-                        <div class="modal-brutalist__body">
+                        <div class="modal__body">
                             <slot />
                         </div>
 
                         <!-- Footer -->
-                        <div v-if="showFooter || $slots.footer" class="modal-brutalist__footer">
+                        <div v-if="showFooter || $slots.footer" class="modal__footer">
                             <slot name="footer">
-                                <div class="modal-brutalist__actions">
+                                <div class="modal__actions">
                                     <slot name="actions">
                                         <button
                                             type="button"
-                                            class="btn-brutalist btn-brutalist--secondary"
+                                            class="btn btn--secondary"
                                             @click="cancel"
                                         >
                                             Cancelar
                                         </button>
                                         <button
                                             type="button"
-                                            class="btn-brutalist btn-brutalist--accent"
+                                            class="btn btn--accent"
                                             @click="confirm"
                                         >
                                             Confirmar
@@ -168,7 +168,7 @@ onUnmounted(() => {
 }
 
 /* Modal */
-.modal-brutalist {
+.modal {
     position: fixed;
     inset: 0;
     z-index: 1000;
@@ -180,7 +180,7 @@ onUnmounted(() => {
     backdrop-filter: blur(2px);
 }
 
-.modal-brutalist__content {
+.modal__content {
     position: relative;
     display: flex;
     flex-direction: column;
@@ -192,35 +192,35 @@ onUnmounted(() => {
 }
 
 /* Sizes */
-.modal-brutalist__content--sm {
+.modal__content--sm {
     max-width: 400px;
 }
 
-.modal-brutalist__content--md {
+.modal__content--md {
     max-width: 600px;
 }
 
-.modal-brutalist__content--lg {
+.modal__content--lg {
     max-width: 800px;
 }
 
-.modal-brutalist__content--xl {
+.modal__content--xl {
     max-width: 1200px;
 }
 
-.modal-brutalist__content--full {
+.modal__content--full {
     max-width: calc(100vw - 40px);
     max-height: calc(100vh - 40px);
 }
 
 /* Header */
-.modal-brutalist__header {
+.modal__header {
     position: relative;
     padding: 24px;
     border-bottom: 2px solid var(--border-color);
 }
 
-.modal-brutalist__title {
+.modal__title {
     font-family: 'Space Grotesk', sans-serif;
     font-size: 20px;
     font-weight: 700;
@@ -231,7 +231,7 @@ onUnmounted(() => {
     padding-right: 40px;
 }
 
-.modal-brutalist__close {
+.modal__close {
     position: absolute;
     top: 24px;
     right: 24px;
@@ -248,14 +248,14 @@ onUnmounted(() => {
     transition: all 180ms ease;
 }
 
-.modal-brutalist__close:hover {
+.modal__close:hover {
     background: var(--color-error);
     border-color: var(--color-error);
     color: #fff;
 }
 
 /* Body */
-.modal-brutalist__body {
+.modal__body {
     flex: 1;
     padding: 24px;
     overflow-y: auto;
@@ -266,13 +266,13 @@ onUnmounted(() => {
 }
 
 /* Footer */
-.modal-brutalist__footer {
+.modal__footer {
     padding: 24px;
     border-top: 2px solid var(--border-color);
     background: var(--bg-secondary);
 }
 
-.modal-brutalist__actions {
+.modal__actions {
     display: flex;
     align-items: center;
     justify-content: flex-end;
@@ -280,25 +280,25 @@ onUnmounted(() => {
 }
 
 /* Scrollbar */
-.modal-brutalist__body::-webkit-scrollbar {
+.modal__body::-webkit-scrollbar {
     width: 8px;
 }
 
-.modal-brutalist__body::-webkit-scrollbar-track {
+.modal__body::-webkit-scrollbar-track {
     background: var(--bg-primary);
 }
 
-.modal-brutalist__body::-webkit-scrollbar-thumb {
+.modal__body::-webkit-scrollbar-thumb {
     background: var(--border-color);
     border: 2px solid var(--bg-primary);
 }
 
-.modal-brutalist__body::-webkit-scrollbar-thumb:hover {
+.modal__body::-webkit-scrollbar-thumb:hover {
     background: var(--text-muted);
 }
 
 /* Dark mode */
-:root[data-theme='dark'] .modal-brutalist__content {
+:root[data-theme='dark'] .modal__content {
     background: var(--bg-secondary);
 }
 </style>

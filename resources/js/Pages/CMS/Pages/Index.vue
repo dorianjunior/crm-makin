@@ -1,415 +1,297 @@
 <template>
   <MainLayout>
-    <div class="pages-index">
+    <div class="page-container">
       <!-- Header -->
       <div class="page-header">
-        <div>
-          <h1 class="page-title">Páginas - {{ currentSite?.name }}</h1>
-          <Breadcrumbs :items="breadcrumbs" />
+        <div class="page-header__content">
+          <h1 class="page-header__title">PÁGINAS CMS</h1>
+          <p class="page-header__subtitle">Gerencie páginas estáticas do seu site</p>
         </div>
-        <div class="header-actions">
-          <select v-model="selectedSiteId" @change="changeSite" class="site-selector">
-            <option v-for="site in sites" :key="site.id" :value="site.id">
-              {{ site.name }}
-            </option>
-          </select>
-          <Button
-            label="Nova Página"
-            icon="fa fa-plus"
-            @click="createPage"
-            severity="success"
-          />
-        </div>
-      </div>
-
-      <!-- Filters -->
-      <div class="filters-card">
-        <div class="filters-grid">
-          <div class="filter-item">
-            <label>Buscar</label>
-            <Input
-              v-model="filters.search"
-              placeholder="Título ou slug..."
-              icon="fa fa-search"
-              @input="debouncedSearch"
-            />
-          </div>
-
-          <div class="filter-item">
-            <label>Status</label>
-            <select v-model="filters.status" @change="loadPages" class="form-select">
-              <option value="">Todos</option>
-              <option value="draft">Rascunho</option>
-              <option value="pending">Pendente</option>
-              <option value="published">Publicado</option>
-            </select>
-          </div>
-
-          <div class="filter-item">
-            <label>Criado por</label>
-            <select v-model="filters.created_by" @change="loadPages" class="form-select">
-              <option value="">Todos</option>
-              <option v-for="user in users" :key="user.id" :value="user.id">
-                {{ user.name }}
-              </option>
-            </select>
-          </div>
+        <div class="page-header__actions">
+          <button class="btn btn--secondary" @click="showFilters = !showFilters">
+            <i class="fas fa-filter"></i>
+            Filtros
+          </button>
+          <button class="btn" @click="createPage">
+            <i class="fas fa-plus"></i>
+            Nova Página
+          </button>
         </div>
       </div>
 
       <!-- Stats -->
-      <div class="stats-grid">
-        <StatCard
-          title="Total de Páginas"
-          :value="stats.total"
-          icon="fa fa-file-alt"
-          color="blue"
-        />
-        <StatCard
-          title="Publicadas"
-          :value="stats.published"
-          icon="fa fa-check-circle"
-          color="green"
-        />
-        <StatCard
-          title="Rascunhos"
-          :value="stats.draft"
-          icon="fa fa-edit"
-          color="orange"
-        />
-        <StatCard
-          title="Pendentes"
-          :value="stats.pending"
-          icon="fa fa-clock"
-          color="purple"
-        />
+      <div class="grid grid--5">
+        <div class="stat-card">
+          <div class="stat-card__label">Total</div>
+          <div class="stat-card__value">{{ stats.total }}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card__label">Publicadas</div>
+          <div class="stat-card__value">{{ stats.published }}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card__label">Rascunhos</div>
+          <div class="stat-card__value">{{ stats.draft }}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card__label">Agendadas</div>
+          <div class="stat-card__value">{{ stats.scheduled }}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card__label">Visualizações</div>
+          <div class="stat-card__value">{{ stats.views }}</div>
+        </div>
       </div>
 
-      <!-- Table -->
-      <div class="table-card">
-        <div v-if="loading" class="table-loading">
-          <i class="fa fa-spinner fa-spin"></i> Carregando...
-        </div>
+      <!-- Filters -->
+      <div class="filters">
+        <button
+          v-for="filter in filters"
+          :key="filter.value"
+          class="filter-btn"
+          :class="{ 'filter-btn--active': activeFilter === filter.value }"
+          @click="activeFilter = filter.value"
+        >
+          {{ filter.label }} ({{ filter.count }})
+        </button>
+      </div>
 
-        <div v-else-if="pages.data.length === 0" class="table-empty">
-          <i class="fa fa-inbox"></i>
-          <p>Nenhuma página encontrada</p>
-          <Button
-            label="Criar Primeira Página"
-            icon="fa fa-plus"
-            @click="createPage"
-            severity="success"
-          />
-        </div>
-
-        <table v-else class="data-table">
+      <!-- Pages Table -->
+      <div v-if="filteredPages.length > 0" class="table">
+        <table>
           <thead>
             <tr>
-              <th @click="sort('title')">
-                Título
-                <i v-if="sortField === 'title'" :class="sortIcon"></i>
-              </th>
-              <th>Slug</th>
-              <th @click="sort('status')">
-                Status
-                <i v-if="sortField === 'status'" :class="sortIcon"></i>
-              </th>
-              <th>Versões</th>
-              <th>Criado por</th>
-              <th @click="sort('published_at')">
-                Publicado em
-                <i v-if="sortField === 'published_at'" :class="sortIcon"></i>
-              </th>
-              <th class="text-center">Ações</th>
+              <th>TÍTULO</th>
+              <th>SLUG</th>
+              <th>STATUS</th>
+              <th>SITE</th>
+              <th>AUTOR</th>
+              <th>VISUALIZAÇÕES</th>
+              <th>ÚLTIMA ATUALIZAÇÃO</th>
+              <th>AÇÕES</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="page in pages.data" :key="page.id">
+            <tr v-for="page in filteredPages" :key="page.id">
               <td>
                 <div class="page-title-cell">
-                  <strong>{{ page.title }}</strong>
-                  <span v-if="page.meta_title" class="meta-title">{{ page.meta_title }}</span>
+                  <i :class="getPageIcon(page.template)"></i>
+                  {{ page.title }}
                 </div>
               </td>
               <td>
-                <code class="slug-code">{{ page.slug }}</code>
+                <span class="code-text">{{ page.slug }}</span>
               </td>
               <td>
-                <span :class="['badge', 'badge-' + page.status]">
-                  {{ getStatusLabel(page.status) }}
+                <span :class="['badge', `badge--${getStatusColor(page.status)}`]">
+                  {{ page.status.toUpperCase() }}
                 </span>
               </td>
+              <td>{{ page.site_name }}</td>
+              <td>{{ page.author_name }}</td>
               <td>
-                <div class="versions-cell">
-                  <i class="fa fa-code-branch"></i>
-                  <span>{{ page.versions_count || 0 }} versões</span>
+                <div class="views-cell">
+                  <i class="fas fa-eye"></i>
+                  {{ page.views_count }}
                 </div>
               </td>
+              <td>{{ formatDate(page.updated_at) }}</td>
               <td>
-                <div class="user-badge">
-                  <i class="fa fa-user-circle"></i>
-                  {{ page.creator?.name }}
-                </div>
-              </td>
-              <td>
-                <span v-if="page.published_at">
-                  {{ formatDate(page.published_at) }}
-                </span>
-                <span v-else class="text-muted">-</span>
-              </td>
-              <td class="text-center">
-                <div class="action-buttons">
-                  <button @click="previewPage(page)" class="btn-icon" title="Preview">
-                    <i class="fa fa-eye"></i>
+                <div class="actions-cell">
+                  <button class="action-btn" @click="editPage(page.id)" title="Editar">
+                    <i class="fas fa-edit"></i>
                   </button>
-                  <button @click="editPage(page)" class="btn-icon" title="Editar">
-                    <i class="fa fa-edit"></i>
+                  <button class="action-btn" @click="viewPage(page.slug)" title="Visualizar">
+                    <i class="fas fa-eye"></i>
                   </button>
-                  <button
-                    v-if="page.status === 'draft'"
-                    @click="publishPage(page)"
-                    class="btn-icon"
-                    title="Publicar"
-                  >
-                    <i class="fa fa-paper-plane"></i>
-                  </button>
-                  <button @click="duplicatePage(page)" class="btn-icon" title="Duplicar">
-                    <i class="fa fa-copy"></i>
-                  </button>
-                  <button @click="viewVersions(page)" class="btn-icon" title="Versões">
-                    <i class="fa fa-code-branch"></i>
-                  </button>
-                  <button @click="deletePage(page)" class="btn-icon btn-danger" title="Excluir">
-                    <i class="fa fa-trash"></i>
+                  <button class="action-btn action-btn--danger" @click="deletePage(page.id)" title="Excluir">
+                    <i class="fas fa-trash"></i>
                   </button>
                 </div>
               </td>
             </tr>
           </tbody>
         </table>
+      </div>
 
-        <!-- Pagination -->
-        <div v-if="pages.data.length > 0" class="pagination">
-          <div class="pagination-info">
-            Mostrando {{ pages.from }} a {{ pages.to }} de {{ pages.total }} registros
-          </div>
-          <div class="pagination-buttons">
-            <button
-              @click="changePage(page)"
-              v-for="page in paginationPages"
-              :key="page"
-              :class="['pagination-btn', { active: page === pages.current_page }]"
-              :disabled="page === '...'"
-            >
-              {{ page }}
-            </button>
-          </div>
-        </div>
+      <!-- Empty State -->
+      <div v-else class="empty-state">
+        <i class="fas fa-file-alt empty-state__icon"></i>
+        <h3 class="empty-state__title">Nenhuma página encontrada</h3>
+        <p class="empty-state__text">Crie sua primeira página para começar</p>
+        <button class="btn" @click="createPage">
+          <i class="fas fa-plus"></i>
+          Criar Primeira Página
+        </button>
       </div>
     </div>
-
-    <!-- Modal de confirmação de exclusão -->
-    <Modal
-      v-model:visible="showDeleteModal"
-      title="Confirmar Exclusão"
-      @confirm="confirmDelete"
-    >
-      <p>Tem certeza que deseja excluir a página <strong>{{ pageToDelete?.title }}</strong>?</p>
-      <p class="text-muted">Esta ação não pode ser desfeita.</p>
-    </Modal>
-
-    <!-- Modal de Preview -->
-    <Modal
-      v-model:visible="showPreviewModal"
-      :title="'Preview: ' + pageToPreview?.title"
-      size="fullscreen"
-      :showFooter="false"
-    >
-      <div class="preview-container">
-        <iframe
-          v-if="previewUrl"
-          :src="previewUrl"
-          class="preview-iframe"
-        ></iframe>
-        <div v-else class="preview-loading">
-          <i class="fa fa-spinner fa-spin"></i>
-          Carregando preview...
-        </div>
-      </div>
-    </Modal>
   </MainLayout>
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue';
+import { ref, computed } from 'vue';
 import { router } from '@inertiajs/vue3';
 import MainLayout from '@/Layouts/MainLayout.vue';
-import Button from '@/Components/Button.vue';
-import Input from '@/Components/Input.vue';
-import StatCard from '@/Components/StatCard.vue';
-import Breadcrumbs from '@/Components/Breadcrumbs.vue';
-import Modal from '@/Components/Modal.vue';
 
 const props = defineProps({
-  pages: Object,
-  sites: Array,
-  currentSite: Object,
-  users: Array,
+  pages: Array,
   stats: Object,
 });
 
-const breadcrumbs = computed(() => [
-  { label: 'Dashboard', to: '/dashboard' },
-  { label: 'CMS', to: '/cms' },
-  { label: 'Sites', to: '/cms/sites' },
-  { label: props.currentSite?.name, active: true }
+const activeFilter = ref('all');
+const showFilters = ref(false);
+
+const filters = computed(() => [
+  { label: 'Todas', value: 'all', count: props.pages?.length || 0 },
+  { label: 'Publicadas', value: 'published', count: props.pages?.filter(p => p.status === 'published').length || 0 },
+  { label: 'Rascunhos', value: 'draft', count: props.pages?.filter(p => p.status === 'draft').length || 0 },
+  { label: 'Agendadas', value: 'scheduled', count: props.pages?.filter(p => p.status === 'scheduled').length || 0 },
 ]);
 
-const loading = ref(false);
-const selectedSiteId = ref(props.currentSite?.id);
-const filters = ref({
-  search: '',
-  status: '',
-  created_by: '',
+const filteredPages = computed(() => {
+  if (!props.pages) return [];
+  if (activeFilter.value === 'all') return props.pages;
+  return props.pages.filter(p => p.status === activeFilter.value);
 });
 
-const sortField = ref('published_at');
-const sortDirection = ref('desc');
-const showDeleteModal = ref(false);
-const pageToDelete = ref(null);
-const showPreviewModal = ref(false);
-const pageToPreview = ref(null);
-const previewUrl = ref('');
-
-const sortIcon = computed(() => {
-  return sortDirection.value === 'asc' ? 'fa fa-sort-up' : 'fa fa-sort-down';
-});
-
-const paginationPages = computed(() => {
-  const pages = [];
-  const current = props.pages.current_page;
-  const last = props.pages.last_page;
-
-  if (last <= 7) {
-    for (let i = 1; i <= last; i++) {
-      pages.push(i);
-    }
-  } else {
-    if (current <= 3) {
-      pages.push(1, 2, 3, 4, '...', last);
-    } else if (current >= last - 2) {
-      pages.push(1, '...', last - 3, last - 2, last - 1, last);
-    } else {
-      pages.push(1, '...', current - 1, current, current + 1, '...', last);
-    }
-  }
-
-  return pages;
-});
-
-watch(() => props.currentSite?.id, (newId) => {
-  selectedSiteId.value = newId;
-});
-
-let searchTimeout = null;
-const debouncedSearch = () => {
-  clearTimeout(searchTimeout);
-  searchTimeout = setTimeout(() => {
-    loadPages();
-  }, 500);
-};
-
-const changeSite = () => {
-  router.visit(`/cms/sites/${selectedSiteId.value}/pages`);
-};
-
-const loadPages = () => {
-  loading.value = true;
-  router.get(`/cms/sites/${selectedSiteId.value}/pages`, {
-    ...filters.value,
-    sort: sortField.value,
-    direction: sortDirection.value,
-  }, {
-    preserveState: true,
-    preserveScroll: true,
-    onFinish: () => loading.value = false,
-  });
-};
-
-const sort = (field) => {
-  if (sortField.value === field) {
-    sortDirection.value = sortDirection.value === 'asc' ? 'desc' : 'asc';
-  } else {
-    sortField.value = field;
-    sortDirection.value = 'asc';
-  }
-  loadPages();
-};
-
-const changePage = (page) => {
-  if (page === '...') return;
-  router.get(`/cms/sites/${selectedSiteId.value}/pages?page=${page}`, filters.value, {
-    preserveState: true,
-  });
-};
-
-const createPage = () => {
-  router.visit(`/cms/sites/${selectedSiteId.value}/pages/create`);
-};
-
-const editPage = (page) => {
-  router.visit(`/cms/sites/${selectedSiteId.value}/pages/${page.id}/edit`);
-};
-
-const previewPage = (page) => {
-  pageToPreview.value = page;
-  previewUrl.value = page.preview_url;
-  showPreviewModal.value = true;
-};
-
-const publishPage = (page) => {
-  router.post(`/cms/sites/${selectedSiteId.value}/pages/${page.id}/publish`);
-};
-
-const duplicatePage = (page) => {
-  router.post(`/cms/sites/${selectedSiteId.value}/pages/${page.id}/duplicate`);
-};
-
-const viewVersions = (page) => {
-  router.visit(`/cms/sites/${selectedSiteId.value}/pages/${page.id}/versions`);
-};
-
-const deletePage = (page) => {
-  pageToDelete.value = page;
-  showDeleteModal.value = true;
-};
-
-const confirmDelete = () => {
-  router.delete(`/cms/sites/${selectedSiteId.value}/pages/${pageToDelete.value.id}`, {
-    onSuccess: () => {
-      showDeleteModal.value = false;
-      pageToDelete.value = null;
-    },
-  });
-};
-
-const getStatusLabel = (status) => {
-  const labels = {
-    draft: 'Rascunho',
-    pending: 'Pendente',
-    published: 'Publicado',
+const getPageIcon = (template) => {
+  const icons = {
+    'home': 'fas fa-home',
+    'about': 'fas fa-info-circle',
+    'contact': 'fas fa-envelope',
+    'services': 'fas fa-briefcase',
+    'default': 'fas fa-file-alt'
   };
-  return labels[status] || status;
+  return icons[template] || icons.default;
+};
+
+const getStatusColor = (status) => {
+  const colors = {
+    published: 'success',
+    draft: 'warning',
+    scheduled: 'info',
+    archived: 'neutral'
+  };
+  return colors[status] || 'neutral';
 };
 
 const formatDate = (date) => {
-  return new Date(date).toLocaleDateString('pt-BR', {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  });
+  return new Date(date).toLocaleString('pt-BR');
+};
+
+const createPage = () => {
+  router.visit('/cms/pages/create');
+};
+
+const editPage = (id) => {
+  router.visit(`/cms/pages/${id}/edit`);
+};
+
+const viewPage = (slug) => {
+  window.open(`/page/${slug}`, '_blank');
+};
+
+const deletePage = (id) => {
+  if (confirm('Tem certeza que deseja excluir esta página?')) {
+    router.delete(`/cms/pages/${id}`);
+  }
 };
 </script>
 
+<style scoped lang="scss">
+.page-container {
+  padding: 32px;
+}
+
+.filters {
+  display: flex;
+  gap: 16px;
+  margin: 32px 0;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  padding: 12px 24px;
+  border: 2px solid var(--border-color);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: #FF6B35;
+    transform: translateX(2px);
+  }
+
+  &--active {
+    background: #FF6B35;
+    color: var(--bg-primary);
+    border-color: #FF6B35;
+  }
+}
+
+.page-title-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+
+  i {
+    color: #FF6B35;
+  }
+}
+
+.code-text {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.views-cell {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  i {
+    color: #FF6B35;
+  }
+}
+
+.actions-cell {
+  display: flex;
+  gap: 8px;
+}
+
+.action-btn {
+  width: 32px;
+  height: 32px;
+  border: 2px solid var(--border-color);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: #FF6B35;
+    color: #FF6B35;
+  }
+
+  &--danger:hover {
+    border-color: #dc3545;
+    color: #dc3545;
+  }
+}
+
+@media (max-width: 1024px) {
+  .table {
+    overflow-x: auto;
+  }
+}
+</style>

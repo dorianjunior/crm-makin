@@ -25,20 +25,20 @@ const handleRemove = () => {
 <template>
     <span
         :class="[
-            'badge-brutalist',
-            `badge-brutalist--${variant}`,
-            `badge-brutalist--${size}`,
+            'badge',
+            `badge--${variant}`,
+            `badge--${size}`,
         ]"
     >
-        <span v-if="dot" class="badge-brutalist__dot"></span>
-        <i v-if="icon" :class="`fas ${icon}`" class="badge-brutalist__icon"></i>
-        <span class="badge-brutalist__text">
+        <span v-if="dot" class="badge__dot"></span>
+        <i v-if="icon" :class="`fas ${icon}`" class="badge__icon"></i>
+        <span class="badge__text">
             <slot />
         </span>
         <button
             v-if="removable"
             type="button"
-            class="badge-brutalist__remove"
+            class="badge__remove"
             @click="handleRemove"
         >
             <i class="fas fa-times"></i>
@@ -47,7 +47,7 @@ const handleRemove = () => {
 </template>
 
 <style scoped>
-.badge-brutalist {
+.badge {
     display: inline-flex;
     align-items: center;
     gap: 6px;
@@ -65,78 +65,78 @@ const handleRemove = () => {
 }
 
 /* Variants */
-.badge-brutalist--default {
+.badge--default {
     background: var(--bg-secondary);
     border-color: var(--border-color);
     color: var(--text-primary);
 }
 
-.badge-brutalist--primary {
+.badge--primary {
     background: var(--color-primary);
     border-color: var(--color-primary);
     color: #fff;
 }
 
-.badge-brutalist--accent {
+.badge--accent {
     background: var(--color-accent);
     border-color: var(--color-accent);
     color: #fff;
 }
 
-.badge-brutalist--success {
+.badge--success {
     background: var(--color-success);
     border-color: var(--color-success);
     color: #fff;
 }
 
-.badge-brutalist--warning {
+.badge--warning {
     background: var(--color-warning);
     border-color: var(--color-warning);
     color: #fff;
 }
 
-.badge-brutalist--danger {
+.badge--danger {
     background: var(--color-error);
     border-color: var(--color-error);
     color: #fff;
 }
 
-.badge-brutalist--info {
+.badge--info {
     background: var(--color-info);
     border-color: var(--color-info);
     color: #fff;
 }
 
 /* Sizes */
-.badge-brutalist--sm {
+.badge--sm {
     padding: 2px 8px;
     font-size: 10px;
     gap: 4px;
 }
 
-.badge-brutalist--lg {
+.badge--lg {
     padding: 6px 12px;
     font-size: 12px;
     gap: 8px;
 }
 
 /* Elements */
-.badge-brutalist__dot {
+.badge__dot {
     width: 6px;
     height: 6px;
     border-radius: 50%;
     background: currentColor;
 }
 
-.badge-brutalist__icon {
+.badge__icon {
     font-size: 10px;
 }
 
-.badge-brutalist__text {
+.badge__text {
     line-height: 1;
 }
 
-.badge-brutalist__remove {
+.badge__remove {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -151,11 +151,11 @@ const handleRemove = () => {
     transition: opacity 120ms ease;
 }
 
-.badge-brutalist__remove:hover {
+.badge__remove:hover {
     opacity: 1;
 }
 
-.badge-brutalist__remove i {
+.badge__remove i {
     font-size: 9px;
 }
 </style>

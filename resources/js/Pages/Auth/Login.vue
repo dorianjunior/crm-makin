@@ -34,7 +34,7 @@ const submit = () => {
                     </div>
                 </div>
                 <h1 class="login__title">MAKIN</h1>
-                <p class="login__subtitle">Sistema Operacional — CRM</p>
+                <p class="login__subtitle">Marketing Inteligente</p>
             </div>
 
             <!-- Form Card -->

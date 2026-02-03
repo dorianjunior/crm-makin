@@ -28,6 +28,7 @@ services:
       - XDEBUG_MODE=debug
       - XDEBUG_CLIENT_HOST=host.docker.internal
       - XDEBUG_CLIENT_PORT=9003
+      - NODE_OPTIONS=--max-old-space-size=4096
     ports:
       - "9003:9003"  # Xdebug
     healthcheck:

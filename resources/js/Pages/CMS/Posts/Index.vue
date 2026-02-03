@@ -1,452 +1,359 @@
 <template>
   <MainLayout>
-    <div class="posts-index">
+    <div class="page-container">
       <!-- Header -->
       <div class="page-header">
-        <div>
-          <h1 class="page-title">Posts - {{ currentSite?.name }}</h1>
-          <Breadcrumbs :items="breadcrumbs" />
+        <div class="page-header__content">
+          <h1 class="page-header__title">POSTS DO BLOG</h1>
+          <p class="page-header__subtitle">Gerencie artigos e conteúdo do blog</p>
         </div>
-        <div class="header-actions">
-          <select v-model="selectedSiteId" @change="changeSite" class="site-selector">
-            <option v-for="site in sites" :key="site.id" :value="site.id">
-              {{ site.name }}
-            </option>
-          </select>
-          <Button
-            label="Novo Post"
-            icon="fa fa-plus"
-            @click="createPost"
-            severity="success"
-          />
-        </div>
-      </div>
-
-      <!-- Filters -->
-      <div class="filters-card">
-        <div class="filters-grid">
-          <div class="filter-item">
-            <label>Buscar</label>
-            <Input
-              v-model="filters.search"
-              placeholder="Título ou conteúdo..."
-              icon="fa fa-search"
-              @input="debouncedSearch"
-            />
-          </div>
-
-          <div class="filter-item">
-            <label>Status</label>
-            <select v-model="filters.status" @change="loadPosts" class="form-select">
-              <option value="">Todos</option>
-              <option value="draft">Rascunho</option>
-              <option value="pending">Pendente</option>
-              <option value="published">Publicado</option>
-            </select>
-          </div>
-
-          <div class="filter-item">
-            <label>Categoria</label>
-            <select v-model="filters.category_id" @change="loadPosts" class="form-select">
-              <option value="">Todas</option>
-              <option v-for="category in categories" :key="category.id" :value="category.id">
-                {{ category.name }}
-              </option>
-            </select>
-          </div>
-
-          <div class="filter-item">
-            <label>Autor</label>
-            <select v-model="filters.author_id" @change="loadPosts" class="form-select">
-              <option value="">Todos</option>
-              <option v-for="user in users" :key="user.id" :value="user.id">
-                {{ user.name }}
-              </option>
-            </select>
-          </div>
+        <div class="page-header__actions">
+          <button class="btn btn--secondary" @click="router.visit('/cms/posts/categories')">
+            <i class="fas fa-tags"></i>
+            Categorias
+          </button>
+          <button class="btn" @click="createPost">
+            <i class="fas fa-plus"></i>
+            Novo Post
+          </button>
         </div>
       </div>
 
       <!-- Stats -->
-      <div class="stats-grid">
-        <StatCard
-          title="Total de Posts"
-          :value="stats.total"
-          icon="fa fa-blog"
-          color="blue"
-        />
-        <StatCard
-          title="Publicados"
-          :value="stats.published"
-          icon="fa fa-check-circle"
-          color="green"
-        />
-        <StatCard
-          title="Rascunhos"
-          :value="stats.draft"
-          icon="fa fa-edit"
-          color="orange"
-        />
-        <StatCard
-          title="Categorias"
-          :value="categories.length"
-          icon="fa fa-folder"
-          color="purple"
-        />
+      <div class="grid grid--5">
+        <div class="stat-card">
+          <div class="stat-card__label">Total</div>
+          <div class="stat-card__value">{{ stats.total }}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card__label">Publicados</div>
+          <div class="stat-card__value">{{ stats.published }}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card__label">Rascunhos</div>
+          <div class="stat-card__value">{{ stats.draft }}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card__label">Comentários</div>
+          <div class="stat-card__value">{{ stats.comments }}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card__label">Visualizações</div>
+          <div class="stat-card__value">{{ stats.total_views }}</div>
+        </div>
       </div>
 
-      <!-- Posts Grid -->
-      <div v-if="loading" class="loading">
-        <i class="fa fa-spinner fa-spin"></i> Carregando...
+      <!-- Filters -->
+      <div class="filters">
+        <button
+          v-for="filter in filters"
+          :key="filter.value"
+          class="filter-btn"
+          :class="{ 'filter-btn--active': activeFilter === filter.value }"
+          @click="activeFilter = filter.value"
+        >
+          {{ filter.label }} ({{ filter.count }})
+        </button>
       </div>
 
-      <div v-else-if="posts.data.length === 0" class="empty-state">
-        <i class="fa fa-blog"></i>
-        <h3>Nenhum post encontrado</h3>
-        <p>Crie seu primeiro post para começar</p>
-        <Button
-          label="Criar Primeiro Post"
-          icon="fa fa-plus"
-          @click="createPost"
-          severity="success"
-        />
-      </div>
-
-      <div v-else class="posts-container">
-        <div class="posts-grid">
-          <div v-for="post in posts.data" :key="post.id" class="post-card">
-            <div v-if="post.featured_image" class="post-image">
-              <img :src="post.featured_image" :alt="post.title" />
-              <div class="image-overlay">
-                <button @click="previewPost(post)" class="overlay-btn">
-                  <i class="fa fa-eye"></i> Preview
-                </button>
+      <!-- Posts List -->
+      <div v-if="filteredPosts.length > 0" class="posts-list">
+        <div v-for="post in filteredPosts" :key="post.id" class="post-card">
+          <div v-if="post.featured_image" class="post-card__image" :style="`background-image: url(${post.featured_image})`">
+            <span v-if="post.is_featured" class="featured-badge">
+              <i class="fas fa-star"></i>
+              DESTAQUE
+            </span>
+          </div>
+          <div class="post-card__content">
+            <div class="post-card__header">
+              <div class="post-card__categories">
+                <span v-for="category in post.categories" :key="category" class="category-tag">
+                  {{ category }}
+                </span>
               </div>
-            </div>
-            <div v-else class="post-image-placeholder">
-              <i class="fa fa-image"></i>
-              <span>Sem imagem</span>
+              <span :class="['badge', `badge--${getStatusColor(post.status)}`]">
+                {{ post.status.toUpperCase() }}
+              </span>
             </div>
 
-            <div class="post-content">
-              <div class="post-meta">
-                <span :class="['badge', 'badge-' + post.status]">
-                  {{ getStatusLabel(post.status) }}
-                </span>
-                <span v-if="post.category" class="category-badge">
-                  <i class="fa fa-folder"></i>
-                  {{ post.category.name }}
-                </span>
+            <h3 class="post-card__title">{{ post.title }}</h3>
+            <p class="post-card__excerpt">{{ post.excerpt }}</p>
+
+            <div class="post-card__meta">
+              <div class="meta-item">
+                <i class="fas fa-user"></i>
+                {{ post.author_name }}
               </div>
-
-              <h3 class="post-title">{{ post.title }}</h3>
-
-              <p v-if="post.excerpt" class="post-excerpt">
-                {{ post.excerpt }}
-              </p>
-
-              <div class="post-info">
-                <div class="info-item">
-                  <i class="fa fa-user"></i>
-                  <span>{{ post.author?.name }}</span>
-                </div>
-                <div v-if="post.published_at" class="info-item">
-                  <i class="fa fa-calendar"></i>
-                  <span>{{ formatDate(post.published_at) }}</span>
-                </div>
-                <div v-if="post.read_time" class="info-item">
-                  <i class="fa fa-clock"></i>
-                  <span>{{ post.read_time }} min</span>
-                </div>
+              <div class="meta-item">
+                <i class="fas fa-calendar"></i>
+                {{ formatDate(post.published_at || post.created_at) }}
               </div>
-
-              <div v-if="post.tags && post.tags.length > 0" class="post-tags">
-                <span v-for="tag in post.tags.slice(0, 3)" :key="tag" class="tag">
-                  {{ tag }}
-                </span>
-                <span v-if="post.tags.length > 3" class="tag-more">
-                  +{{ post.tags.length - 3 }}
-                </span>
+              <div class="meta-item">
+                <i class="fas fa-eye"></i>
+                {{ post.views_count }} views
               </div>
-
-              <div class="post-actions">
-                <Button
-                  label="Editar"
-                  icon="fa fa-edit"
-                  @click="editPost(post)"
-                  size="small"
-                  outlined
-                />
-                <button @click="duplicatePost(post)" class="btn-icon" title="Duplicar">
-                  <i class="fa fa-copy"></i>
-                </button>
-                <button
-                  v-if="post.status === 'draft'"
-                  @click="publishPost(post)"
-                  class="btn-icon"
-                  title="Publicar"
-                >
-                  <i class="fa fa-paper-plane"></i>
-                </button>
-                <button @click="deletePost(post)" class="btn-icon btn-danger" title="Excluir">
-                  <i class="fa fa-trash"></i>
-                </button>
+              <div class="meta-item">
+                <i class="fas fa-comments"></i>
+                {{ post.comments_count }} comentários
               </div>
+            </div>
+
+            <div class="post-card__actions">
+              <button class="btn btn--sm" @click="editPost(post.id)">
+                <i class="fas fa-edit"></i>
+                Editar
+              </button>
+              <button class="btn btn--sm btn--secondary" @click="viewPost(post.slug)">
+                <i class="fas fa-eye"></i>
+                Visualizar
+              </button>
+              <button class="btn btn--sm btn--danger" @click="deletePost(post.id)">
+                <i class="fas fa-trash"></i>
+              </button>
             </div>
           </div>
         </div>
+      </div>
 
-        <!-- Pagination -->
-        <div v-if="posts.data.length > 0" class="pagination">
-          <div class="pagination-info">
-            Mostrando {{ posts.from }} a {{ posts.to }} de {{ posts.total }} registros
-          </div>
-          <div class="pagination-buttons">
-            <button
-              @click="changePage(page)"
-              v-for="page in paginationPages"
-              :key="page"
-              :class="['pagination-btn', { active: page === posts.current_page }]"
-              :disabled="page === '...'"
-            >
-              {{ page }}
-            </button>
-          </div>
-        </div>
+      <!-- Empty State -->
+      <div v-else class="empty-state">
+        <i class="fas fa-blog empty-state__icon"></i>
+        <h3 class="empty-state__title">Nenhum post encontrado</h3>
+        <p class="empty-state__text">Crie seu primeiro post para começar seu blog</p>
+        <button class="btn" @click="createPost">
+          <i class="fas fa-plus"></i>
+          Criar Primeiro Post
+        </button>
       </div>
     </div>
-
-    <!-- Modal de confirmação de exclusão -->
-    <Modal
-      v-model:visible="showDeleteModal"
-      title="Confirmar Exclusão"
-      @confirm="confirmDelete"
-    >
-      <p>Tem certeza que deseja excluir o post <strong>{{ postToDelete?.title }}</strong>?</p>
-      <p class="text-muted">Esta ação não pode ser desfeita.</p>
-    </Modal>
-
-    <!-- Modal de Preview -->
-    <Modal
-      v-model:visible="showPreviewModal"
-      :title="'Preview: ' + postToPreview?.title"
-      size="fullscreen"
-      :showFooter="false"
-    >
-      <div class="preview-container">
-        <iframe
-          v-if="previewUrl"
-          :src="previewUrl"
-          class="preview-iframe"
-        ></iframe>
-      </div>
-    </Modal>
-
-    <!-- Modal de Categoria -->
-    <Modal
-      v-model:visible="showCategoryModal"
-      title="Gerenciar Categorias"
-      size="medium"
-    >
-      <div class="category-manager">
-        <div class="category-form">
-          <Input
-            v-model="newCategoryName"
-            placeholder="Nome da nova categoria"
-            @keyup.enter="addCategory"
-          />
-          <Button
-            label="Adicionar"
-            icon="fa fa-plus"
-            @click="addCategory"
-            size="small"
-          />
-        </div>
-
-        <div class="category-list">
-          <div v-for="category in categories" :key="category.id" class="category-item">
-            <span class="category-name">{{ category.name }}</span>
-            <span class="category-count">{{ category.posts_count }} posts</span>
-            <button @click="deleteCategory(category)" class="btn-icon-sm btn-danger">
-              <i class="fa fa-trash"></i>
-            </button>
-          </div>
-        </div>
-      </div>
-    </Modal>
   </MainLayout>
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue';
+import { ref, computed } from 'vue';
 import { router } from '@inertiajs/vue3';
 import MainLayout from '@/Layouts/MainLayout.vue';
-import Button from '@/Components/Button.vue';
-import Input from '@/Components/Input.vue';
-import StatCard from '@/Components/StatCard.vue';
-import Breadcrumbs from '@/Components/Breadcrumbs.vue';
-import Modal from '@/Components/Modal.vue';
 
 const props = defineProps({
-  posts: Object,
-  sites: Array,
-  currentSite: Object,
-  categories: Array,
-  users: Array,
+  posts: Array,
   stats: Object,
 });
 
-const breadcrumbs = computed(() => [
-  { label: 'Dashboard', to: '/dashboard' },
-  { label: 'CMS', to: '/cms' },
-  { label: 'Sites', to: '/cms/sites' },
-  { label: props.currentSite?.name, to: `/cms/sites/${props.currentSite?.id}` },
-  { label: 'Posts', active: true }
+const activeFilter = ref('all');
+
+const filters = computed(() => [
+  { label: 'Todos', value: 'all', count: props.posts?.length || 0 },
+  { label: 'Publicados', value: 'published', count: props.posts?.filter(p => p.status === 'published').length || 0 },
+  { label: 'Rascunhos', value: 'draft', count: props.posts?.filter(p => p.status === 'draft').length || 0 },
+  { label: 'Destaques', value: 'featured', count: props.posts?.filter(p => p.is_featured).length || 0 },
 ]);
 
-const loading = ref(false);
-const selectedSiteId = ref(props.currentSite?.id);
-const filters = ref({
-  search: '',
-  status: '',
-  category_id: '',
-  author_id: '',
+const filteredPosts = computed(() => {
+  if (!props.posts) return [];
+  if (activeFilter.value === 'all') return props.posts;
+  if (activeFilter.value === 'featured') return props.posts.filter(p => p.is_featured);
+  return props.posts.filter(p => p.status === activeFilter.value);
 });
 
-const showDeleteModal = ref(false);
-const postToDelete = ref(null);
-const showPreviewModal = ref(false);
-const postToPreview = ref(null);
-const previewUrl = ref('');
-const showCategoryModal = ref(false);
-const newCategoryName = ref('');
-
-const paginationPages = computed(() => {
-  const pages = [];
-  const current = props.posts.current_page;
-  const last = props.posts.last_page;
-
-  if (last <= 7) {
-    for (let i = 1; i <= last; i++) {
-      pages.push(i);
-    }
-  } else {
-    if (current <= 3) {
-      pages.push(1, 2, 3, 4, '...', last);
-    } else if (current >= last - 2) {
-      pages.push(1, '...', last - 3, last - 2, last - 1, last);
-    } else {
-      pages.push(1, '...', current - 1, current, current + 1, '...', last);
-    }
-  }
-
-  return pages;
-});
-
-watch(() => props.currentSite?.id, (newId) => {
-  selectedSiteId.value = newId;
-});
-
-let searchTimeout = null;
-const debouncedSearch = () => {
-  clearTimeout(searchTimeout);
-  searchTimeout = setTimeout(() => {
-    loadPosts();
-  }, 500);
-};
-
-const changeSite = () => {
-  router.visit(`/cms/sites/${selectedSiteId.value}/posts`);
-};
-
-const loadPosts = () => {
-  loading.value = true;
-  router.get(`/cms/sites/${selectedSiteId.value}/posts`, filters.value, {
-    preserveState: true,
-    preserveScroll: true,
-    onFinish: () => loading.value = false,
-  });
-};
-
-const changePage = (page) => {
-  if (page === '...') return;
-  router.get(`/cms/sites/${selectedSiteId.value}/posts?page=${page}`, filters.value, {
-    preserveState: true,
-  });
-};
-
-const createPost = () => {
-  router.visit(`/cms/sites/${selectedSiteId.value}/posts/create`);
-};
-
-const editPost = (post) => {
-  router.visit(`/cms/sites/${selectedSiteId.value}/posts/${post.id}/edit`);
-};
-
-const previewPost = (post) => {
-  postToPreview.value = post;
-  previewUrl.value = post.preview_url;
-  showPreviewModal.value = true;
-};
-
-const publishPost = (post) => {
-  router.post(`/cms/sites/${selectedSiteId.value}/posts/${post.id}/publish`);
-};
-
-const duplicatePost = (post) => {
-  router.post(`/cms/sites/${selectedSiteId.value}/posts/${post.id}/duplicate`);
-};
-
-const deletePost = (post) => {
-  postToDelete.value = post;
-  showDeleteModal.value = true;
-};
-
-const confirmDelete = () => {
-  router.delete(`/cms/sites/${selectedSiteId.value}/posts/${postToDelete.value.id}`, {
-    onSuccess: () => {
-      showDeleteModal.value = false;
-      postToDelete.value = null;
-    },
-  });
-};
-
-const addCategory = () => {
-  if (!newCategoryName.value.trim()) return;
-
-  router.post(`/cms/sites/${selectedSiteId.value}/categories`, {
-    name: newCategoryName.value
-  }, {
-    onSuccess: () => {
-      newCategoryName.value = '';
-    },
-  });
-};
-
-const deleteCategory = (category) => {
-  if (category.posts_count > 0) {
-    alert('Não é possível excluir uma categoria com posts associados.');
-    return;
-  }
-
-  router.delete(`/cms/sites/${selectedSiteId.value}/categories/${category.id}`);
-};
-
-const getStatusLabel = (status) => {
-  const labels = {
-    draft: 'Rascunho',
-    pending: 'Pendente',
-    published: 'Publicado',
+const getStatusColor = (status) => {
+  const colors = {
+    published: 'success',
+    draft: 'warning',
+    scheduled: 'info',
+    archived: 'neutral'
   };
-  return labels[status] || status;
+  return colors[status] || 'neutral';
 };
 
 const formatDate = (date) => {
-  return new Date(date).toLocaleDateString('pt-BR', {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
-  });
+  return new Date(date).toLocaleDateString('pt-BR');
+};
+
+const createPost = () => {
+  router.visit('/cms/posts/create');
+};
+
+const editPost = (id) => {
+  router.visit(`/cms/posts/${id}/edit`);
+};
+
+const viewPost = (slug) => {
+  window.open(`/blog/${slug}`, '_blank');
+};
+
+const deletePost = (id) => {
+  if (confirm('Tem certeza que deseja excluir este post?')) {
+    router.delete(`/cms/posts/${id}`);
+  }
 };
 </script>
 
+<style scoped lang="scss">
+.page-container {
+  padding: 32px;
+}
+
+.filters {
+  display: flex;
+  gap: 16px;
+  margin: 32px 0;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  padding: 12px 24px;
+  border: 2px solid var(--border-color);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: #FF6B35;
+    transform: translateX(2px);
+  }
+
+  &--active {
+    background: #FF6B35;
+    color: var(--bg-primary);
+    border-color: #FF6B35;
+  }
+}
+
+.posts-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
+  gap: 24px;
+}
+
+.post-card {
+  border: 2px solid var(--border-color);
+  background: var(--bg-primary);
+  display: flex;
+  flex-direction: column;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: #FF6B35;
+    transform: translateY(-2px);
+  }
+
+  &__image {
+    height: 240px;
+    background-size: cover;
+    background-position: center;
+    border-bottom: 2px solid var(--border-color);
+    position: relative;
+
+    .featured-badge {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: #FF6B35;
+      color: var(--bg-primary);
+      padding: 8px 16px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+  }
+
+  &__content {
+    padding: 24px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  &__categories {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    flex: 1;
+
+    .category-tag {
+      padding: 4px 12px;
+      border: 2px solid var(--border-color);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+    }
+  }
+
+  &__title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0 0 12px;
+    color: var(--text-primary);
+    line-height: 1.3;
+  }
+
+  &__excerpt {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    margin: 0 0 20px;
+    flex: 1;
+  }
+
+  &__meta {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+    padding-top: 16px;
+    border-top: 2px solid var(--border-color);
+
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--text-secondary);
+
+      i {
+        color: #FF6B35;
+      }
+    }
+  }
+
+  &__actions {
+    display: flex;
+    gap: 8px;
+  }
+}
+
+@media (max-width: 768px) {
+  .posts-list {
+    grid-template-columns: 1fr;
+  }
+
+  .post-card__actions {
+    flex-direction: column;
+
+    .btn {
+      width: 100%;
+    }
+  }
+}
+</style>

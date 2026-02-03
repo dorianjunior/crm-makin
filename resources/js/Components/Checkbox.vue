@@ -40,8 +40,8 @@ const isChecked = () => {
 </script>
 
 <template>
-    <div class="checkbox-brutalist">
-        <div class="checkbox-brutalist__wrapper">
+    <div class="checkbox">
+        <div class="checkbox__wrapper">
             <input
                 :id="checkboxId"
                 type="checkbox"
@@ -49,31 +49,31 @@ const isChecked = () => {
                 :value="value"
                 :disabled="disabled"
                 :indeterminate="indeterminate"
-                class="checkbox-brutalist__input"
+                class="checkbox__input"
                 @change="handleChange"
             />
             <label
                 :for="checkboxId"
                 :class="[
-                    'checkbox-brutalist__box',
-                    { 'checkbox-brutalist__box--checked': isChecked() },
-                    { 'checkbox-brutalist__box--indeterminate': indeterminate },
-                    { 'checkbox-brutalist__box--disabled': disabled },
+                    'checkbox__box',
+                    { 'checkbox__box--checked': isChecked() },
+                    { 'checkbox__box--indeterminate': indeterminate },
+                    { 'checkbox__box--disabled': disabled },
                 ]"
             >
-                <i v-if="indeterminate" class="fas fa-minus checkbox-brutalist__icon"></i>
-                <i v-else-if="isChecked()" class="fas fa-check checkbox-brutalist__icon"></i>
+                <i v-if="indeterminate" class="fas fa-minus checkbox__icon"></i>
+                <i v-else-if="isChecked()" class="fas fa-check checkbox__icon"></i>
             </label>
         </div>
 
-        <div v-if="label || description" class="checkbox-brutalist__content">
+        <div v-if="label || description" class="checkbox__content">
             <label
                 :for="checkboxId"
-                class="checkbox-brutalist__label"
+                class="checkbox__label"
             >
                 {{ label }}
             </label>
-            <p v-if="description" class="checkbox-brutalist__description">
+            <p v-if="description" class="checkbox__description">
                 {{ description }}
             </p>
         </div>
@@ -81,25 +81,25 @@ const isChecked = () => {
 </template>
 
 <style scoped>
-.checkbox-brutalist {
+.checkbox {
     display: flex;
     align-items: flex-start;
     gap: 12px;
 }
 
-.checkbox-brutalist__wrapper {
+.checkbox__wrapper {
     position: relative;
     flex-shrink: 0;
 }
 
-.checkbox-brutalist__input {
+.checkbox__input {
     position: absolute;
     opacity: 0;
     width: 0;
     height: 0;
 }
 
-.checkbox-brutalist__box {
+.checkbox__box {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -111,42 +111,42 @@ const isChecked = () => {
     transition: all 180ms ease;
 }
 
-.checkbox-brutalist__box:hover:not(.checkbox-brutalist__box--disabled) {
+.checkbox__box:hover:not(.checkbox__box--disabled) {
     border-color: var(--color-accent);
 }
 
-.checkbox-brutalist__box--checked {
+.checkbox__box--checked {
     background: var(--color-accent);
     border-color: var(--color-accent);
 }
 
-.checkbox-brutalist__box--indeterminate {
+.checkbox__box--indeterminate {
     background: var(--color-accent);
     border-color: var(--color-accent);
 }
 
-.checkbox-brutalist__box--disabled {
+.checkbox__box--disabled {
     opacity: 0.5;
     cursor: not-allowed;
 }
 
-.checkbox-brutalist__icon {
+.checkbox__icon {
     font-size: 11px;
     color: #fff;
 }
 
-.checkbox-brutalist__input:focus-visible + .checkbox-brutalist__box {
+.checkbox__input:focus-visible + .checkbox__box {
     outline: 2px solid var(--color-accent);
     outline-offset: 2px;
 }
 
-.checkbox-brutalist__content {
+.checkbox__content {
     display: flex;
     flex-direction: column;
     gap: 4px;
 }
 
-.checkbox-brutalist__label {
+.checkbox__label {
     font-family: 'Inter', sans-serif;
     font-size: 14px;
     font-weight: 500;
@@ -154,7 +154,7 @@ const isChecked = () => {
     cursor: pointer;
 }
 
-.checkbox-brutalist__description {
+.checkbox__description {
     font-family: 'Inter', sans-serif;
     font-size: 12px;
     color: var(--text-secondary);

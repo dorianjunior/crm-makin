@@ -23,17 +23,17 @@ const defaultIcons = {
 </script>
 
 <template>
-    <div :class="['alert-brutalist', `alert-brutalist--${variant}`]">
-        <div class="alert-brutalist__icon">
+    <div :class="['alert', `alert--${variant}`]">
+        <div class="alert__icon">
             <i :class="`fas ${icon || defaultIcons[variant]}`"></i>
         </div>
-        <div class="alert-brutalist__content">
+        <div class="alert__content">
             <slot />
         </div>
         <button
             v-if="closeable"
             type="button"
-            class="alert-brutalist__close"
+            class="alert__close"
             @click="emit('close')"
         >
             <i class="fas fa-times"></i>
@@ -42,7 +42,7 @@ const defaultIcons = {
 </template>
 
 <style scoped>
-.alert-brutalist {
+.alert {
     display: flex;
     align-items: flex-start;
     gap: 12px;
@@ -54,7 +54,7 @@ const defaultIcons = {
     line-height: 1.5;
 }
 
-.alert-brutalist__icon {
+.alert__icon {
     flex-shrink: 0;
     display: flex;
     align-items: center;
@@ -63,11 +63,11 @@ const defaultIcons = {
     font-size: 16px;
 }
 
-.alert-brutalist__content {
+.alert__content {
     flex: 1;
 }
 
-.alert-brutalist__close {
+.alert__close {
     flex-shrink: 0;
     display: flex;
     align-items: center;
@@ -82,49 +82,49 @@ const defaultIcons = {
     transition: opacity 120ms ease;
 }
 
-.alert-brutalist__close:hover {
+.alert__close:hover {
     opacity: 1;
 }
 
 /* Variants */
-.alert-brutalist--info {
+.alert--info {
     background: color-mix(in srgb, var(--color-info) 8%, var(--bg-secondary));
     border-color: var(--color-info);
     color: var(--color-info);
 }
 
-.alert-brutalist--success {
+.alert--success {
     background: color-mix(in srgb, var(--color-success) 8%, var(--bg-secondary));
     border-color: var(--color-success);
     color: var(--color-success);
 }
 
-.alert-brutalist--warning {
+.alert--warning {
     background: color-mix(in srgb, var(--color-warning) 8%, var(--bg-secondary));
     border-color: var(--color-warning);
     color: var(--color-warning);
 }
 
-.alert-brutalist--error {
+.alert--error {
     background: color-mix(in srgb, var(--color-error) 8%, var(--bg-secondary));
     border-color: var(--color-error);
     color: var(--color-error);
 }
 
 /* Dark mode adjustments */
-:root[data-theme='dark'] .alert-brutalist--info {
+:root[data-theme='dark'] .alert--info {
     background: color-mix(in srgb, var(--color-info) 12%, var(--bg-secondary));
 }
 
-:root[data-theme='dark'] .alert-brutalist--success {
+:root[data-theme='dark'] .alert--success {
     background: color-mix(in srgb, var(--color-success) 12%, var(--bg-secondary));
 }
 
-:root[data-theme='dark'] .alert-brutalist--warning {
+:root[data-theme='dark'] .alert--warning {
     background: color-mix(in srgb, var(--color-warning) 12%, var(--bg-secondary));
 }
 
-:root[data-theme='dark'] .alert-brutalist--error {
+:root[data-theme='dark'] .alert--error {
     background: color-mix(in srgb, var(--color-error) 12%, var(--bg-secondary));
 }
 </style>

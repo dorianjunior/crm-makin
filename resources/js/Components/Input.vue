@@ -55,27 +55,27 @@ defineExpose({ focus });
 </script>
 
 <template>
-    <div class="input-brutalist">
+    <div class="input">
         <!-- Label -->
         <label
             v-if="label"
             :for="inputId"
-            class="input-brutalist__label"
+            class="input__label"
         >
             {{ label }}
-            <span v-if="required" class="input-brutalist__required">*</span>
+            <span v-if="required" class="input__required">*</span>
         </label>
 
         <!-- Input Wrapper -->
         <div
             :class="[
-                'input-brutalist__wrapper',
-                { 'input-brutalist__wrapper--focused': isFocused },
-                { 'input-brutalist__wrapper--error': hasError },
-                { 'input-brutalist__wrapper--disabled': disabled },
+                'input__wrapper',
+                { 'input__wrapper--focused': isFocused },
+                { 'input__wrapper--error': hasError },
+                { 'input__wrapper--disabled': disabled },
             ]"
         >
-            <i v-if="icon" :class="`fas ${icon}`" class="input-brutalist__icon"></i>
+            <i v-if="icon" :class="`fas ${icon}`" class="input__icon"></i>
 
             <!-- Textarea -->
             <textarea
@@ -89,7 +89,7 @@ defineExpose({ focus });
                 :required="required"
                 :maxlength="maxlength"
                 :rows="rows"
-                class="input-brutalist__field input-brutalist__field--textarea"
+                class="input__field input__field--textarea"
                 @input="emit('update:modelValue', $event.target.value)"
                 @focus="handleFocus"
                 @blur="handleBlur"
@@ -107,27 +107,27 @@ defineExpose({ focus });
                 :readonly="readonly"
                 :required="required"
                 :maxlength="maxlength"
-                class="input-brutalist__field"
+                class="input__field"
                 @input="emit('update:modelValue', $event.target.value)"
                 @focus="handleFocus"
                 @blur="handleBlur"
             />
 
-            <i v-if="iconRight" :class="`fas ${iconRight}`" class="input-brutalist__icon-right"></i>
+            <i v-if="iconRight" :class="`fas ${iconRight}`" class="input__icon-right"></i>
         </div>
 
         <!-- Helper / Error Text -->
-        <div v-if="error || helperText" class="input-brutalist__footer">
+        <div v-if="error || helperText" class="input__footer">
             <span
                 v-if="error"
-                class="input-brutalist__error"
+                class="input__error"
             >
                 <i class="fas fa-exclamation-circle"></i>
                 {{ error }}
             </span>
             <span
                 v-else-if="helperText"
-                class="input-brutalist__helper"
+                class="input__helper"
             >
                 {{ helperText }}
             </span>
@@ -136,7 +136,7 @@ defineExpose({ focus });
         <!-- Character Count -->
         <div
             v-if="maxlength && modelValue"
-            class="input-brutalist__count"
+            class="input__count"
         >
             {{ modelValue.length }} / {{ maxlength }}
         </div>
@@ -144,13 +144,13 @@ defineExpose({ focus });
 </template>
 
 <style scoped>
-.input-brutalist {
+.input {
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
 
-.input-brutalist__label {
+.input__label {
     font-family: 'Space Grotesk', sans-serif;
     font-size: 12px;
     font-weight: 700;
@@ -159,12 +159,12 @@ defineExpose({ focus });
     color: var(--text-primary);
 }
 
-.input-brutalist__required {
+.input__required {
     color: var(--color-error);
     margin-left: 2px;
 }
 
-.input-brutalist__wrapper {
+.input__wrapper {
     position: relative;
     display: flex;
     align-items: center;
@@ -173,20 +173,20 @@ defineExpose({ focus });
     transition: all 180ms ease;
 }
 
-.input-brutalist__wrapper--focused {
+.input__wrapper--focused {
     border-color: var(--color-accent);
 }
 
-.input-brutalist__wrapper--error {
+.input__wrapper--error {
     border-color: var(--color-error);
 }
 
-.input-brutalist__wrapper--disabled {
+.input__wrapper--disabled {
     opacity: 0.5;
     cursor: not-allowed;
 }
 
-.input-brutalist__field {
+.input__field {
     flex: 1;
     padding: 12px 16px;
     font-family: 'Inter', sans-serif;
@@ -199,36 +199,36 @@ defineExpose({ focus });
     outline: none;
 }
 
-.input-brutalist__field--textarea {
+.input__field--textarea {
     resize: vertical;
     min-height: 100px;
 }
 
-.input-brutalist__field::placeholder {
+.input__field::placeholder {
     color: var(--text-muted);
     opacity: 0.6;
 }
 
-.input-brutalist__field:disabled {
+.input__field:disabled {
     cursor: not-allowed;
 }
 
-.input-brutalist__icon,
-.input-brutalist__icon-right {
+.input__icon,
+.input__icon-right {
     flex-shrink: 0;
     font-size: 16px;
     color: var(--text-secondary);
 }
 
-.input-brutalist__icon {
+.input__icon {
     margin-left: 16px;
 }
 
-.input-brutalist__icon-right {
+.input__icon-right {
     margin-right: 16px;
 }
 
-.input-brutalist__footer {
+.input__footer {
     display: flex;
     align-items: center;
     gap: 4px;
@@ -237,7 +237,7 @@ defineExpose({ focus });
     line-height: 1.4;
 }
 
-.input-brutalist__error {
+.input__error {
     display: flex;
     align-items: center;
     gap: 6px;
@@ -245,11 +245,11 @@ defineExpose({ focus });
     font-weight: 500;
 }
 
-.input-brutalist__helper {
+.input__helper {
     color: var(--text-secondary);
 }
 
-.input-brutalist__count {
+.input__count {
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
     color: var(--text-muted);
@@ -257,11 +257,11 @@ defineExpose({ focus });
 }
 
 /* Dark mode adjustments */
-:root[data-theme='dark'] .input-brutalist__field {
+:root[data-theme='dark'] .input__field {
     color: var(--text-primary);
 }
 
-:root[data-theme='dark'] .input-brutalist__wrapper {
+:root[data-theme='dark'] .input__wrapper {
     background: var(--bg-secondary);
 }
 </style>

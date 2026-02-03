@@ -112,15 +112,15 @@ if (typeof document !== 'undefined') {
 </script>
 
 <template>
-    <div class="select-brutalist" ref="selectRef">
+    <div class="select" ref="selectRef">
         <!-- Label -->
         <label
             v-if="label"
             :for="selectId"
-            class="select-brutalist__label"
+            class="select__label"
         >
             {{ label }}
-            <span v-if="required" class="select-brutalist__required">*</span>
+            <span v-if="required" class="select__required">*</span>
         </label>
 
         <!-- Select Button -->
@@ -128,69 +128,69 @@ if (typeof document !== 'undefined') {
             type="button"
             :id="selectId"
             :class="[
-                'select-brutalist__button',
-                { 'select-brutalist__button--open': isOpen },
-                { 'select-brutalist__button--error': hasError },
-                { 'select-brutalist__button--disabled': disabled },
+                'select__button',
+                { 'select__button--open': isOpen },
+                { 'select__button--error': hasError },
+                { 'select__button--disabled': disabled },
             ]"
             @click="toggleDropdown"
             :disabled="disabled"
         >
             <span :class="[
-                'select-brutalist__value',
-                { 'select-brutalist__value--placeholder': !modelValue || (Array.isArray(modelValue) && modelValue.length === 0) }
+                'select__value',
+                { 'select__value--placeholder': !modelValue || (Array.isArray(modelValue) && modelValue.length === 0) }
             ]">
                 {{ displayText }}
             </span>
             <i :class="[
                 'fas',
                 isOpen ? 'fa-chevron-up' : 'fa-chevron-down',
-                'select-brutalist__icon'
+                'select__icon'
             ]"></i>
         </button>
 
         <!-- Dropdown -->
-        <div v-show="isOpen" class="select-brutalist__dropdown">
+        <div v-show="isOpen" class="select__dropdown">
             <!-- Search Input -->
-            <div v-if="searchable" class="select-brutalist__search">
-                <i class="fas fa-search select-brutalist__search-icon"></i>
+            <div v-if="searchable" class="select__search">
+                <i class="fas fa-search select__search-icon"></i>
                 <input
                     v-model="searchTerm"
                     type="text"
                     placeholder="Buscar..."
-                    class="select-brutalist__search-input"
+                    class="select__search-input"
                     @click.stop
                 />
             </div>
 
             <!-- Options List -->
-            <div class="select-brutalist__options">
+            <div class="select__options">
                 <div
                     v-for="option in filteredOptions"
                     :key="option[valueKey]"
                     :class="[
-                        'select-brutalist__option',
-                        { 'select-brutalist__option--selected': isSelected(option) }
+                        'select__option',
+                        { 'select__option--selected': isSelected(option) }
                     ]"
                     @click="selectOption(option)"
                 >
                     <span>{{ option[labelKey] }}</span>
-                    <i v-if="isSelected(option)" class="fas fa-check select-brutalist__check"></i>
+                    <i v-if="isSelected(option)" class="fas fa-check select__check"></i>
                 </div>
 
-                <div v-if="filteredOptions.length === 0" class="select-brutalist__empty">
+                <div v-if="filteredOptions.length === 0" class="select__empty">
                     Nenhuma opção encontrada
                 </div>
             </div>
         </div>
 
         <!-- Helper / Error Text -->
-        <div v-if="error || helperText" class="select-brutalist__footer">
-            <span v-if="error" class="select-brutalist__error">
+        <div v-if="error || helperText" class="select__footer">
+            <span v-if="error" class="select__error">
                 <i class="fas fa-exclamation-circle"></i>
                 {{ error }}
             </span>
-            <span v-else-if="helperText" class="select-brutalist__helper">
+            <span v-else-if="helperText" class="select__helper">
                 {{ helperText }}
             </span>
         </div>
@@ -198,14 +198,14 @@ if (typeof document !== 'undefined') {
 </template>
 
 <style scoped>
-.select-brutalist {
+.select {
     position: relative;
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
 
-.select-brutalist__label {
+.select__label {
     font-family: 'Space Grotesk', sans-serif;
     font-size: 12px;
     font-weight: 700;
@@ -214,12 +214,12 @@ if (typeof document !== 'undefined') {
     color: var(--text-primary);
 }
 
-.select-brutalist__required {
+.select__required {
     color: var(--color-error);
     margin-left: 2px;
 }
 
-.select-brutalist__button {
+.select__button {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -236,40 +236,40 @@ if (typeof document !== 'undefined') {
     transition: all 180ms ease;
 }
 
-.select-brutalist__button:hover:not(:disabled) {
+.select__button:hover:not(:disabled) {
     border-color: var(--border-bold, #262626);
 }
 
-.select-brutalist__button--open {
+.select__button--open {
     border-color: var(--color-accent);
 }
 
-.select-brutalist__button--error {
+.select__button--error {
     border-color: var(--color-error);
 }
 
-.select-brutalist__button--disabled {
+.select__button--disabled {
     opacity: 0.5;
     cursor: not-allowed;
 }
 
-.select-brutalist__value {
+.select__value {
     flex: 1;
     color: var(--text-primary);
 }
 
-.select-brutalist__value--placeholder {
+.select__value--placeholder {
     color: var(--text-muted);
     opacity: 0.6;
 }
 
-.select-brutalist__icon {
+.select__icon {
     font-size: 12px;
     color: var(--text-secondary);
     transition: transform 180ms ease;
 }
 
-.select-brutalist__dropdown {
+.select__dropdown {
     position: absolute;
     top: calc(100% + 4px);
     left: 0;
@@ -293,13 +293,13 @@ if (typeof document !== 'undefined') {
     }
 }
 
-.select-brutalist__search {
+.select__search {
     position: relative;
     padding: 12px;
     border-bottom: 2px solid var(--border-color);
 }
 
-.select-brutalist__search-icon {
+.select__search-icon {
     position: absolute;
     left: 24px;
     top: 50%;
@@ -308,7 +308,7 @@ if (typeof document !== 'undefined') {
     font-size: 14px;
 }
 
-.select-brutalist__search-input {
+.select__search-input {
     width: 100%;
     padding: 8px 12px 8px 36px;
     font-family: 'Inter', sans-serif;
@@ -319,16 +319,16 @@ if (typeof document !== 'undefined') {
     outline: none;
 }
 
-.select-brutalist__search-input:focus {
+.select__search-input:focus {
     border-color: var(--color-accent);
 }
 
-.select-brutalist__options {
+.select__options {
     max-height: 236px;
     overflow-y: auto;
 }
 
-.select-brutalist__option {
+.select__option {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -341,25 +341,25 @@ if (typeof document !== 'undefined') {
     border-bottom: 1px solid var(--border-color);
 }
 
-.select-brutalist__option:last-child {
+.select__option:last-child {
     border-bottom: none;
 }
 
-.select-brutalist__option:hover {
+.select__option:hover {
     background: var(--bg-secondary);
 }
 
-.select-brutalist__option--selected {
+.select__option--selected {
     background: var(--bg-secondary);
     font-weight: 600;
 }
 
-.select-brutalist__check {
+.select__check {
     color: var(--color-accent);
     font-size: 14px;
 }
 
-.select-brutalist__empty {
+.select__empty {
     padding: 24px 16px;
     text-align: center;
     font-family: 'Inter', sans-serif;
@@ -367,7 +367,7 @@ if (typeof document !== 'undefined') {
     color: var(--text-muted);
 }
 
-.select-brutalist__footer {
+.select__footer {
     display: flex;
     align-items: center;
     gap: 4px;
@@ -375,7 +375,7 @@ if (typeof document !== 'undefined') {
     font-size: 12px;
 }
 
-.select-brutalist__error {
+.select__error {
     display: flex;
     align-items: center;
     gap: 6px;
@@ -383,25 +383,25 @@ if (typeof document !== 'undefined') {
     font-weight: 500;
 }
 
-.select-brutalist__helper {
+.select__helper {
     color: var(--text-secondary);
 }
 
 /* Scrollbar */
-.select-brutalist__options::-webkit-scrollbar {
+.select__options::-webkit-scrollbar {
     width: 8px;
 }
 
-.select-brutalist__options::-webkit-scrollbar-track {
+.select__options::-webkit-scrollbar-track {
     background: var(--bg-primary);
 }
 
-.select-brutalist__options::-webkit-scrollbar-thumb {
+.select__options::-webkit-scrollbar-thumb {
     background: var(--border-color);
     border: 2px solid var(--bg-primary);
 }
 
-.select-brutalist__options::-webkit-scrollbar-thumb:hover {
+.select__options::-webkit-scrollbar-thumb:hover {
     background: var(--text-muted);
 }
 </style>

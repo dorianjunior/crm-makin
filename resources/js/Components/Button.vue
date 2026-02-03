@@ -43,28 +43,28 @@ const handleClick = (event) => {
     <button
         :type="type"
         :class="[
-            'btn-brutalist',
-            `btn-brutalist--${variant}`,
-            `btn-brutalist--${size}`,
-            { 'btn-brutalist--full': fullWidth },
-            { 'btn-brutalist--loading': loading },
+            'btn',
+            `btn--${variant}`,
+            `btn--${size}`,
+            { 'btn--full': fullWidth },
+            { 'btn--loading': loading },
         ]"
         :disabled="disabled || loading"
         @click="handleClick"
     >
-        <i v-if="loading" class="fas fa-spinner fa-spin btn-brutalist__icon"></i>
-        <i v-else-if="icon" :class="`fas ${icon}`" class="btn-brutalist__icon"></i>
+        <i v-if="loading" class="fas fa-spinner fa-spin btn__icon"></i>
+        <i v-else-if="icon" :class="`fas ${icon}`" class="btn__icon"></i>
 
-        <span class="btn-brutalist__text">
+        <span class="btn__text">
             <slot />
         </span>
 
-        <i v-if="iconRight && !loading" :class="`fas ${iconRight}`" class="btn-brutalist__icon-right"></i>
+        <i v-if="iconRight && !loading" :class="`fas ${iconRight}`" class="btn__icon-right"></i>
     </button>
 </template>
 
 <style scoped>
-.btn-brutalist {
+.btn {
     position: relative;
     display: inline-flex;
     align-items: center;
@@ -85,7 +85,7 @@ const handleClick = (event) => {
     overflow: hidden;
 }
 
-.btn-brutalist::before {
+.btn::before {
     content: '';
     position: absolute;
     inset: 0;
@@ -95,133 +95,133 @@ const handleClick = (event) => {
     z-index: 0;
 }
 
-.btn-brutalist:hover::before {
+.btn:hover::before {
     opacity: 0.08;
 }
 
-.btn-brutalist:active {
+.btn:active {
     transform: translateY(1px);
 }
 
-.btn-brutalist:disabled {
+.btn:disabled {
     opacity: 0.5;
     cursor: not-allowed;
     transform: none !important;
 }
 
-.btn-brutalist__icon,
-.btn-brutalist__icon-right,
-.btn-brutalist__text {
+.btn__icon,
+.btn__icon-right,
+.btn__text {
     position: relative;
     z-index: 1;
 }
 
 /* Variants */
-.btn-brutalist--primary {
+.btn--primary {
     background: var(--color-primary);
     border-color: var(--color-primary);
     color: #fff;
 }
 
-.btn-brutalist--primary:hover:not(:disabled) {
+.btn--primary:hover:not(:disabled) {
     background: var(--color-primary-dark);
     border-color: var(--color-primary-dark);
     transform: translateX(2px);
 }
 
-.btn-brutalist--secondary {
+.btn--secondary {
     background: var(--bg-secondary);
     border-color: var(--border-color);
     color: var(--text-primary);
 }
 
-.btn-brutalist--secondary:hover:not(:disabled) {
+.btn--secondary:hover:not(:disabled) {
     background: var(--bg-tertiary);
     border-color: var(--border-bold, #262626);
 }
 
-.btn-brutalist--accent {
+.btn--accent {
     background: var(--color-accent);
     border-color: var(--color-accent);
     color: #fff;
 }
 
-.btn-brutalist--accent:hover:not(:disabled) {
+.btn--accent:hover:not(:disabled) {
     background: var(--color-accent-dark);
     border-color: var(--color-accent-dark);
     transform: translateX(3px);
 }
 
-.btn-brutalist--accent::before {
+.btn--accent::before {
     background: #fff;
 }
 
-.btn-brutalist--success {
+.btn--success {
     background: var(--color-success);
     border-color: var(--color-success);
     color: #fff;
 }
 
-.btn-brutalist--success:hover:not(:disabled) {
+.btn--success:hover:not(:disabled) {
     opacity: 0.9;
 }
 
-.btn-brutalist--danger {
+.btn--danger {
     background: var(--color-error);
     border-color: var(--color-error);
     color: #fff;
 }
 
-.btn-brutalist--danger:hover:not(:disabled) {
+.btn--danger:hover:not(:disabled) {
     opacity: 0.9;
 }
 
-.btn-brutalist--warning {
+.btn--warning {
     background: var(--color-warning);
     border-color: var(--color-warning);
     color: #fff;
 }
 
-.btn-brutalist--warning:hover:not(:disabled) {
+.btn--warning:hover:not(:disabled) {
     opacity: 0.9;
 }
 
-.btn-brutalist--ghost {
+.btn--ghost {
     background: transparent;
     border-color: var(--border-color);
     color: var(--text-primary);
 }
 
-.btn-brutalist--ghost:hover:not(:disabled) {
+.btn--ghost:hover:not(:disabled) {
     background: var(--bg-secondary);
     border-color: var(--border-bold, #262626);
 }
 
 /* Sizes */
-.btn-brutalist--sm {
+.btn--sm {
     padding: 8px 16px;
     font-size: 11px;
     gap: 8px;
 }
 
-.btn-brutalist--lg {
+.btn--lg {
     padding: 16px 32px;
     font-size: 15px;
     gap: 12px;
 }
 
 /* Full width */
-.btn-brutalist--full {
+.btn--full {
     width: 100%;
 }
 
 /* Loading state */
-.btn-brutalist--loading {
+.btn--loading {
     pointer-events: none;
 }
 
 /* Focus */
-.btn-brutalist:focus-visible {
+.btn:focus-visible {
     outline: 2px solid var(--color-accent);
     outline-offset: 2px;
 }

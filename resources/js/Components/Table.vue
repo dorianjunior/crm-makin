@@ -45,25 +45,25 @@ const getCellValue = (row, column) => {
 </script>
 
 <template>
-    <div class="table-brutalist-wrapper">
+    <div class="table-wrapper">
         <table
             :class="[
-                'table-brutalist',
-                { 'table-brutalist--striped': striped },
-                { 'table-brutalist--hoverable': hoverable },
-                { 'table-brutalist--bordered': bordered },
+                'table',
+                { 'table--striped': striped },
+                { 'table--hoverable': hoverable },
+                { 'table--bordered': bordered },
             ]"
         >
             <!-- Header -->
-            <thead class="table-brutalist__head">
-                <tr class="table-brutalist__row">
+            <thead class="table__head">
+                <tr class="table__row">
                     <th
                         v-for="(column, index) in columns"
                         :key="index"
                         :class="[
-                            'table-brutalist__cell table-brutalist__cell--header',
-                            column.align ? `table-brutalist__cell--${column.align}` : '',
-                            column.width ? '' : 'table-brutalist__cell--auto',
+                            'table__cell table__cell--header',
+                            column.align ? `table__cell--${column.align}` : '',
+                            column.width ? '' : 'table__cell--auto',
                         ]"
                         :style="column.width ? { width: column.width } : {}"
                     >
@@ -75,11 +75,11 @@ const getCellValue = (row, column) => {
             </thead>
 
             <!-- Body -->
-            <tbody class="table-brutalist__body">
+            <tbody class="table__body">
                 <!-- Loading State -->
-                <tr v-if="loading" class="table-brutalist__row">
-                    <td :colspan="columns.length" class="table-brutalist__cell table-brutalist__cell--loading">
-                        <div class="table-brutalist__loading">
+                <tr v-if="loading" class="table__row">
+                    <td :colspan="columns.length" class="table__cell table__cell--loading">
+                        <div class="table__loading">
                             <i class="fas fa-spinner fa-spin"></i>
                             <span>Carregando...</span>
                         </div>
@@ -87,8 +87,8 @@ const getCellValue = (row, column) => {
                 </tr>
 
                 <!-- Empty State -->
-                <tr v-else-if="data.length === 0" class="table-brutalist__row">
-                    <td :colspan="columns.length" class="table-brutalist__cell table-brutalist__cell--empty">
+                <tr v-else-if="data.length === 0" class="table__row">
+                    <td :colspan="columns.length" class="table__cell table__cell--empty">
                         <slot name="empty">
                             {{ emptyText }}
                         </slot>
@@ -100,15 +100,15 @@ const getCellValue = (row, column) => {
                     v-else
                     v-for="(row, rowIndex) in data"
                     :key="rowIndex"
-                    class="table-brutalist__row table-brutalist__row--body"
+                    class="table__row table__row--body"
                     @click="handleRowClick(row, rowIndex)"
                 >
                     <td
                         v-for="(column, colIndex) in columns"
                         :key="colIndex"
                         :class="[
-                            'table-brutalist__cell',
-                            column.align ? `table-brutalist__cell--${column.align}` : '',
+                            'table__cell',
+                            column.align ? `table__cell--${column.align}` : '',
                         ]"
                     >
                         <slot :name="`cell-${column.field}`" :row="row" :value="getCellValue(row, column)" :index="rowIndex">
@@ -122,13 +122,13 @@ const getCellValue = (row, column) => {
 </template>
 
 <style scoped>
-.table-brutalist-wrapper {
+.table-wrapper {
     width: 100%;
     overflow-x: auto;
     border: 2px solid var(--border-color);
 }
 
-.table-brutalist {
+.table {
     width: 100%;
     border-collapse: collapse;
     font-family: 'Inter', sans-serif;
@@ -136,11 +136,11 @@ const getCellValue = (row, column) => {
 }
 
 /* Header */
-.table-brutalist__head {
+.table__head {
     background: var(--bg-secondary);
 }
 
-.table-brutalist__cell--header {
+.table__cell--header {
     padding: 16px 20px;
     font-family: 'Space Grotesk', sans-serif;
     font-size: 12px;
@@ -153,7 +153,7 @@ const getCellValue = (row, column) => {
 }
 
 /* Body */
-.table-brutalist__body .table-brutalist__cell {
+.table__body .table__cell {
     padding: 16px 20px;
     font-size: 14px;
     font-weight: 500;
@@ -161,60 +161,60 @@ const getCellValue = (row, column) => {
     border-bottom: 1px solid var(--border-color);
 }
 
-.table-brutalist__row--body:last-child .table-brutalist__cell {
+.table__row--body:last-child .table__cell {
     border-bottom: none;
 }
 
 /* Alignment */
-.table-brutalist__cell--left {
+.table__cell--left {
     text-align: left;
 }
 
-.table-brutalist__cell--center {
+.table__cell--center {
     text-align: center;
 }
 
-.table-brutalist__cell--right {
+.table__cell--right {
     text-align: right;
 }
 
-.table-brutalist__cell--auto {
+.table__cell--auto {
     width: auto;
 }
 
 /* Bordered */
-.table-brutalist--bordered .table-brutalist__cell {
+.table--bordered .table__cell {
     border-right: 1px solid var(--border-color);
 }
 
-.table-brutalist--bordered .table-brutalist__cell:last-child {
+.table--bordered .table__cell:last-child {
     border-right: none;
 }
 
 /* Striped */
-.table-brutalist--striped .table-brutalist__row--body:nth-child(even) {
+.table--striped .table__row--body:nth-child(even) {
     background: var(--bg-secondary);
 }
 
 /* Hoverable */
-.table-brutalist--hoverable .table-brutalist__row--body {
+.table--hoverable .table__row--body {
     cursor: pointer;
     transition: all 120ms ease;
 }
 
-.table-brutalist--hoverable .table-brutalist__row--body:hover {
+.table--hoverable .table__row--body:hover {
     background: var(--bg-secondary);
 }
 
 /* Loading State */
-.table-brutalist__cell--loading,
-.table-brutalist__cell--empty {
+.table__cell--loading,
+.table__cell--empty {
     padding: 48px 20px;
     text-align: center;
     color: var(--text-muted);
 }
 
-.table-brutalist__loading {
+.table__loading {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -222,35 +222,35 @@ const getCellValue = (row, column) => {
     font-size: 14px;
 }
 
-.table-brutalist__loading i {
+.table__loading i {
     font-size: 20px;
     color: var(--color-accent);
 }
 
 /* Scrollbar */
-.table-brutalist-wrapper::-webkit-scrollbar {
+.table-wrapper::-webkit-scrollbar {
     height: 8px;
 }
 
-.table-brutalist-wrapper::-webkit-scrollbar-track {
+.table-wrapper::-webkit-scrollbar-track {
     background: var(--bg-primary);
 }
 
-.table-brutalist-wrapper::-webkit-scrollbar-thumb {
+.table-wrapper::-webkit-scrollbar-thumb {
     background: var(--border-color);
     border: 2px solid var(--bg-primary);
 }
 
-.table-brutalist-wrapper::-webkit-scrollbar-thumb:hover {
+.table-wrapper::-webkit-scrollbar-thumb:hover {
     background: var(--text-muted);
 }
 
 /* Dark mode */
-:root[data-theme='dark'] .table-brutalist {
+:root[data-theme='dark'] .table {
     background: var(--bg-secondary);
 }
 
-:root[data-theme='dark'] .table-brutalist__head {
+:root[data-theme='dark'] .table__head {
     background: var(--bg-tertiary);
 }
 </style>

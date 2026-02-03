@@ -127,7 +127,6 @@ const toggleSidebar = () => {
 
 .layout-content {
     background: var(--bg-primary);
-    border-radius: 12px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
     padding: 24px;
     border: 1px solid var(--border-color);

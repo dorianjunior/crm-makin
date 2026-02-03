@@ -30,7 +30,7 @@ const recentActivities = [
             <div class="dash__header">
                 <div>
                     <h1 class="dash__title">Dashboard</h1>
-                    <p class="dash__subtitle">Sistema operacional — CRM Makin</p>
+                    <p class="dash__subtitle">CRM Makin</p>
                 </div>
                 <Link href="/leads/create" class="dash__cta">
                     <span class="dash__cta-glow"></span>
@@ -145,7 +145,7 @@ const recentActivities = [
                 <div class="status-bar__left">
                     <span class="status-bar__dot"></span>
                     <div>
-                        <p class="status-bar__title">Sistema Operacional</p>
+                        <p class="status-bar__title">Sistema Online</p>
                         <p class="status-bar__subtitle">Todos os serviços funcionando normalmente</p>
                     </div>
                 </div>

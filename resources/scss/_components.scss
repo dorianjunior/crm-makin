@@ -99,7 +99,6 @@
     padding: $spacing-xs $spacing-sm;
     font-size: 0.75rem;
     font-weight: 600;
-    border-radius: $radius-full;
 
     &-primary {
         background-color: var(--color-info-light);
@@ -125,7 +124,6 @@
 // Alert
 .alert {
     padding: $spacing-lg;
-    border-radius: $radius-md;
     border-left: 4px solid;
 
     &-info {
@@ -160,7 +158,6 @@
     background-color: var(--bg-primary);
     color: var(--text-primary);
     border: 1px solid var(--border-color);
-    border-radius: $radius-md;
     @include transition(border-color, box-shadow);
 
     &:focus {
@@ -215,7 +212,6 @@
         color: var(--bg-primary);
         font-size: 0.75rem;
         white-space: nowrap;
-        border-radius: $radius-sm;
         opacity: 0;
         pointer-events: none;
         transition: opacity $transition-fast, transform $transition-fast;

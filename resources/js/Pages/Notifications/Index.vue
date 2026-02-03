@@ -1,90 +1,71 @@
 <template>
   <MainLayout>
-    <div class="notifications-page">
+    <div class="page-container">
       <!-- Header -->
       <div class="page-header">
-        <div>
-          <h1 class="page-title">
-            <i class="fa fa-bell"></i>
-            Notificações
-          </h1>
-          <Breadcrumbs :items="breadcrumbs" />
+        <div class="page-header__content">
+          <h1 class="page-header__title">NOTIFICAÇÕES</h1>
+          <p class="page-header__subtitle">Mantenha-se atualizado com as últimas atividades</p>
         </div>
-        <div class="header-actions">
-          <Button
-            label="Marcar Todas como Lidas"
-            icon="fa fa-check-double"
-            @click="markAllAsRead"
-            :disabled="unreadCount === 0"
-            outlined
-          />
-          <Button
-            label="Configurações"
-            icon="fa fa-cog"
-            @click="showSettings = true"
-            outlined
-          />
+        <div class="page-header__actions">
+          <button class="btn btn--secondary" @click="markAllAsRead" :disabled="unreadCount === 0">
+            <i class="fas fa-check-double"></i>
+            Marcar Todas como Lidas
+          </button>
+          <button class="btn btn--secondary" @click="$inertia.visit('/notifications/preferences')">
+            <i class="fas fa-cog"></i>
+            Configurações
+          </button>
         </div>
       </div>
 
       <!-- Stats -->
-      <div class="notification-stats">
-        <div class="stat-item">
-          <span class="stat-value">{{ unreadCount }}</span>
-          <span class="stat-label">Não Lidas</span>
+      <div class="grid grid--3">
+        <div class="stat-card">
+          <div class="stat-card__icon">
+            <i class="fas fa-bell"></i>
+          </div>
+          <p class="stat-card__label">Não Lidas</p>
+          <h2 class="stat-card__value">{{ unreadCount }}</h2>
         </div>
-        <div class="stat-item">
-          <span class="stat-value">{{ todayCount }}</span>
-          <span class="stat-label">Hoje</span>
+
+        <div class="stat-card">
+          <div class="stat-card__icon">
+            <i class="fas fa-calendar-day"></i>
+          </div>
+          <p class="stat-card__label">Hoje</p>
+          <h2 class="stat-card__value">{{ todayCount }}</h2>
         </div>
-        <div class="stat-item">
-          <span class="stat-value">{{ totalCount }}</span>
-          <span class="stat-label">Total</span>
+
+        <div class="stat-card">
+          <div class="stat-card__icon">
+            <i class="fas fa-list"></i>
+          </div>
+          <p class="stat-card__label">Total</p>
+          <h2 class="stat-card__value">{{ totalCount }}</h2>
         </div>
       </div>
 
       <!-- Filters -->
-      <div class="notification-filters">
-        <button
-          :class="['filter-btn', { active: filter === 'all' }]"
-          @click="filter = 'all'"
-        >
+      <div class="filters">
+        <button :class="['filter-btn', { active: filter === 'all' }]" @click="filter = 'all'">
           Todas
         </button>
-        <button
-          :class="['filter-btn', { active: filter === 'unread' }]"
-          @click="filter = 'unread'"
-        >
+        <button :class="['filter-btn', { active: filter === 'unread' }]" @click="filter = 'unread'">
           Não Lidas
-          <span v-if="unreadCount > 0" class="badge">{{ unreadCount }}</span>
+          <span v-if="unreadCount > 0" class="badge badge--accent">{{ unreadCount }}</span>
         </button>
-        <button
-          :class="['filter-btn', { active: filter === 'leads' }]"
-          @click="filter = 'leads'"
-        >
-          <i class="fa fa-user"></i>
+        <button :class="['filter-btn', { active: filter === 'leads' }]" @click="filter = 'leads'">
+          <i class="fas fa-user"></i>
           Leads
         </button>
-        <button
-          :class="['filter-btn', { active: filter === 'activities' }]"
-          @click="filter = 'activities'"
-        >
-          <i class="fa fa-calendar"></i>
+        <button :class="['filter-btn', { active: filter === 'activities' }]" @click="filter = 'activities'">
+          <i class="fas fa-calendar"></i>
           Atividades
         </button>
-        <button
-          :class="['filter-btn', { active: filter === 'messages' }]"
-          @click="filter = 'messages'"
-        >
-          <i class="fa fa-comments"></i>
+        <button :class="['filter-btn', { active: filter === 'messages' }]" @click="filter = 'messages'">
+          <i class="fas fa-comments"></i>
           Mensagens
-        </button>
-        <button
-          :class="['filter-btn', { active: filter === 'system' }]"
-          @click="filter = 'system'"
-        >
-          <i class="fa fa-cog"></i>
-          Sistema
         </button>
       </div>
 
@@ -95,14 +76,14 @@
             <h3>{{ formatDateHeader(date) }}</h3>
           </div>
 
-          <div class="notifications-list">
+          <div class="notification-list">
             <div
               v-for="notification in group"
               :key="notification.id"
-              :class="['notification-item', { unread: !notification.read_at }]"
+              :class="['notification-item', { 'notification-item--unread': !notification.read_at }]"
               @click="handleNotificationClick(notification)"
             >
-              <div class="notification-icon" :class="notification.type">
+              <div :class="['notification-icon', `notification-icon--${notification.type}`]">
                 <i :class="getNotificationIcon(notification.type)"></i>
               </div>
 
@@ -113,18 +94,14 @@
                 </div>
                 <p class="notification-message">{{ notification.message }}</p>
 
-                <div v-if="notification.data" class="notification-data">
-                  <span v-if="notification.data.lead_name" class="data-tag">
-                    <i class="fa fa-user"></i>
+                <div v-if="notification.data" class="notification-tags">
+                  <span v-if="notification.data.lead_name" class="badge">
+                    <i class="fas fa-user"></i>
                     {{ notification.data.lead_name }}
                   </span>
-                  <span v-if="notification.data.amount" class="data-tag amount">
-                    <i class="fa fa-dollar-sign"></i>
+                  <span v-if="notification.data.amount" class="badge badge--accent">
+                    <i class="fas fa-dollar-sign"></i>
                     {{ formatCurrency(notification.data.amount) }}
-                  </span>
-                  <span v-if="notification.data.user_name" class="data-tag">
-                    <i class="fa fa-user-circle"></i>
-                    {{ notification.data.user_name }}
                   </span>
                 </div>
               </div>
@@ -133,17 +110,17 @@
                 <button
                   v-if="!notification.read_at"
                   @click.stop="markAsRead(notification)"
-                  class="btn-action"
+                  class="btn btn--icon-only btn--small"
                   title="Marcar como lida"
                 >
-                  <i class="fa fa-check"></i>
+                  <i class="fas fa-check"></i>
                 </button>
                 <button
                   @click.stop="deleteNotification(notification)"
-                  class="btn-action"
+                  class="btn btn--icon-only btn--small"
                   title="Excluir"
                 >
-                  <i class="fa fa-trash"></i>
+                  <i class="fas fa-trash"></i>
                 </button>
               </div>
             </div>
@@ -151,124 +128,21 @@
         </div>
 
         <div v-if="Object.keys(groupedNotifications).length === 0" class="empty-state">
-          <i class="fa fa-bell-slash"></i>
-          <h3>Nenhuma notificação</h3>
-          <p>Você está em dia! Não há notificações para exibir.</p>
+          <div class="empty-state__icon">
+            <i class="fas fa-bell-slash"></i>
+          </div>
+          <h3 class="empty-state__title">Nenhuma Notificação</h3>
+          <p class="empty-state__description">Você está em dia! Não há notificações para exibir.</p>
         </div>
 
-        <!-- Load More -->
         <div v-if="hasMore" class="load-more">
-          <Button
-            label="Carregar Mais"
-            icon="fa fa-arrow-down"
-            @click="loadMore"
-            :loading="loading"
-            outlined
-            block
-          />
+          <button class="btn btn--secondary" @click="loadMore" :disabled="loading">
+            <i class="fas fa-arrow-down"></i>
+            Carregar Mais
+          </button>
         </div>
       </div>
     </div>
-
-    <!-- Settings Modal -->
-    <Modal
-      v-model:visible="showSettings"
-      title="Configurações de Notificações"
-      @confirm="saveSettings"
-    >
-      <div class="settings-form">
-        <div class="settings-section">
-          <h4>Notificações por E-mail</h4>
-          <div class="setting-item">
-            <label class="checkbox-label">
-              <input type="checkbox" v-model="settings.email_new_lead" />
-              <span>Novo lead criado</span>
-            </label>
-          </div>
-          <div class="setting-item">
-            <label class="checkbox-label">
-              <input type="checkbox" v-model="settings.email_lead_converted" />
-              <span>Lead convertido</span>
-            </label>
-          </div>
-          <div class="setting-item">
-            <label class="checkbox-label">
-              <input type="checkbox" v-model="settings.email_task_assigned" />
-              <span>Tarefa atribuída a mim</span>
-            </label>
-          </div>
-          <div class="setting-item">
-            <label class="checkbox-label">
-              <input type="checkbox" v-model="settings.email_task_due" />
-              <span>Tarefa próxima do prazo</span>
-            </label>
-          </div>
-          <div class="setting-item">
-            <label class="checkbox-label">
-              <input type="checkbox" v-model="settings.email_new_message" />
-              <span>Nova mensagem (WhatsApp/Instagram)</span>
-            </label>
-          </div>
-        </div>
-
-        <div class="settings-section">
-          <h4>Notificações no Sistema</h4>
-          <div class="setting-item">
-            <label class="checkbox-label">
-              <input type="checkbox" v-model="settings.system_new_lead" />
-              <span>Novo lead criado</span>
-            </label>
-          </div>
-          <div class="setting-item">
-            <label class="checkbox-label">
-              <input type="checkbox" v-model="settings.system_activity_reminder" />
-              <span>Lembretes de atividades</span>
-            </label>
-          </div>
-          <div class="setting-item">
-            <label class="checkbox-label">
-              <input type="checkbox" v-model="settings.system_lead_updated" />
-              <span>Lead atualizado</span>
-            </label>
-          </div>
-        </div>
-
-        <div class="settings-section">
-          <h4>Notificações Push</h4>
-          <div class="setting-item">
-            <label class="checkbox-label">
-              <input type="checkbox" v-model="settings.push_enabled" />
-              <span>Ativar notificações push</span>
-            </label>
-          </div>
-          <div v-if="settings.push_enabled" class="push-options">
-            <div class="setting-item">
-              <label class="checkbox-label">
-                <input type="checkbox" v-model="settings.push_urgent_only" />
-                <span>Apenas urgentes</span>
-              </label>
-            </div>
-          </div>
-        </div>
-
-        <div class="settings-section">
-          <h4>Horário de Silêncio</h4>
-          <div class="time-range">
-            <div class="form-group">
-              <label>Das</label>
-              <Input v-model="settings.quiet_hours_start" type="time" size="small" />
-            </div>
-            <div class="form-group">
-              <label>Até</label>
-              <Input v-model="settings.quiet_hours_end" type="time" size="small" />
-            </div>
-          </div>
-          <small class="help-text">
-            Não receber notificações durante este período
-          </small>
-        </div>
-      </div>
-    </Modal>
   </MainLayout>
 </template>
 
@@ -276,55 +150,19 @@
 import { ref, computed } from 'vue';
 import { router } from '@inertiajs/vue3';
 import MainLayout from '@/Layouts/MainLayout.vue';
-import Button from '@/Components/Button.vue';
-import Input from '@/Components/Input.vue';
-import Breadcrumbs from '@/Components/Breadcrumbs.vue';
-import Modal from '@/Components/Modal.vue';
 
 const props = defineProps({
   notifications: Array,
+  unreadCount: Number,
+  todayCount: Number,
+  totalCount: Number,
   hasMore: Boolean,
-  userSettings: Object,
 });
-
-const breadcrumbs = [
-  { label: 'Dashboard', to: '/dashboard' },
-  { label: 'Notificações', active: true }
-];
 
 const filter = ref('all');
-const showSettings = ref(false);
 const loading = ref(false);
 
-const settings = ref({
-  email_new_lead: props.userSettings?.email_new_lead ?? true,
-  email_lead_converted: props.userSettings?.email_lead_converted ?? true,
-  email_task_assigned: props.userSettings?.email_task_assigned ?? true,
-  email_task_due: props.userSettings?.email_task_due ?? true,
-  email_new_message: props.userSettings?.email_new_message ?? true,
-  system_new_lead: props.userSettings?.system_new_lead ?? true,
-  system_activity_reminder: props.userSettings?.system_activity_reminder ?? true,
-  system_lead_updated: props.userSettings?.system_lead_updated ?? true,
-  push_enabled: props.userSettings?.push_enabled ?? false,
-  push_urgent_only: props.userSettings?.push_urgent_only ?? false,
-  quiet_hours_start: props.userSettings?.quiet_hours_start || '22:00',
-  quiet_hours_end: props.userSettings?.quiet_hours_end || '08:00',
-});
-
-const unreadCount = computed(() => {
-  return props.notifications.filter(n => !n.read_at).length;
-});
-
-const todayCount = computed(() => {
-  const today = new Date().toDateString();
-  return props.notifications.filter(n =>
-    new Date(n.created_at).toDateString() === today
-  ).length;
-});
-
-const totalCount = computed(() => props.notifications.length);
-
-const filteredNotifications = computed(() => {
+const groupedNotifications = computed(() => {
   let filtered = props.notifications;
 
   if (filter.value === 'unread') {
@@ -333,112 +171,216 @@ const filteredNotifications = computed(() => {
     filtered = filtered.filter(n => n.type === filter.value);
   }
 
-  return filtered;
-});
-
-const groupedNotifications = computed(() => {
-  const groups = {};
-
-  filteredNotifications.value.forEach(notification => {
-    const date = new Date(notification.created_at).toLocaleDateString('pt-BR');
-
-    if (!groups[date]) {
-      groups[date] = [];
-    }
-
+  return filtered.reduce((groups, notification) => {
+    const date = new Date(notification.created_at).toLocaleDateString();
+    if (!groups[date]) groups[date] = [];
     groups[date].push(notification);
-  });
-
-  return groups;
+    return groups;
+  }, {});
 });
 
-const markAsRead = (notification) => {
-  router.patch(`/notifications/${notification.id}/read`, {}, {
-    preserveState: true,
-  });
+const getNotificationIcon = (type) => {
+  const icons = {
+    leads: 'fas fa-user',
+    activities: 'fas fa-calendar',
+    messages: 'fas fa-comments',
+    system: 'fas fa-cog',
+  };
+  return icons[type] || 'fas fa-bell';
+};
+
+const formatDateHeader = (date) => {
+  const today = new Date().toLocaleDateString();
+  const yesterday = new Date(Date.now() - 86400000).toLocaleDateString();
+
+  if (date === today) return 'HOJE';
+  if (date === yesterday) return 'ONTEM';
+  return new Date(date).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long' }).toUpperCase();
+};
+
+const formatTime = (datetime) => {
+  return new Date(datetime).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+};
+
+const formatCurrency = (value) => {
+  return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
 };
 
 const markAllAsRead = () => {
-  router.post('/notifications/mark-all-read', {}, {
-    preserveState: true,
-  });
+  router.post('/notifications/mark-all-read');
+};
+
+const markAsRead = (notification) => {
+  router.post(`/notifications/${notification.id}/read`);
 };
 
 const deleteNotification = (notification) => {
-  router.delete(`/notifications/${notification.id}`, {
-    preserveState: true,
-  });
+  if (confirm('Deseja excluir esta notificação?')) {
+    router.delete(`/notifications/${notification.id}`);
+  }
 };
 
 const handleNotificationClick = (notification) => {
-  if (!notification.read_at) {
-    markAsRead(notification);
-  }
-
-  if (notification.action_url) {
-    router.visit(notification.action_url);
+  if (notification.url) {
+    router.visit(notification.url);
   }
 };
 
 const loadMore = () => {
   loading.value = true;
-  router.get('/notifications', {
-    page: Math.ceil(props.notifications.length / 20) + 1,
-  }, {
+  router.get('/notifications', { page: props.notifications.length / 20 + 1 }, {
     preserveState: true,
     onFinish: () => loading.value = false,
   });
 };
-
-const saveSettings = () => {
-  router.post('/notifications/settings', settings.value, {
-    onSuccess: () => {
-      showSettings.value = false;
-    },
-  });
-};
-
-const formatDateHeader = (date) => {
-  const today = new Date().toLocaleDateString('pt-BR');
-  const yesterday = new Date(Date.now() - 86400000).toLocaleDateString('pt-BR');
-
-  if (date === today) return 'Hoje';
-  if (date === yesterday) return 'Ontem';
-  return date;
-};
-
-const formatTime = (datetime) => {
-  const now = new Date();
-  const then = new Date(datetime);
-  const diffMinutes = Math.floor((now - then) / (1000 * 60));
-
-  if (diffMinutes < 1) return 'Agora';
-  if (diffMinutes < 60) return `${diffMinutes}m`;
-
-  const diffHours = Math.floor(diffMinutes / 60);
-  if (diffHours < 24) return `${diffHours}h`;
-
-  return then.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-};
-
-const formatCurrency = (value) => {
-  return new Intl.NumberFormat('pt-BR', {
-    style: 'currency',
-    currency: 'BRL'
-  }).format(value);
-};
-
-const getNotificationIcon = (type) => {
-  const icons = {
-    leads: 'fa fa-user-plus',
-    activities: 'fa fa-calendar-check',
-    messages: 'fa fa-comments',
-    system: 'fa fa-info-circle',
-    task: 'fa fa-tasks',
-    deal: 'fa fa-handshake',
-    warning: 'fa fa-exclamation-triangle',
-  };
-  return icons[type] || 'fa fa-bell';
-};
 </script>
 
+<style scoped lang="scss">
+.page-container {
+  padding: 32px;
+}
+
+.filters {
+  display: flex;
+  gap: 12px;
+  margin: 32px 0;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-primary);
+  background: var(--bg-primary);
+  border: 2px solid var(--border-color);
+  cursor: pointer;
+  transition: all 200ms ease;
+
+  &:hover {
+    border-color: var(--border-bold, #262626);
+  }
+
+  &.active {
+    background: #FF6B35;
+    border-color: #FF6B35;
+    color: var(--bg-primary);
+  }
+}
+
+.group-header {
+  margin: 32px 0 16px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--border-color);
+
+  h3 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-tertiary);
+    margin: 0;
+  }
+}
+
+.notification-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.notification-item {
+  display: flex;
+  gap: 16px;
+  padding: 20px;
+  background: var(--bg-primary);
+  border: 2px solid var(--border-color);
+  cursor: pointer;
+  transition: all 200ms ease;
+
+  &:hover {
+    border-color: var(--border-bold, #262626);
+    transform: translateX(4px);
+  }
+
+  &--unread {
+    border-left: 4px solid #FF6B35;
+  }
+}
+
+.notification-icon {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-secondary);
+  border: 2px solid var(--border-color);
+  font-size: 20px;
+  color: var(--text-secondary);
+
+  &--leads { background: #e0edff; color: #2563eb; }
+  &--activities { background: #dcfce7; color: #16a34a; }
+  &--messages { background: #fef3c7; color: #d97706; }
+  &--system { background: #f3f4f6; color: #6b7280; }
+}
+
+.notification-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.notification-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 8px;
+
+  h4 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+  }
+}
+
+.notification-time {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--text-tertiary);
+  white-space: nowrap;
+}
+
+.notification-message {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  margin: 0 0 12px;
+}
+
+.notification-tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.notification-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.load-more {
+  margin-top: 32px;
+  text-align: center;
+}
+</style>

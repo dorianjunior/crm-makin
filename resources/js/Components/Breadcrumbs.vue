@@ -10,32 +10,26 @@ defineProps({
 </script>
 
 <template>
-    <nav class="breadcrumbs-brutalist" aria-label="Breadcrumb">
-        <ol class="breadcrumbs-brutalist__list">
-            <li class="breadcrumbs-brutalist__item">
-                <Link href="/dashboard" class="breadcrumbs-brutalist__link">
-                    <i class="fas fa-home breadcrumbs-brutalist__icon"></i>
-                    Dashboard
-                </Link>
-            </li>
-
+    <nav class="breadcrumbs" aria-label="Breadcrumb">
+        <ol class="breadcrumbs__list">
             <li
                 v-for="(item, index) in items"
                 :key="index"
-                class="breadcrumbs-brutalist__item"
+                class="breadcrumbs__item"
             >
-                <i class="fas fa-chevron-right breadcrumbs-brutalist__separator"></i>
+                <i v-if="index > 0" class="fas fa-chevron-right breadcrumbs__separator"></i>
 
                 <Link
                     v-if="item.href"
                     :href="item.href"
-                    class="breadcrumbs-brutalist__link"
+                    class="breadcrumbs__link"
                 >
+                    <i v-if="index === 0" class="fas fa-home breadcrumbs__icon"></i>
                     {{ item.name }}
                 </Link>
                 <span
                     v-else
-                    class="breadcrumbs-brutalist__current"
+                    class="breadcrumbs__current"
                 >
                     {{ item.name }}
                 </span>
@@ -45,11 +39,11 @@ defineProps({
 </template>
 
 <style scoped>
-.breadcrumbs-brutalist {
+.breadcrumbs {
     display: flex;
 }
 
-.breadcrumbs-brutalist__list {
+.breadcrumbs__list {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
@@ -59,13 +53,13 @@ defineProps({
     list-style: none;
 }
 
-.breadcrumbs-brutalist__item {
+.breadcrumbs__item {
     display: flex;
     align-items: center;
     gap: 8px;
 }
 
-.breadcrumbs-brutalist__link {
+.breadcrumbs__link {
     display: inline-flex;
     align-items: center;
     gap: 8px;
@@ -77,20 +71,20 @@ defineProps({
     transition: color 120ms ease;
 }
 
-.breadcrumbs-brutalist__link:hover {
+.breadcrumbs__link:hover {
     color: var(--color-accent);
 }
 
-.breadcrumbs-brutalist__icon {
+.breadcrumbs__icon {
     font-size: 12px;
 }
 
-.breadcrumbs-brutalist__separator {
+.breadcrumbs__separator {
     font-size: 10px;
     color: var(--text-muted);
 }
 
-.breadcrumbs-brutalist__current {
+.breadcrumbs__current {
     font-family: 'Inter', sans-serif;
     font-size: 13px;
     font-weight: 600;

@@ -1,251 +1,111 @@
 <template>
   <MainLayout>
-    <div class="portfolios-page">
-      <Breadcrumbs :items="breadcrumbs" />
-
+    <div class="page-container">
+      <!-- Header -->
       <div class="page-header">
-        <div>
-          <h1>Portfólios</h1>
-          <p class="subtitle">Gerencie os projetos e trabalhos do seu portfólio</p>
+        <div class="page-header__content">
+          <h1 class="page-header__title">PORTFÓLIOS</h1>
+          <p class="page-header__subtitle">Mostre seus projetos e trabalhos realizados</p>
         </div>
-        <Button variant="primary" @click="$inertia.visit('/cms/portfolios/create')">
-          <i class="fa fa-plus"></i>
-          Novo Projeto
-        </Button>
+        <div class="page-header__actions">
+          <button class="btn" @click="createPortfolio">
+            <i class="fas fa-plus"></i>
+            Novo Projeto
+          </button>
+        </div>
       </div>
 
       <!-- Stats -->
-      <div class="stats-grid">
-        <StatCard
-          title="Total de Projetos"
-          :value="stats.total"
-          icon="briefcase"
-          color="blue"
-        />
-        <StatCard
-          title="Publicados"
-          :value="stats.published"
-          icon="check-circle"
-          color="green"
-        />
-        <StatCard
-          title="Rascunhos"
-          :value="stats.draft"
-          icon="file"
-          color="orange"
-        />
-        <StatCard
-          title="Visualizações"
-          :value="stats.views"
-          icon="eye"
-          color="purple"
-        />
+      <div class="grid grid--4">
+        <div class="stat-card">
+          <div class="stat-card__label">Total de Projetos</div>
+          <div class="stat-card__value">{{ stats.total }}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card__label">Publicados</div>
+          <div class="stat-card__value">{{ stats.published }}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card__label">Em Destaque</div>
+          <div class="stat-card__value">{{ stats.featured }}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card__label">Visualizações</div>
+          <div class="stat-card__value">{{ stats.total_views }}</div>
+        </div>
       </div>
 
       <!-- Filters -->
-      <div class="filters-section card">
-        <div class="search-bar">
-          <i class="fa fa-search"></i>
-          <Input
-            v-model="searchQuery"
-            placeholder="Buscar projetos..."
-            @input="handleSearch"
-          />
-        </div>
-
-        <div class="filters">
-          <div class="filter-group">
-            <label>Status:</label>
-            <select v-model="filters.status" @change="applyFilters" class="filter-select">
-              <option value="">Todos</option>
-              <option value="published">Publicados</option>
-              <option value="draft">Rascunhos</option>
-              <option value="archived">Arquivados</option>
-            </select>
-          </div>
-
-          <div class="filter-group">
-            <label>Categoria:</label>
-            <select v-model="filters.category" @change="applyFilters" class="filter-select">
-              <option value="">Todas</option>
-              <option v-for="category in categories" :key="category.id" :value="category.id">
-                {{ category.name }}
-              </option>
-            </select>
-          </div>
-
-          <div class="filter-group">
-            <label>Site:</label>
-            <select v-model="filters.site" @change="applyFilters" class="filter-select">
-              <option value="">Todos</option>
-              <option v-for="site in sites" :key="site.id" :value="site.id">
-                {{ site.name }}
-              </option>
-            </select>
-          </div>
-
-          <Button variant="secondary" size="small" @click="clearFilters">
-            <i class="fa fa-times"></i>
-            Limpar
-          </Button>
-        </div>
-      </div>
-
-      <!-- View Toggle -->
-      <div class="view-toggle">
+      <div class="filters">
         <button
-          @click="viewMode = 'grid'"
-          :class="{ active: viewMode === 'grid' }"
-          class="toggle-btn"
+          v-for="filter in filters"
+          :key="filter.value"
+          class="filter-btn"
+          :class="{ 'filter-btn--active': activeFilter === filter.value }"
+          @click="activeFilter = filter.value"
         >
-          <i class="fa fa-th"></i>
-          Grade
-        </button>
-        <button
-          @click="viewMode = 'list'"
-          :class="{ active: viewMode === 'list' }"
-          class="toggle-btn"
-        >
-          <i class="fa fa-list"></i>
-          Lista
+          {{ filter.label }} ({{ filter.count }})
         </button>
       </div>
 
-      <!-- Grid View -->
-      <div v-if="viewMode === 'grid'" class="portfolios-grid">
-        <div v-for="portfolio in portfolios.data" :key="portfolio.id" class="portfolio-card">
-          <div class="portfolio-image">
-            <img v-if="portfolio.featured_image" :src="portfolio.featured_image" :alt="portfolio.title">
-            <div v-else class="image-placeholder">
-              <i class="fa fa-image"></i>
+      <!-- Portfolio Grid -->
+      <div v-if="filteredPortfolios.length > 0" class="portfolio-grid">
+        <div v-for="portfolio in filteredPortfolios" :key="portfolio.id" class="portfolio-card">
+          <div class="portfolio-card__image" :style="`background-image: url(${portfolio.thumbnail})`">
+            <div class="portfolio-card__overlay">
+              <div class="overlay-actions">
+                <button class="overlay-btn" @click="editPortfolio(portfolio.id)">
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button class="overlay-btn" @click="viewPortfolio(portfolio.slug)">
+                  <i class="fas fa-eye"></i>
+                </button>
+              </div>
             </div>
-            <div class="portfolio-overlay">
-              <Button variant="primary" size="small" @click="editPortfolio(portfolio)">
-                <i class="fa fa-edit"></i>
-              </Button>
-              <Button variant="secondary" size="small" @click="viewPortfolio(portfolio)">
-                <i class="fa fa-eye"></i>
-              </Button>
-              <Button variant="danger" size="small" @click="deletePortfolio(portfolio)">
-                <i class="fa fa-trash"></i>
-              </Button>
-            </div>
-            <span class="status-badge" :class="portfolio.status">
-              {{ getStatusLabel(portfolio.status) }}
+            <span v-if="portfolio.is_featured" class="featured-star">
+              <i class="fas fa-star"></i>
             </span>
           </div>
-          <div class="portfolio-content">
-            <h3>{{ portfolio.title }}</h3>
-            <p class="portfolio-excerpt">{{ portfolio.excerpt }}</p>
-            <div class="portfolio-meta">
-              <span class="meta-item">
-                <i class="fa fa-folder"></i>
-                {{ portfolio.category?.name || 'Sem categoria' }}
-              </span>
-              <span class="meta-item">
-                <i class="fa fa-calendar"></i>
-                {{ formatDate(portfolio.created_at) }}
-              </span>
-              <span class="meta-item">
-                <i class="fa fa-eye"></i>
-                {{ portfolio.views || 0 }} visualizações
+
+          <div class="portfolio-card__content">
+            <div class="portfolio-card__header">
+              <h3 class="portfolio-card__title">{{ portfolio.title }}</h3>
+              <span :class="['badge', `badge--${getStatusColor(portfolio.status)}`]">
+                {{ portfolio.status.toUpperCase() }}
               </span>
             </div>
-            <div class="portfolio-tags">
-              <span v-for="tag in portfolio.tags" :key="tag.id" class="tag">
-                {{ tag.name }}
+
+            <p class="portfolio-card__description">{{ truncateText(portfolio.description, 100) }}</p>
+
+            <div class="portfolio-card__tech">
+              <span v-for="tech in portfolio.technologies" :key="tech" class="tech-tag">
+                {{ tech }}
               </span>
+            </div>
+
+            <div class="portfolio-card__meta">
+              <div class="meta-item">
+                <i class="fas fa-calendar"></i>
+                {{ formatDate(portfolio.completed_at) }}
+              </div>
+              <div class="meta-item">
+                <i class="fas fa-eye"></i>
+                {{ portfolio.views_count }} views
+              </div>
             </div>
           </div>
-        </div>
-
-        <div v-if="!portfolios.data.length" class="empty-state">
-          <i class="fa fa-briefcase"></i>
-          <h3>Nenhum projeto encontrado</h3>
-          <p>Comece criando seu primeiro projeto de portfólio</p>
-          <Button variant="primary" @click="$inertia.visit('/cms/portfolios/create')">
-            <i class="fa fa-plus"></i>
-            Criar Primeiro Projeto
-          </Button>
         </div>
       </div>
 
-      <!-- List View -->
-      <div v-if="viewMode === 'list'" class="card">
-        <div class="table-responsive">
-          <table class="portfolios-table">
-            <thead>
-              <tr>
-                <th>Projeto</th>
-                <th>Categoria</th>
-                <th>Cliente</th>
-                <th>Status</th>
-                <th>Data</th>
-                <th>Visualizações</th>
-                <th class="text-right">Ações</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="portfolio in portfolios.data" :key="portfolio.id">
-                <td>
-                  <div class="portfolio-info">
-                    <img v-if="portfolio.featured_image" :src="portfolio.featured_image" :alt="portfolio.title" class="thumbnail">
-                    <div class="thumbnail-placeholder" v-else>
-                      <i class="fa fa-image"></i>
-                    </div>
-                    <div>
-                      <strong>{{ portfolio.title }}</strong>
-                      <span class="portfolio-url">{{ portfolio.slug }}</span>
-                    </div>
-                  </div>
-                </td>
-                <td>{{ portfolio.category?.name || '-' }}</td>
-                <td>{{ portfolio.client || '-' }}</td>
-                <td>
-                  <span class="status-badge" :class="portfolio.status">
-                    {{ getStatusLabel(portfolio.status) }}
-                  </span>
-                </td>
-                <td>{{ formatDate(portfolio.created_at) }}</td>
-                <td>{{ portfolio.views || 0 }}</td>
-                <td class="text-right">
-                  <div class="action-buttons">
-                    <button @click="editPortfolio(portfolio)" class="action-btn" title="Editar">
-                      <i class="fa fa-edit"></i>
-                    </button>
-                    <button @click="viewPortfolio(portfolio)" class="action-btn" title="Ver">
-                      <i class="fa fa-eye"></i>
-                    </button>
-                    <button @click="duplicatePortfolio(portfolio)" class="action-btn" title="Duplicar">
-                      <i class="fa fa-copy"></i>
-                    </button>
-                    <button @click="deletePortfolio(portfolio)" class="action-btn danger" title="Excluir">
-                      <i class="fa fa-trash"></i>
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <!-- Pagination -->
-        <div class="pagination">
-          <div class="pagination-info">
-            Exibindo {{ portfolios.from }} a {{ portfolios.to }} de {{ portfolios.total }} projetos
-          </div>
-          <div class="pagination-buttons">
-            <button
-              v-for="page in paginationPages"
-              :key="page"
-              @click="changePage(page)"
-              :class="{ active: page === portfolios.current_page }"
-              :disabled="page === '...'"
-            >
-              {{ page }}
-            </button>
-          </div>
-        </div>
+      <!-- Empty State -->
+      <div v-else class="empty-state">
+        <i class="fas fa-briefcase empty-state__icon"></i>
+        <h3 class="empty-state__title">Nenhum projeto no portfólio</h3>
+        <p class="empty-state__text">Adicione projetos para mostrar seu trabalho</p>
+        <button class="btn" @click="createPortfolio">
+          <i class="fas fa-plus"></i>
+          Adicionar Primeiro Projeto
+        </button>
       </div>
     </div>
   </MainLayout>
@@ -255,130 +115,245 @@
 import { ref, computed } from 'vue';
 import { router } from '@inertiajs/vue3';
 import MainLayout from '@/Layouts/MainLayout.vue';
-import Breadcrumbs from '@/Components/Breadcrumbs.vue';
-import Button from '@/Components/Button.vue';
-import Input from '@/Components/Input.vue';
-import StatCard from '@/Components/StatCard.vue';
 
 const props = defineProps({
-  portfolios: Object,
-  categories: Array,
-  sites: Array,
+  portfolios: Array,
   stats: Object,
-  filters: Object
 });
 
-const searchQuery = ref('');
-const viewMode = ref('grid');
+const activeFilter = ref('all');
 
-const filters = ref({
-  status: props.filters?.status || '',
-  category: props.filters?.category || '',
-  site: props.filters?.site || ''
+const filters = computed(() => [
+  { label: 'Todos', value: 'all', count: props.portfolios?.length || 0 },
+  { label: 'Publicados', value: 'published', count: props.portfolios?.filter(p => p.status === 'published').length || 0 },
+  { label: 'Rascunhos', value: 'draft', count: props.portfolios?.filter(p => p.status === 'draft').length || 0 },
+  { label: 'Destaque', value: 'featured', count: props.portfolios?.filter(p => p.is_featured).length || 0 },
+]);
+
+const filteredPortfolios = computed(() => {
+  if (!props.portfolios) return [];
+  if (activeFilter.value === 'all') return props.portfolios;
+  if (activeFilter.value === 'featured') return props.portfolios.filter(p => p.is_featured);
+  return props.portfolios.filter(p => p.status === activeFilter.value);
 });
 
-const breadcrumbs = [
-  { label: 'CMS', url: '/cms' },
-  { label: 'Portfólios' }
-];
-
-const paginationPages = computed(() => {
-  const current = props.portfolios.current_page;
-  const last = props.portfolios.last_page;
-  const pages = [];
-
-  if (last <= 7) {
-    for (let i = 1; i <= last; i++) pages.push(i);
-  } else {
-    if (current <= 3) {
-      for (let i = 1; i <= 5; i++) pages.push(i);
-      pages.push('...');
-      pages.push(last);
-    } else if (current >= last - 2) {
-      pages.push(1);
-      pages.push('...');
-      for (let i = last - 4; i <= last; i++) pages.push(i);
-    } else {
-      pages.push(1);
-      pages.push('...');
-      for (let i = current - 1; i <= current + 1; i++) pages.push(i);
-      pages.push('...');
-      pages.push(last);
-    }
-  }
-
-  return pages;
-});
-
-const handleSearch = () => {
-  router.get('/cms/portfolios', { search: searchQuery.value, ...filters.value }, {
-    preserveState: true,
-    preserveScroll: true
-  });
-};
-
-const applyFilters = () => {
-  router.get('/cms/portfolios', { search: searchQuery.value, ...filters.value }, {
-    preserveState: true,
-    preserveScroll: true
-  });
-};
-
-const clearFilters = () => {
-  filters.value = { status: '', category: '', site: '' };
-  searchQuery.value = '';
-  router.get('/cms/portfolios', {}, { preserveState: true });
-};
-
-const changePage = (page) => {
-  if (page === '...') return;
-  router.get('/cms/portfolios', {
-    search: searchQuery.value,
-    ...filters.value,
-    page
-  }, {
-    preserveState: true,
-    preserveScroll: true
-  });
-};
-
-const editPortfolio = (portfolio) => {
-  router.visit(`/cms/portfolios/${portfolio.id}/edit`);
-};
-
-const viewPortfolio = (portfolio) => {
-  window.open(`/portfolio/${portfolio.slug}`, '_blank');
-};
-
-const duplicatePortfolio = (portfolio) => {
-  if (confirm(`Duplicar o projeto "${portfolio.title}"?`)) {
-    router.post(`/cms/portfolios/${portfolio.id}/duplicate`, {}, {
-      preserveState: true,
-      preserveScroll: true
-    });
-  }
-};
-
-const deletePortfolio = (portfolio) => {
-  if (confirm(`Tem certeza que deseja excluir o projeto "${portfolio.title}"?`)) {
-    router.delete(`/cms/portfolios/${portfolio.id}`, {
-      preserveState: true,
-      preserveScroll: true
-    });
-  }
-};
-
-const getStatusLabel = (status) => {
-  const labels = {
-    published: 'Publicado',
-    draft: 'Rascunho',
-    archived: 'Arquivado'
+const getStatusColor = (status) => {
+  const colors = {
+    published: 'success',
+    draft: 'warning',
+    archived: 'neutral'
   };
-  return labels[status] || status;
+  return colors[status] || 'neutral';
+};
+
+const truncateText = (text, length) => {
+  if (!text) return '';
+  return text.length > length ? text.substring(0, length) + '...' : text;
 };
 
 const formatDate = (date) => {
   return new Date(date).toLocaleDateString('pt-BR');
 };
+
+const createPortfolio = () => {
+  router.visit('/cms/portfolios/create');
+};
+
+const editPortfolio = (id) => {
+  router.visit(`/cms/portfolios/${id}/edit`);
+};
+
+const viewPortfolio = (slug) => {
+  window.open(`/portfolio/${slug}`, '_blank');
+};
 </script>
 
+<style scoped lang="scss">
+.page-container {
+  padding: 32px;
+}
+
+.filters {
+  display: flex;
+  gap: 16px;
+  margin: 32px 0;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  padding: 12px 24px;
+  border: 2px solid var(--border-color);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: #FF6B35;
+    transform: translateX(2px);
+  }
+
+  &--active {
+    background: #FF6B35;
+    color: var(--bg-primary);
+    border-color: #FF6B35;
+  }
+}
+
+.portfolio-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 24px;
+}
+
+.portfolio-card {
+  border: 2px solid var(--border-color);
+  background: var(--bg-primary);
+  display: flex;
+  flex-direction: column;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: #FF6B35;
+
+    .portfolio-card__overlay {
+      opacity: 1;
+    }
+  }
+
+  &__image {
+    height: 280px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    border-bottom: 2px solid var(--border-color);
+
+    .featured-star {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      width: 48px;
+      height: 48px;
+      background: #FF6B35;
+      color: var(--bg-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+  }
+
+  &__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+
+    .overlay-actions {
+      display: flex;
+      gap: 16px;
+    }
+
+    .overlay-btn {
+      width: 64px;
+      height: 64px;
+      border: 2px solid #FF6B35;
+      background: transparent;
+      color: #FF6B35;
+      font-size: 24px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: #FF6B35;
+        color: var(--bg-primary);
+      }
+    }
+  }
+
+  &__content {
+    padding: 24px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  &__title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0;
+    color: var(--text-primary);
+    flex: 1;
+  }
+
+  &__description {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    margin: 0 0 16px;
+    flex: 1;
+  }
+
+  &__tech {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+
+    .tech-tag {
+      padding: 4px 10px;
+      border: 2px solid var(--border-color);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+    }
+  }
+
+  &__meta {
+    display: flex;
+    gap: 16px;
+    padding-top: 16px;
+    border-top: 2px solid var(--border-color);
+
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--text-secondary);
+
+      i {
+        color: #FF6B35;
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .portfolio-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>

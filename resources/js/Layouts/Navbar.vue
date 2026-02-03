@@ -17,9 +17,9 @@ const showUserMenu = ref(false);
 const showNotifications = ref(false);
 
 const notifications = ref([
-    { id: 1, title: 'Novo lead cadastrado', time: '5 min atrás', icon: 'fa-user-plus', color: 'blue' },
-    { id: 2, title: 'Proposta aprovada', time: '1 hora atrás', icon: 'fa-check-circle', color: 'green' },
-    { id: 3, title: 'Mensagem do Instagram', time: '2 horas atrás', icon: 'fa-instagram', color: 'purple' },
+    { id: 1, title: 'Novo lead cadastrado', time: '5 min atrás', icon: 'fas fa-user-plus', color: 'blue' },
+    { id: 2, title: 'Proposta aprovada', time: '1 hora atrás', icon: 'fas fa-check-circle', color: 'green' },
+    { id: 3, title: 'Mensagem do Instagram', time: '2 horas atrás', icon: 'fab fa-instagram', color: 'purple' },
 ]);
 
 const logout = () => {
@@ -101,7 +101,7 @@ const logout = () => {
                                     class="dropdown__item"
                                 >
                                     <div :class="['dropdown__icon', `dropdown__icon--${notification.color}`]">
-                                        <i :class="`fas ${notification.icon}`"></i>
+                                        <i :class="`${notification.icon}`"></i>
                                     </div>
                                     <div class="dropdown__content">
                                         <p class="dropdown__title">{{ notification.title }}</p>
@@ -241,7 +241,6 @@ const logout = () => {
     letter-spacing: 0.08em;
     text-transform: uppercase;
     line-height: 1.1;
-    border-radius: 8px;
     text-decoration: none;
     transition: all 200ms ease;
 }
@@ -373,9 +372,7 @@ const logout = () => {
     position: absolute;
     top: calc(100% + 8px);
     background: var(--bg-primary);
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+    border: 2px solid var(--border-color);
     overflow: hidden;
     min-width: 220px;
     z-index: var(--z-dropdown, 1000);
@@ -396,12 +393,15 @@ const logout = () => {
     margin: 0;
     font-size: 14px;
     font-weight: 600;
+    font-family: 'Space Grotesk', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
     color: var(--text-primary);
 }
 
 .dropdown__link {
     font-size: 12px;
-    color: var(--color-info);
+    color: #FF6B35;
 }
 
 .dropdown__list {
@@ -421,21 +421,30 @@ const logout = () => {
 
 .dropdown__item:last-child { border-bottom: none; }
 
-.dropdown__item:hover { background: var(--bg-secondary); }
+.dropdown__item:hover { background: #FF6B35; color: var(--bg-primary); }
+
+.dropdown__item:hover .dropdown__title,
+.dropdown__item:hover .dropdown__subtitle {
+    color: var(--bg-primary);
+}
+
+.dropdown__item:hover .dropdown__icon {
+    background: var(--bg-primary);
+    color: #FF6B35;
+}
 
 .dropdown__icon {
     width: 40px;
     height: 40px;
-    border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 14px;
+    background: var(--bg-secondary);
+    color: var(--text-secondary);
 }
 
-.dropdown__icon--blue { background: #e0edff; color: #2563eb; }
-.dropdown__icon--green { background: #dcfce7; color: #16a34a; }
-.dropdown__icon--purple { background: #ede9fe; color: #7c3aed; }
+
 
 .dropdown__content { flex: 1; min-width: 0; }
 .dropdown__title { margin: 0; font-size: 14px; font-weight: 600; }
@@ -446,7 +455,7 @@ const logout = () => {
 
 .dropdown__list--flush .dropdown__item { border-bottom: none; padding: 10px 14px; gap: 10px; align-items: center; }
 .dropdown__item--row { align-items: center; gap: 10px; font-size: 14px; }
-.dropdown__item--danger { color: #dc2626; }
+.dropdown__item--danger { color: #FF6B35; }
 .dropdown__footer { border-top: 1px solid var(--border-color); }
 
 .navbar__user {
@@ -466,7 +475,6 @@ const logout = () => {
 .navbar__avatar {
     width: 36px;
     height: 36px;
-    border-radius: 6px;
     background: linear-gradient(135deg, #2563eb, #1d4ed8);
     color: #fff;
     display: flex;
