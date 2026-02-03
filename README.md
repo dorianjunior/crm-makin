@@ -98,27 +98,131 @@ CRM Makin é uma solução completa de gestão de relacionamento com clientes qu
 
 ## 🚀 Instalação
 
-### 1. Clone o repositório
+### Opção 1: Instalação com Docker (Recomendado) 🐳
+
+#### 1. Clone o repositório
 
 ```bash
 git clone <repository-url>
-cd crm-api
+cd crm-makin
 ```
 
-### 2. Instale as dependências
+#### 2. Configure o ambiente
+
+```bash
+cp .env.example .env
+```
+
+Edite o arquivo `.env` com as configurações Docker:
+
+```env
+APP_NAME="CRM Makin"
+APP_URL=http://localhost:8000
+
+DB_CONNECTION=mysql
+DB_HOST=db
+DB_PORT=3306
+DB_DATABASE=crm_makin
+DB_USERNAME=crm_user
+DB_PASSWORD=crm_password
+
+REDIS_HOST=redis
+REDIS_PASSWORD=null
+REDIS_PORT=6379
+
+MAIL_MAILER=smtp
+MAIL_HOST=mailhog
+MAIL_PORT=1025
+```
+
+#### 3. Inicie os containers Docker
+
+```bash
+# Iniciar todos os serviços
+docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+
+# Verificar se os containers estão rodando
+docker ps
+```
+
+#### 4. Acesse o container da aplicação
+
+```bash
+docker exec -it crm-app bash
+```
+
+#### 5. Instale as dependências (dentro do container)
 
 ```bash
 composer install
 ```
 
-### 3. Configure o ambiente
+#### 6. Gere a chave da aplicação
+
+```bash
+php artisan key:generate
+```
+
+#### 7. Execute as migrations
+
+```bash
+php artisan migrate
+```
+
+#### 8. Execute os seeders
+
+```bash
+php artisan db:seed
+```
+
+#### 9. Acesse a aplicação
+
+- **API:** http://localhost:8000
+- **phpMyAdmin:** http://localhost:8080
+- **MailHog:** http://localhost:8025
+- **Redis Commander:** http://localhost:8081
+
+#### Comandos úteis Docker
+
+```bash
+# Parar os containers
+docker compose -f docker-compose.yml -f docker-compose.dev.yml down
+
+# Ver logs
+docker compose -f docker-compose.yml -f docker-compose.dev.yml logs -f
+
+# Resetar banco de dados
+docker exec -it crm-app php artisan migrate:fresh --seed
+
+# Acessar MySQL
+docker exec -it crm-db mysql -u crm_user -p crm_makin
+```
+
+---
+
+### Opção 2: Instalação Local
+
+#### 1. Clone o repositório
+
+```bash
+git clone <repository-url>
+cd crm-makin
+```
+
+#### 2. Instale as dependências
+
+```bash
+composer install
+```
+
+#### 3. Configure o ambiente
 
 ```bash
 cp .env.example .env
 php artisan key:generate
 ```
 
-### 4. Configure o banco de dados
+#### 4. Configure o banco de dados
 
 Edite o arquivo `.env`:
 
@@ -126,32 +230,24 @@ Edite o arquivo `.env`:
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
-DB_DATABASE=crm
+DB_DATABASE=crm_makin
 DB_USERNAME=root
 DB_PASSWORD=sua_senha
 ```
 
-### 5. Inicie o Docker (MySQL)
+#### 5. Execute as migrations
 
 ```bash
-cd ../crm-data
-docker compose up -d
-```
-
-### 6. Execute as migrations
-
-```bash
-cd ../crm-api
 php artisan migrate
 ```
 
-### 7. Execute os seeders
+#### 6. Execute os seeders
 
 ```bash
 php artisan db:seed
 ```
 
-### 8. Inicie o servidor
+#### 7. Inicie o servidor
 
 ```bash
 php artisan serve
@@ -161,16 +257,43 @@ A API estará disponível em: `http://localhost:8000`
 
 ## ⚙️ Configuração
 
-### Docker MySQL
+### Docker Services
 
-O projeto usa Docker para o MySQL. Configure as variáveis no `.env` da pasta `crm-data`:
+O projeto inclui os seguintes serviços Docker:
+
+- **nginx** - Servidor web (porta 8000)
+- **app** - Aplicação Laravel com PHP-FPM
+- **db** - MariaDB 11.2 (porta 3306)
+- **redis** - Cache Redis (porta 6379)
+- **scheduler** - Laravel Scheduler
+- **queue-worker** - Processamento de filas
+- **mailhog** - Servidor de email para testes (porta 8025)
+- **phpmyadmin** - Interface web MySQL (porta 8080)
+- **redis-commander** - Interface web Redis (porta 8081)
+
+### Variáveis de Ambiente
+
+Principais variáveis do `.env` para Docker:
 
 ```env
-MYSQL_ROOT_PASSWORD=root
-MYSQL_DATABASE=crm
-MYSQL_USER=crm_user
-MYSQL_PASSWORD=crm_password
-MYSQL_PORT=3306
+# Application
+APP_PORT=8000
+APP_SSL_PORT=443
+
+# Database
+DB_HOST=db
+DB_PORT=3306
+DB_DATABASE=crm_makin
+DB_USERNAME=crm_user
+DB_PASSWORD=crm_password
+
+# Redis
+REDIS_HOST=redis
+REDIS_PORT=6379
+
+# Mail (MailHog)
+MAIL_HOST=mailhog
+MAIL_PORT=1025
 ```
 
 ### Sanctum

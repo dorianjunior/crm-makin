@@ -2451,6 +2451,7 @@ onMounted(() => {
 #### ✅ Checklist Completo
 
 - [ ] **Testes Completos**
+  - [ ] Feature tests: CRM workflow completo
   - [ ] Feature tests: CMS workflow completo
   - [ ] Feature tests: WhatsApp integration
   - [ ] Feature tests: IA generation
@@ -2459,7 +2460,7 @@ onMounted(() => {
   - [ ] Unit tests: Services críticos
   - [ ] Mocks de APIs externas
   - [ ] `php artisan test --coverage`
-  - [ ] Cobertura 65%+
+  - [ ] Cobertura 80%+
 
 - [ ] **Análise Estática**
   - [ ] `./vendor/bin/phpstan analyse`
