@@ -22,6 +22,7 @@ class Lead extends Model
         'name',
         'email',
         'phone',
+        'company',
         'status',
         'notes',
     ];
@@ -29,6 +30,13 @@ class Lead extends Model
     protected $casts = [
         'status' => LeadStatus::class,
     ];
+
+    protected $appends = ['status_value'];
+
+    public function getStatusValueAttribute()
+    {
+        return $this->status?->value ?? $this->attributes['status'];
+    }
 
     public function company(): BelongsTo
     {

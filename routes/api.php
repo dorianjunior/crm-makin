@@ -99,16 +99,16 @@ Route::middleware(['auth:sanctum', 'active'])->group(function () {
     // ============================================
     Route::prefix('crm')->group(function () {
         // Companies
-        Route::apiResource('companies', CompanyController::class);
-        Route::post('companies/{company}/activate', [CompanyController::class, 'activate']);
-        Route::post('companies/{company}/deactivate', [CompanyController::class, 'deactivate']);
-        Route::post('companies/{company}/suspend', [CompanyController::class, 'suspend']);
+        Route::apiResource('companies', CompanyController::class)->names('api.companies');
+        Route::post('companies/{company}/activate', [CompanyController::class, 'activate'])->name('api.companies.activate');
+        Route::post('companies/{company}/deactivate', [CompanyController::class, 'deactivate'])->name('api.companies.deactivate');
+        Route::post('companies/{company}/suspend', [CompanyController::class, 'suspend'])->name('api.companies.suspend');
 
         // Lead Management
-        Route::apiResource('lead-sources', LeadSourceController::class);
-        Route::apiResource('leads', LeadController::class);
-        Route::post('leads/{lead}/assign', [LeadController::class, 'assign']);
-        Route::post('leads/{lead}/change-status', [LeadController::class, 'changeStatus']);
+        Route::apiResource('lead-sources', LeadSourceController::class)->names('api.lead-sources');
+        Route::apiResource('leads', LeadController::class)->names('api.leads');
+        Route::post('leads/{lead}/assign', [LeadController::class, 'assign'])->name('api.leads.assign');
+        Route::post('leads/{lead}/change-status', [LeadController::class, 'changeStatus'])->name('api.leads.changeStatus');
 
         // Activities
         Route::apiResource('activities', ActivityController::class);

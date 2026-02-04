@@ -17,11 +17,11 @@ class LeadResource extends JsonResource
             'name' => $this->name,
             'email' => $this->email,
             'phone' => $this->phone,
+            'company' => $this->company,
             'status' => $this->status->value,
             'status_label' => $this->status->label(),
             'status_color' => $this->status->color(),
             'notes' => $this->notes,
-            'company' => $this->whenLoaded('company', fn () => new CompanyResource($this->company)),
             'source' => $this->whenLoaded('source', fn () => new LeadSourceResource($this->source)),
             'assigned_user' => $this->whenLoaded('assignedUser', fn () => [
                 'id' => $this->assignedUser->id,

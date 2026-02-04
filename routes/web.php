@@ -27,7 +27,7 @@ Route::middleware(['auth', 'active'])->group(function () {
     })->name('dashboard');
 
     // CRM
-    Route::get('/leads', [LeadController::class, 'index'])->name('leads.index');
+    Route::resource('leads', LeadController::class)->except(['show']);
     Route::get('/pipelines', function () {
         return Inertia::render('Pipelines/Index');
     })->name('pipelines.index');

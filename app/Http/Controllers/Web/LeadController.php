@@ -22,7 +22,8 @@ class LeadController extends Controller
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
                     ->orWhere('email', 'like', "%{$search}%")
-                    ->orWhere('phone', 'like', "%{$search}%");
+                    ->orWhere('phone', 'like', "%{$search}%")
+                    ->orWhere('company', 'like', "%{$search}%");
             });
         }
 
@@ -52,6 +53,7 @@ class LeadController extends Controller
             'new_this_month' => Lead::where('company_id', $companyId)
                 ->where('status', 'new')
                 ->whereMonth('created_at', now()->month)
+                ->whereYear('created_at', now()->year)
                 ->count(),
             'qualified' => Lead::where('company_id', $companyId)
                 ->where('status', 'qualified')
@@ -68,6 +70,7 @@ class LeadController extends Controller
             'stats' => $stats,
             'sources' => $sources,
             'users' => $users,
+            'filters' => $request->only(['search', 'status', 'source_id', 'assigned_to']),
         ]);
     }
 
@@ -83,5 +86,93 @@ class LeadController extends Controller
             ->count();
 
         return round(($won / $total) * 100, 1);
+    }
+
+    public function create()
+    {
+        $companyId = auth()->user()->company_id;
+        $sources = LeadSource::where('company_id', $companyId)->get();
+        $users = User::where('company_id', $companyId)->get();
+
+        return Inertia::render('Leads/Create', [
+            'sources' => $sources,
+            'users' => $users,
+        ]);
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'nullable|email|max:255',
+            'phone' => 'nullable|string|max:20',
+            'company' => 'nullable|string|max:255',
+            'status' => 'required|in:new,contacted,qualified,negotiation,won,lost',
+            'source_id' => 'nullable|exists:lead_sources,id',
+            'assigned_to' => 'nullable|exists:users,id',
+            'notes' => 'nullable|string',
+        ]);
+
+        $validated['company_id'] = auth()->user()->company_id;
+
+        Lead::create($validated);
+
+        return redirect()->route('leads.index')
+            ->with('success', 'Lead criado com sucesso!');
+    }
+
+    public function edit(Lead $lead)
+    {
+        // Verifica se o lead pertence à empresa do usuário
+        if ($lead->company_id !== auth()->user()->company_id) {
+            abort(403, 'Acesso não autorizado');
+        }
+
+        $companyId = auth()->user()->company_id;
+        $sources = LeadSource::where('company_id', $companyId)->get();
+        $users = User::where('company_id', $companyId)->get();
+
+        return Inertia::render('Leads/Edit', [
+            'lead' => $lead,
+            'sources' => $sources,
+            'users' => $users,
+        ]);
+    }
+
+    public function update(Request $request, Lead $lead)
+    {
+        // Verifica se o lead pertence à empresa do usuário
+        if ($lead->company_id !== auth()->user()->company_id) {
+            abort(403, 'Acesso não autorizado');
+        }
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'nullable|email|max:255',
+            'phone' => 'nullable|string|max:20',
+            'company' => 'nullable|string|max:255',
+            'status' => 'required|in:new,contacted,qualified,negotiation,won,lost',
+            'source_id' => 'nullable|exists:lead_sources,id',
+            'assigned_to' => 'nullable|exists:users,id',
+            'notes' => 'nullable|string',
+        ]);
+
+        $lead->update($validated);
+
+        return redirect()->route('leads.index')
+            ->with('success', 'Lead atualizado com sucesso!');
+    }
+
+    public function destroy(Lead $lead)
+    {
+        // Verifica se o lead pertence à empresa do usuário
+        if ($lead->company_id !== auth()->user()->company_id) {
+            abort(403, 'Acesso não autorizado');
+        }
+
+        $lead->delete();
+
+        return redirect()->route('leads.index')
+            ->with('success', 'Lead excluído com sucesso!');
     }
 }

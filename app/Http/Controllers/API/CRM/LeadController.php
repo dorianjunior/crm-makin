@@ -20,10 +20,13 @@ class LeadController extends Controller
 
     public function index(Request $request): AnonymousResourceCollection
     {
-        $filters = $request->only(['company_id', 'status', 'assigned_to', 'search']);
+        $filters = $request->only(['status', 'assigned_to', 'source_id', 'search', 'sort', 'direction', 'page']);
         $leads = $this->leadService->getByCompany($filters);
+        $stats = $this->leadService->getStats(auth()->user()->company_id);
 
-        return LeadResource::collection($leads);
+        return LeadResource::collection($leads)->additional([
+            'stats' => $stats,
+        ]);
     }
 
     public function store(StoreLeadRequest $request): LeadResource

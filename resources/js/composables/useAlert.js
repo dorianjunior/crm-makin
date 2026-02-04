@@ -20,23 +20,31 @@ export function useAlert() {
     /**
      * Base configuration for brutalist alerts
      */
-    const getBaseConfig = () => ({
-        customClass: {
-            popup: 'brutalist-popup',
-            title: 'brutalist-title',
-            htmlContainer: 'brutalist-content',
-            confirmButton: 'brutalist-btn brutalist-btn--confirm',
-            cancelButton: 'brutalist-btn brutalist-btn--cancel',
-            denyButton: 'brutalist-btn brutalist-btn--deny',
-        },
-        buttonsStyling: false,
-        showClass: {
-            popup: 'brutalist-show',
-        },
-        hideClass: {
-            popup: 'brutalist-hide',
-        },
-    });
+    const getBaseConfig = (includeExtraButtons = false) => {
+        const config = {
+            customClass: {
+                popup: 'brutalist-popup',
+                title: 'brutalist-title',
+                htmlContainer: 'brutalist-content',
+                confirmButton: 'brutalist-btn brutalist-btn--confirm',
+            },
+            buttonsStyling: false,
+            showClass: {
+                popup: 'brutalist-show',
+            },
+            hideClass: {
+                popup: 'brutalist-hide',
+            },
+        };
+
+        // Adiciona classes de botões extras apenas se necessário
+        if (includeExtraButtons) {
+            config.customClass.cancelButton = 'brutalist-btn brutalist-btn--cancel';
+            config.customClass.denyButton = 'brutalist-btn brutalist-btn--deny';
+        }
+
+        return config;
+    };
 
     /**
      * Success alert
@@ -48,6 +56,8 @@ export function useAlert() {
             title,
             text: message,
             confirmButtonText: 'OK',
+            showCancelButton: false,
+            showDenyButton: false,
             iconColor: '#10b981',
         });
     };
@@ -62,6 +72,8 @@ export function useAlert() {
             title,
             text: message,
             confirmButtonText: 'OK',
+            showCancelButton: false,
+            showDenyButton: false,
             iconColor: '#ef4444',
         });
     };
@@ -76,6 +88,8 @@ export function useAlert() {
             title,
             text: message,
             confirmButtonText: 'OK',
+            showCancelButton: false,
+            showDenyButton: false,
             iconColor: '#f59e0b',
         });
     };
@@ -90,6 +104,8 @@ export function useAlert() {
             title,
             text: message,
             confirmButtonText: 'OK',
+            showCancelButton: false,
+            showDenyButton: false,
             iconColor: '#3b82f6',
         });
     };
@@ -99,7 +115,7 @@ export function useAlert() {
      */
     const confirmDelete = (title = 'Tem certeza?', message = 'Esta ação não pode ser desfeita!') => {
         return Swal.fire({
-            ...getBaseConfig(),
+            ...getBaseConfig(true),
             icon: 'warning',
             title,
             text: message,
@@ -116,7 +132,7 @@ export function useAlert() {
      */
     const confirm = (title, message = '', confirmText = 'Confirmar', cancelText = 'Cancelar') => {
         return Swal.fire({
-            ...getBaseConfig(),
+            ...getBaseConfig(true),
             icon: 'question',
             title,
             text: message,

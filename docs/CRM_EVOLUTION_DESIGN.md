@@ -2141,6 +2141,641 @@ onMounted(() => {
 
 ---
 
+### FASE 3.6: WebSockets - Comunicação em Tempo Real (Futuro - Alta Prioridade) 🚀
+
+> **Status**: ⏳ Planejado - Implementação futura para notificações em tempo real  
+> **Prioridade**: Alta (Experiência do usuário)  
+> **Dependências**: FASE 6 (Notificações) completa
+
+#### 🎯 Objetivo
+
+Implementar comunicação bidirecional em tempo real para:
+- Notificações instantâneas (leads, mensagens, tarefas)
+- Chat ao vivo entre usuários
+- Atualização de dashboards sem refresh
+- Status de presença online/offline
+- Sincronização multi-dispositivo
+
+#### 📋 Checklist de Implementação
+
+- [ ] **Setup Laravel Echo Server**
+  - [ ] Escolher provider: Pusher (Cloud) vs Soketi (Self-hosted)
+  - [ ] Instalar Laravel Echo Server ou Soketi
+  - [ ] Configurar .env (keys, cluster, etc.)
+  - [ ] Testar conexão WebSocket
+  - [ ] SSL/TLS configurado
+
+- [ ] **Backend - Broadcasting**
+  - [ ] Instalar `laravel/echo` e provider
+  - [ ] Configurar `config/broadcasting.php`
+  - [ ] Criar canais privados/presence em `routes/channels.php`
+  - [ ] Implementar ShouldBroadcast em Events existentes
+  - [ ] Criar novos Events para real-time:
+    - [ ] NewLeadCreated
+    - [ ] NewMessageReceived
+    - [ ] TaskAssigned
+    - [ ] UserPresenceChanged
+    - [ ] DashboardMetricsUpdated
+  - [ ] Adicionar broadcasting em Services críticos
+  - [ ] Testar com `php artisan queue:work`
+
+- [ ] **Frontend - Laravel Echo Client**
+  - [ ] Instalar `laravel-echo` e `pusher-js` / `soketi-js`
+  - [ ] Configurar bootstrap Echo em `resources/js/app.js`
+  - [ ] Criar composable `useRealtimeNotifications.js`
+  - [ ] Criar composable `usePresence.js`
+  - [ ] Criar composable `useLiveChat.js`
+  - [ ] Implementar toast notifications no layout
+  - [ ] Badge de contador em tempo real
+  - [ ] Audio/visual alerts opcionais
+
+- [ ] **Canais Específicos**
+  - [ ] Canal privado: `company.{companyId}`
+  - [ ] Canal privado: `user.{userId}`
+  - [ ] Canal presence: `chat.{conversationId}`
+  - [ ] Canal presence: `dashboard.{companyId}`
+  - [ ] Autorização via broadcasting auth
+
+- [ ] **Features de Presença**
+  - [ ] Lista de usuários online
+  - [ ] Status "digitando..." em chats
+  - [ ] Indicador de visualização de mensagens
+  - [ ] Sincronização de ações entre dispositivos
+
+- [ ] **Performance e Escalabilidade**
+  - [ ] Rate limiting em broadcasting
+  - [ ] Debounce em eventos frequentes
+  - [ ] Reconnection automática com backoff
+  - [ ] Fallback para polling se WebSocket falhar
+  - [ ] Monitoramento de conexões ativas
+
+- [ ] **Segurança**
+  - [ ] Autenticação de canais via Sanctum
+  - [ ] Validação de permissões por canal
+  - [ ] Rate limiting de broadcasting
+  - [ ] Logs de eventos suspeitos
+
+- [ ] **Testes**
+  - [ ] Unit tests: Events com ShouldBroadcast
+  - [ ] Feature tests: Channel authorization
+  - [ ] E2E tests: Simulação de conexões WebSocket
+  - [ ] Load tests: Múltiplas conexões simultâneas
+
+- [ ] **Documentação**
+  - [ ] WEBSOCKETS_GUIDE.md completo
+  - [ ] Exemplos de uso no frontend
+  - [ ] Guia de troubleshooting
+  - [ ] Comparação Pusher vs Soketi (custos)
+
+#### 🏗️ Arquitetura Proposta
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│ Frontend (Vue 3 + Laravel Echo)                             │
+│                                                             │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐     │
+│  │ Notifications│  │  Chat Live   │  │  Dashboard   │     │
+│  │  Component   │  │  Component   │  │  Real-time   │     │
+│  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘     │
+│         │                  │                  │             │
+│         └──────────────────┴──────────────────┘             │
+│                            │                                │
+│                   ┌────────▼─────────┐                      │
+│                   │  Laravel Echo    │                      │
+│                   │   (WebSocket)    │                      │
+│                   └────────┬─────────┘                      │
+└────────────────────────────┼─────────────────────────────────┘
+                             │
+                    ┌────────▼─────────┐
+                    │ Pusher / Soketi  │
+                    │  WebSocket Hub   │
+                    └────────┬─────────┘
+                             │
+┌────────────────────────────┼─────────────────────────────────┐
+│ Backend (Laravel)          │                                 │
+│                   ┌────────▼─────────┐                       │
+│                   │  Broadcasting    │                       │
+│                   │    Driver        │                       │
+│                   └────────┬─────────┘                       │
+│                            │                                 │
+│         ┌──────────────────┴──────────────────┐             │
+│         │                                      │             │
+│  ┌──────▼─────────┐              ┌────────────▼──────┐      │
+│  │ Events/         │              │ Channels/         │      │
+│  │ NewLeadCreated │              │ Authorization     │      │
+│  │ MessageReceived│              │ - Private         │      │
+│  │ TaskAssigned   │              │ - Presence        │      │
+│  └────────────────┘              └───────────────────┘      │
+└─────────────────────────────────────────────────────────────┘
+```
+
+#### 💡 Exemplo de Implementação
+
+**Event - NewLeadCreated.php**
+```php
+namespace App\Events;
+
+use App\Models\CRM\Lead;
+use Illuminate\Broadcasting\Channel;
+use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Queue\SerializesModels;
+
+class NewLeadCreated implements ShouldBroadcast
+{
+    use Dispatchable, InteractsWithSockets, SerializesModels;
+
+    public function __construct(
+        public Lead $lead
+    ) {}
+
+    public function broadcastOn(): array
+    {
+        return [
+            new Channel('company.' . $this->lead->company_id),
+        ];
+    }
+
+    public function broadcastAs(): string
+    {
+        return 'lead.created';
+    }
+
+    public function broadcastWith(): array
+    {
+        return [
+            'id' => $this->lead->id,
+            'name' => $this->lead->name,
+            'email' => $this->lead->email,
+            'status' => $this->lead->status,
+            'created_at' => $this->lead->created_at->toIso8601String(),
+        ];
+    }
+}
+```
+
+**Frontend Composable - useRealtimeNotifications.js**
+```javascript
+import { ref, onMounted, onUnmounted } from 'vue';
+import { useToast } from 'primevue/usetoast';
+
+export function useRealtimeNotifications(companyId) {
+    const toast = useToast();
+    const notifications = ref([]);
+    let channel = null;
+
+    const connect = () => {
+        channel = window.Echo.private(`company.${companyId}`);
+
+        channel.listen('.lead.created', (data) => {
+            notifications.value.unshift({
+                id: Date.now(),
+                type: 'lead',
+                message: `Novo lead: ${data.name}`,
+                data: data,
+                read: false,
+            });
+
+            toast.add({
+                severity: 'info',
+                summary: 'Novo Lead',
+                detail: `${data.name} acabou de entrar`,
+                life: 5000,
+            });
+        });
+
+        channel.listen('.message.received', (data) => {
+            notifications.value.unshift({
+                id: Date.now(),
+                type: 'message',
+                message: `Nova mensagem de ${data.sender_name}`,
+                data: data,
+                read: false,
+            });
+
+            // Play notification sound
+            const audio = new Audio('/sounds/notification.mp3');
+            audio.play();
+        });
+
+        channel.listen('.task.assigned', (data) => {
+            if (data.assigned_to === window.Laravel.user.id) {
+                toast.add({
+                    severity: 'warn',
+                    summary: 'Nova Tarefa',
+                    detail: data.task_title,
+                    life: 5000,
+                });
+            }
+        });
+    };
+
+    const disconnect = () => {
+        if (channel) {
+            window.Echo.leave(`company.${companyId}`);
+            channel = null;
+        }
+    };
+
+    const markAsRead = (notificationId) => {
+        const index = notifications.value.findIndex(n => n.id === notificationId);
+        if (index !== -1) {
+            notifications.value[index].read = true;
+        }
+    };
+
+    onMounted(() => connect());
+    onUnmounted(() => disconnect());
+
+    return {
+        notifications,
+        markAsRead,
+        unreadCount: computed(() => notifications.value.filter(n => !n.read).length),
+    };
+}
+```
+
+#### 💰 Comparação de Custos
+
+| Provider | Custo | Conexões | Mensagens/Mês | Recomendação |
+|----------|-------|----------|---------------|--------------|
+| **Pusher** (Cloud) | $49/mês | 500 simultâneas | 2M mensagens | ✅ Ideal para MVP/iniciar rápido |
+| **Soketi** (Self-hosted) | $10-20/mês VPS | Ilimitadas | Ilimitadas | ✅ Ideal para escala/custo baixo |
+| **Laravel WebSockets** | Custo servidor | Ilimitadas | Ilimitadas | ⚠️ Deprecated, usar Soketi |
+
+**Recomendação:** Iniciar com Pusher (fácil setup), migrar para Soketi ao escalar.
+
+#### 📚 Recursos de Aprendizado
+
+- **Laravel Broadcasting:** https://laravel.com/docs/12.x/broadcasting
+- **Laravel Echo:** https://laravel.com/docs/12.x/broadcasting#client-side-installation
+- **Soketi Docs:** https://docs.soketi.app/
+- **Pusher Docs:** https://pusher.com/docs/channels/getting_started/javascript/
+
+**Tempo estimado:** 15-20 horas  
+**Complexidade:** Média (infraestrutura nova)  
+**ROI:** Alto (melhora drasticamente UX)
+
+---
+
+### FASE 3.7: Mobile App - iOS e Android (Visão de Futuro) 📱
+
+> **Status**: 🔮 Visão de Futuro - Planejamento para expansão mobile  
+> **Prioridade**: Baixa inicialmente, Alta após validação web  
+> **Dependências**: API REST completa, WebSockets implementados
+
+#### 🎯 Objetivo
+
+Criar aplicativo nativo iOS/Android para:
+- Gerenciamento de leads em movimento
+- Respostas rápidas a mensagens (WhatsApp/Instagram)
+- Notificações push nativas
+- Acesso offline a dados essenciais
+- Localização e check-in de visitas
+- Assinatura digital de propostas
+
+#### 🛠️ Stack Tecnológico Proposto
+
+**Opção 1: React Native (Recomendada)**
+- ✅ Codebase compartilhada (iOS + Android)
+- ✅ Performance nativa
+- ✅ Comunidade massiva
+- ✅ Hot reload
+- ⚠️ Curva de aprendizado média
+
+**Opção 2: Flutter**
+- ✅ Performance excelente
+- ✅ UI bonita out-of-the-box
+- ✅ Desenvolvimento rápido
+- ⚠️ Dart é nova linguagem
+- ⚠️ Comunidade menor que RN
+
+**Opção 3: Nativo (Swift + Kotlin)**
+- ✅ Performance máxima
+- ✅ Acesso total a APIs nativas
+- ⚠️ Codebase duplicada
+- ⚠️ 2x o tempo de desenvolvimento
+
+**Decisão:** **React Native** (melhor custo/benefício)
+
+#### 📋 Checklist de Implementação
+
+- [ ] **Setup e Infraestrutura**
+  - [ ] Criar projeto React Native com Expo
+  - [ ] Configurar TypeScript
+  - [ ] Setup ESLint + Prettier
+  - [ ] Configurar React Navigation
+  - [ ] Instalar bibliotecas base (axios, react-query, zustand)
+  - [ ] Configurar splash screen e ícone
+
+- [ ] **Autenticação Mobile**
+  - [ ] Login com email/senha
+  - [ ] Biometria (Face ID / Touch ID / Fingerprint)
+  - [ ] Refresh token automático
+  - [ ] Logout e limpeza de sessão
+  - [ ] Recuperação de senha
+
+- [ ] **Features Core**
+  - [ ] Dashboard mobile
+  - [ ] Lista de leads com filtros
+  - [ ] Detalhes do lead
+  - [ ] Criar/editar lead rápido
+  - [ ] Lista de tarefas
+  - [ ] Marcar tarefa como concluída
+  - [ ] Adicionar nota rápida
+  - [ ] Fazer ligação direta (deep link)
+  - [ ] Enviar WhatsApp direto
+
+- [ ] **Mensagens e Chat**
+  - [ ] Inbox unificado (WhatsApp + Instagram)
+  - [ ] Interface de chat nativa
+  - [ ] Envio de mensagens
+  - [ ] Upload de imagens/vídeos
+  - [ ] Gravação de áudio
+  - [ ] Respostas rápidas (templates)
+  - [ ] Indicador de digitação
+  - [ ] Status de leitura
+
+- [ ] **Notificações Push**
+  - [ ] Configurar Firebase Cloud Messaging (FCM)
+  - [ ] Configurar Apple Push Notification (APNs)
+  - [ ] Registrar token no backend
+  - [ ] Receber notificações
+  - [ ] Deep links para telas específicas
+  - [ ] Badge count
+  - [ ] Ações rápidas (responder sem abrir app)
+  - [ ] Preferências de notificação
+
+- [ ] **Funcionalidades Offline**
+  - [ ] Cache com AsyncStorage
+  - [ ] Leads acessíveis offline
+  - [ ] Notas em fila para sincronizar
+  - [ ] Indicador de status online/offline
+  - [ ] Sincronização ao voltar online
+  - [ ] Conflitos de sincronização
+
+- [ ] **Features Avançadas**
+  - [ ] Geolocalização e check-in
+  - [ ] Mapa de leads próximos
+  - [ ] Rota otimizada de visitas
+  - [ ] Scanner de cartão de visita (OCR)
+  - [ ] Assinatura digital em propostas
+  - [ ] Câmera para fotos de produtos
+  - [ ] Compartilhamento de contatos
+  - [ ] Dark mode
+
+- [ ] **Integração com Backend**
+  - [ ] API client com axios
+  - [ ] Interceptors para auth token
+  - [ ] React Query para cache
+  - [ ] Retry logic em falhas
+  - [ ] Timeout configurável
+  - [ ] Error handling global
+  - [ ] WebSocket client (Laravel Echo)
+
+- [ ] **UI/UX Mobile**
+  - [ ] Design system mobile (cores, tipografia)
+  - [ ] Componentes nativos (Button, Input, Card, etc.)
+  - [ ] Animações fluidas (Reanimated)
+  - [ ] Gestos nativos (swipe, long press)
+  - [ ] Feedback visual (loading, success, error)
+  - [ ] Acessibilidade (screen readers)
+  - [ ] Suporte a tablets
+
+- [ ] **Performance**
+  - [ ] Lazy loading de imagens
+  - [ ] Virtualized lists (FlashList)
+  - [ ] Code splitting
+  - [ ] Bundle size otimizado
+  - [ ] Splash screen rápida
+  - [ ] Minimizar re-renders
+
+- [ ] **Segurança**
+  - [ ] Criptografia de dados sensíveis
+  - [ ] Certificado SSL pinning
+  - [ ] Obfuscação de código
+  - [ ] Detecção de root/jailbreak
+  - [ ] Timeout de sessão
+  - [ ] Logs seguros (sem dados sensíveis)
+
+- [ ] **Testes**
+  - [ ] Unit tests (Jest)
+  - [ ] Integration tests (React Native Testing Library)
+  - [ ] E2E tests (Detox)
+  - [ ] Testes de acessibilidade
+  - [ ] Testes em dispositivos reais
+
+- [ ] **Publicação**
+  - [ ] Configurar Google Play Console
+  - [ ] Configurar App Store Connect
+  - [ ] Gerar screenshots e preview
+  - [ ] Descrição otimizada (ASO)
+  - [ ] Política de privacidade
+  - [ ] Termos de uso
+  - [ ] Submeter para review
+  - [ ] CI/CD para releases (Fastlane)
+
+- [ ] **Analytics e Monitoring**
+  - [ ] Firebase Analytics
+  - [ ] Crashlytics para erros
+  - [ ] Performance monitoring
+  - [ ] User behavior tracking
+  - [ ] A/B testing setup
+
+#### 🏗️ Arquitetura do App
+
+```
+mobile-app/
+├── src/
+│   ├── navigation/              # React Navigation setup
+│   │   ├── AppNavigator.tsx
+│   │   ├── AuthNavigator.tsx
+│   │   └── TabNavigator.tsx
+│   │
+│   ├── screens/                 # Telas principais
+│   │   ├── Auth/
+│   │   │   ├── LoginScreen.tsx
+│   │   │   └── ForgotPasswordScreen.tsx
+│   │   ├── Dashboard/
+│   │   │   └── DashboardScreen.tsx
+│   │   ├── Leads/
+│   │   │   ├── LeadsListScreen.tsx
+│   │   │   ├── LeadDetailScreen.tsx
+│   │   │   └── LeadFormScreen.tsx
+│   │   ├── Messages/
+│   │   │   ├── InboxScreen.tsx
+│   │   │   └── ChatScreen.tsx
+│   │   └── Profile/
+│   │       └── ProfileScreen.tsx
+│   │
+│   ├── components/              # Componentes reutilizáveis
+│   │   ├── common/
+│   │   │   ├── Button.tsx
+│   │   │   ├── Input.tsx
+│   │   │   ├── Card.tsx
+│   │   │   └── Avatar.tsx
+│   │   ├── leads/
+│   │   │   ├── LeadCard.tsx
+│   │   │   └── LeadStatusBadge.tsx
+│   │   └── chat/
+│   │       ├── MessageBubble.tsx
+│   │       └── ChatInput.tsx
+│   │
+│   ├── services/                # Lógica de negócio
+│   │   ├── api/
+│   │   │   ├── client.ts        # Axios instance
+│   │   │   ├── auth.ts
+│   │   │   ├── leads.ts
+│   │   │   ├── messages.ts
+│   │   │   └── notifications.ts
+│   │   ├── storage.ts           # AsyncStorage wrapper
+│   │   ├── websocket.ts         # Laravel Echo client
+│   │   └── notifications.ts     # FCM/APNs
+│   │
+│   ├── store/                   # State management (Zustand)
+│   │   ├── authStore.ts
+│   │   ├── leadsStore.ts
+│   │   └── messagesStore.ts
+│   │
+│   ├── hooks/                   # Custom hooks
+│   │   ├── useAuth.ts
+│   │   ├── useLeads.ts
+│   │   ├── useChat.ts
+│   │   └── useNotifications.ts
+│   │
+│   ├── utils/                   # Helpers
+│   │   ├── formatters.ts
+│   │   ├── validators.ts
+│   │   └── constants.ts
+│   │
+│   └── theme/                   # Design system
+│       ├── colors.ts
+│       ├── typography.ts
+│       └── spacing.ts
+│
+├── assets/                      # Imagens, fontes, etc.
+├── __tests__/                   # Testes
+├── ios/                         # Código nativo iOS
+├── android/                     # Código nativo Android
+├── app.json
+├── package.json
+└── tsconfig.json
+```
+
+#### 📱 Wireframes das Telas Principais
+
+**Dashboard:**
+```
+┌─────────────────────────────┐
+│  ☰  CRM Makin    🔔 👤     │
+├─────────────────────────────┤
+│                             │
+│  📊 Hoje                    │
+│  ┌─────┐ ┌─────┐ ┌─────┐   │
+│  │ 12  │ │ 5   │ │ 3   │   │
+│  │Leads│ │Tasks│ │Msgs │   │
+│  └─────┘ └─────┘ └─────┘   │
+│                             │
+│  📝 Tarefas Pendentes       │
+│  ┌───────────────────────┐ │
+│  │ ☐ Ligar cliente X     │ │
+│  │ ☐ Enviar proposta Y   │ │
+│  └───────────────────────┘ │
+│                             │
+│  💬 Mensagens Recentes      │
+│  ┌───────────────────────┐ │
+│  │ João Silva            │ │
+│  │ Oi, gostaria de...    │ │
+│  └───────────────────────┘ │
+│                             │
+└─────────────────────────────┘
+```
+
+**Chat:**
+```
+┌─────────────────────────────┐
+│ ← João Silva          ︙     │
+├─────────────────────────────┤
+│                             │
+│      ┌──────────────┐       │
+│      │ Olá! Tudo    │       │
+│      │ bem?         │       │
+│      └──────────────┘ 10:30 │
+│                             │
+│  ┌──────────────┐           │
+│  │ Oi João! Sim,│           │
+│  │ e você?      │           │
+│  └──────────────┘     10:31 │
+│                             │
+│      ┌──────────────┐       │
+│      │ 👍 Ótimo!    │       │
+│      └──────────────┘ 10:32 │
+│                             │
+├─────────────────────────────┤
+│ 📎 😊  [Digite...]  ➤       │
+└─────────────────────────────┘
+```
+
+#### 🚀 Estratégia de Lançamento
+
+**Fase 1: MVP (2-3 meses)**
+- Login + Dashboard
+- Lista de leads
+- Chat básico (WhatsApp)
+- Notificações push
+- **Objetivo:** Validar uso mobile pelos clientes
+
+**Fase 2: Funcionalidades Principais (1-2 meses)**
+- Criar/editar leads
+- Tarefas completas
+- Instagram integration
+- Offline mode básico
+- **Objetivo:** Paridade com funcionalidades web essenciais
+
+**Fase 3: Features Avançadas (2-3 meses)**
+- Geolocalização e mapas
+- Scanner de cartão de visita
+- Assinatura digital
+- WebSockets real-time
+- **Objetivo:** Diferenciais competitivos
+
+**Fase 4: Polimento (1 mês)**
+- Performance optimization
+- Dark mode
+- Acessibilidade
+- Testes extensivos
+- **Objetivo:** Experiência premium
+
+#### 💰 Custos Estimados
+
+| Item | Custo Anual | Observações |
+|------|-------------|-------------|
+| **Desenvolvimento** | R$ 30-60k | Depende se terceirizado ou in-house |
+| **Google Play Developer** | R$ 100 (one-time) | Taxa única |
+| **Apple Developer Program** | R$ 500/ano | Renovação anual |
+| **Firebase (Notifications)** | R$ 0-500/mês | Free tier robusto, cresce com uso |
+| **CodePush / AppCenter** | R$ 0 | Free da Microsoft |
+| **Fastlane / CI/CD** | R$ 0 | Open source |
+| **Total Infraestrutura** | ~R$ 1.000/ano | Sem contar desenvolvimento |
+
+#### 📚 Recursos de Aprendizado
+
+- **React Native Docs:** https://reactnative.dev/docs/getting-started
+- **Expo Docs:** https://docs.expo.dev/
+- **React Navigation:** https://reactnavigation.org/
+- **Firebase for React Native:** https://rnfirebase.io/
+- **React Native Best Practices:** https://github.com/react-native-community/discussions-and-proposals
+
+**Tempo estimado:** 6-9 meses (do MVP ao lançamento)  
+**Complexidade:** Alta (plataforma nova)  
+**ROI:** Muito Alto (mobilidade é essencial para vendas)  
+**Dependências Críticas:** API REST estável, documentação completa
+
+---
+
+---
+
 ### FASE 4: Integração WhatsApp Business API (Semana 7) ✅ COMPLETA
 
 > **Status**: ✅ Implementada  

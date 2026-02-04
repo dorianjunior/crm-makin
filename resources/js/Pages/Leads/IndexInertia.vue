@@ -12,27 +12,9 @@
                     <p class="page-header__subtitle">Gerencie seus leads e oportunidades de negócio</p>
                 </div>
                 <div class="page-header__actions">
-                    <div class="refresh-controls">
-                        <button
-                            class="btn btn--sm btn--ghost"
-                            @click="manualRefresh"
-                            title="Atualizar agora"
-                        >
-                            <i class="fas fa-sync-alt" :class="{ 'fa-spin': loading }"></i>
-                        </button>
-                        <button
-                            :class="['btn', 'btn--sm', autoRefreshEnabled ? 'btn--success' : 'btn--secondary']"
-                            @click="toggleAutoRefresh"
-                            :title="autoRefreshEnabled ? 'Desativar atualização automática' : 'Ativar atualização automática'"
-                        >
-                            <i :class="autoRefreshEnabled ? 'fas fa-pause' : 'fas fa-play'"></i>
-                            {{ autoRefreshEnabled ? 'Auto' : 'Manual' }}
-                        </button>
-                        <span class="refresh-time">
-                            <i class="fas fa-clock"></i>
-                            {{ formatLastRefresh }}
-                        </span>
-                    </div>
+                    <button class="btn btn--sm btn--ghost" @click="refresh" title="Atualizar">
+                        <i class="fas fa-sync-alt" :class="{ 'fa-spin': loading }"></i>
+                    </button>
                     <button class="btn" @click="createLead">
                         <i class="fas fa-plus"></i>
                         Novo Lead
@@ -76,17 +58,36 @@
             <div class="card" style="margin-top: 32px;">
                 <div class="card__body">
                     <div class="filters-grid">
-                        <Input v-model="localFilters.search" placeholder="Buscar por nome, email ou telefone..."
-                            icon="fa-search" @input="debouncedSearch" />
+                        <Input
+                            v-model="localFilters.search"
+                            placeholder="Buscar por nome, email, telefone ou empresa..."
+                            icon="fa-search"
+                            @input="debouncedSearch"
+                        />
 
-                        <Select v-model="localFilters.status" label="Status" :options="statusOptions"
-                            placeholder="Todos os status" @update:modelValue="loadLeads" />
+                        <Select
+                            v-model="localFilters.status"
+                            label="Status"
+                            :options="statusOptions"
+                            placeholder="Todos os status"
+                            @update:modelValue="applyFilters"
+                        />
 
-                        <Select v-model="localFilters.source_id" label="Fonte" :options="sourceOptions"
-                            placeholder="Todas as fontes" @update:modelValue="loadLeads" />
+                        <Select
+                            v-model="localFilters.source_id"
+                            label="Fonte"
+                            :options="sourceOptions"
+                            placeholder="Todas as fontes"
+                            @update:modelValue="applyFilters"
+                        />
 
-                        <Select v-model="localFilters.assigned_to" label="Responsável" :options="userOptions"
-                            placeholder="Todos os responsáveis" @update:modelValue="loadLeads" />
+                        <Select
+                            v-model="localFilters.assigned_to"
+                            label="Responsável"
+                            :options="userOptions"
+                            placeholder="Todos os responsáveis"
+                            @update:modelValue="applyFilters"
+                        />
 
                         <button class="btn btn--secondary" @click="clearFilters">
                             <i class="fas fa-times"></i>
@@ -106,8 +107,13 @@
                     </button>
                 </div>
 
-                <Table :columns="columns" :data="props.leads.data" :loading="loading" empty-text="Nenhum lead encontrado"
-                    hoverable>
+                <Table
+                    :columns="columns"
+                    :data="leads.data"
+                    :loading="loading"
+                    empty-text="Nenhum lead encontrado"
+                    hoverable
+                >
                     <template #cell-name="{ row }">
                         <div class="cell-name">
                             <strong>{{ row.name }}</strong>
@@ -141,9 +147,6 @@
 
                     <template #cell-actions="{ row }">
                         <div class="action-buttons">
-                            <button class="action-btn" @click="viewLead(row)" title="Ver">
-                                <i class="fas fa-eye"></i>
-                            </button>
                             <button class="action-btn" @click="editLead(row)" title="Editar">
                                 <i class="fas fa-edit"></i>
                             </button>
@@ -154,37 +157,54 @@
                     </template>
                 </Table>
 
-                <Pagination :from="props.leads.from" :to="props.leads.to" :total="props.leads.total" :current-page="props.leads.current_page"
-                    :last-page="props.leads.last_page" @page-change="changePage" />
+                <Pagination
+                    :from="leads.from"
+                    :to="leads.to"
+                    :total="leads.total"
+                    :current-page="leads.current_page"
+                    :last-page="leads.last_page"
+                    @page-change="changePage"
+                />
             </div>
         </div>
     </MainLayout>
 </template>
 
 <script setup>
-import { ref, computed, onUnmounted } from 'vue';
+import { ref, computed, reactive } from 'vue';
 import { router } from '@inertiajs/vue3';
 import MainLayout from '@/Layouts/MainLayout.vue';
-import Button from '@/Components/Button.vue';
 import Input from '@/Components/Input.vue';
 import Select from '@/Components/Select.vue';
-import Badge from '@/Components/Badge.vue';
-import Card from '@/Components/Card.vue';
 import Table from '@/Components/Table.vue';
-import StatCard from '@/Components/StatCard.vue';
 import Breadcrumbs from '@/Components/Breadcrumbs.vue';
 import Pagination from '@/Components/Pagination.vue';
 import { useAlert } from '@/composables/useAlert';
 
 const alert = useAlert();
 
-// Props recebidas do Inertia (controller)
+// Props vem do Inertia automaticamente ✨
 const props = defineProps({
-    leads: Object,
-    stats: Object,
-    sources: Array,
-    users: Array,
-    filters: Object,
+    leads: {
+        type: Object,
+        required: true
+    },
+    sources: {
+        type: Array,
+        default: () => []
+    },
+    users: {
+        type: Array,
+        default: () => []
+    },
+    stats: {
+        type: Object,
+        required: true
+    },
+    filters: {
+        type: Object,
+        default: () => ({})
+    }
 });
 
 const breadcrumbs = [
@@ -193,21 +213,14 @@ const breadcrumbs = [
 ];
 
 const loading = ref(false);
-const sortField = ref('created_at');
-const sortDirection = ref('desc');
 
-// Estado dos filtros (inicializa com os valores do backend)
-const localFilters = ref({
-    search: props.filters?.search || '',
-    status: props.filters?.status || '',
-    source_id: props.filters?.source_id || '',
-    assigned_to: props.filters?.assigned_to || '',
+// Filtros locais (reativos)
+const localFilters = reactive({
+    search: props.filters.search || '',
+    status: props.filters.status || '',
+    source_id: props.filters.source_id || '',
+    assigned_to: props.filters.assigned_to || '',
 });
-
-// Controle de auto-refresh
-const autoRefreshEnabled = ref(false);
-const lastRefreshTime = ref(new Date());
-let refreshInterval = null;
 
 // Table columns
 const columns = [
@@ -218,11 +231,11 @@ const columns = [
     { field: 'source', label: 'Fonte', align: 'center', width: '120px' },
     { field: 'assigned', label: 'Responsável', align: 'left', width: '150px' },
     { field: 'created', label: 'Criado em', align: 'center', width: '120px' },
-    { field: 'actions', label: 'Ações', align: 'center', width: '140px' },
+    { field: 'actions', label: 'Ações', align: 'center', width: '100px' },
 ];
 
 // Select options
-const statusOptions = computed(() => [
+const statusOptions = [
     { value: '', label: 'Todos os status' },
     { value: 'new', label: 'Novo' },
     { value: 'contacted', label: 'Contatado' },
@@ -230,16 +243,16 @@ const statusOptions = computed(() => [
     { value: 'negotiation', label: 'Negociação' },
     { value: 'won', label: 'Ganho' },
     { value: 'lost', label: 'Perdido' },
-]);
+];
 
 const sourceOptions = computed(() => [
     { value: '', label: 'Todas as fontes' },
-    ...(props.sources || []).map(source => ({ value: source.id, label: source.name }))
+    ...props.sources.map(source => ({ value: source.id, label: source.name }))
 ]);
 
 const userOptions = computed(() => [
     { value: '', label: 'Todos os responsáveis' },
-    ...(props.users || []).map(user => ({ value: user.id, label: user.name }))
+    ...props.users.map(user => ({ value: user.id, label: user.name }))
 ]);
 
 // Debounced search
@@ -247,87 +260,74 @@ let searchTimeout;
 const debouncedSearch = () => {
     clearTimeout(searchTimeout);
     searchTimeout = setTimeout(() => {
-        loadLeads();
+        applyFilters();
     }, 500);
 };
 
-// Load leads with filters (usando Inertia router)
-const loadLeads = () => {
-    loading.value = true;
-    router.get('/leads',
-        {
-            ...localFilters.value,
-            sort: sortField.value,
-            direction: sortDirection.value,
-        },
-        {
-            preserveState: true,
-            preserveScroll: true,
-            onFinish: () => {
-                loading.value = false;
-                lastRefreshTime.value = new Date();
-            },
-        }
-    );
+// Apply filters using Inertia
+const applyFilters = () => {
+    router.get('/leads', localFilters, {
+        preserveState: true,
+        preserveScroll: true,
+        only: ['leads', 'stats'],
+        onStart: () => loading.value = true,
+        onFinish: () => loading.value = false,
+    });
 };
 
 // Clear filters
 const clearFilters = () => {
-    localFilters.value = {
-        search: '',
-        status: '',
-        source_id: '',
-        assigned_to: '',
-    };
-    loadLeads();
+    localFilters.search = '';
+    localFilters.status = '';
+    localFilters.source_id = '';
+    localFilters.assigned_to = '';
+    applyFilters();
+};
+
+// Refresh data
+const refresh = () => {
+    router.reload({ only: ['leads', 'stats'] });
 };
 
 // Delete lead
-const deleteLead = (lead) => {
-    if (confirm(`Tem certeza que deseja excluir o lead "${lead.name}"?`)) {
+const deleteLead = async (lead) => {
+    const confirmed = await alert.confirmDelete('lead', lead.name);
+
+    if (confirmed) {
         router.delete(`/leads/${lead.id}`, {
             preserveScroll: true,
             onSuccess: () => {
-                alert.success('Lead excluído com sucesso!');
-                lastRefreshTime.value = new Date();
+                alert.success('Lead deletado com sucesso!');
             },
             onError: () => {
-                alert.error('Erro ao excluir lead.');
+                alert.error('Erro ao deletar lead. Tente novamente.');
             },
         });
     }
 };
 
-// Toggle auto-refresh
-const toggleAutoRefresh = () => {
-    autoRefreshEnabled.value = !autoRefreshEnabled.value;
-
-    if (autoRefreshEnabled.value) {
-        // Atualiza a cada 30 segundos
-        refreshInterval = setInterval(() => {
-            manualRefresh();
-        }, 30000);
-        alert.success('Atualização automática ativada (30s)');
-    } else {
-        if (refreshInterval) {
-            clearInterval(refreshInterval);
-            refreshInterval = null;
-        }
-        alert.info('Atualização automática desativada');
-    }
-};
-
-// Manual refresh
-const manualRefresh = () => {
-    router.reload({
+// Navigation
+const changePage = (page) => {
+    if (page === '...') return;
+    router.get(`/leads?page=${page}`, localFilters, {
+        preserveState: true,
         preserveScroll: true,
-        onFinish: () => {
-            lastRefreshTime.value = new Date();
-        },
     });
 };
 
-// Get status variant
+const createLead = () => {
+    router.visit('/leads/create');
+};
+
+const editLead = (lead) => {
+    router.visit(`/leads/${lead.id}/edit`);
+};
+
+const exportLeads = () => {
+    window.location.href = '/leads/export?' + new URLSearchParams(localFilters);
+};
+
+// Helpers
 const getStatusVariant = (status) => {
     const variants = {
         new: 'info',
@@ -338,38 +338,6 @@ const getStatusVariant = (status) => {
         lost: 'danger',
     };
     return variants[status] || 'default';
-};
-
-const changePage = (page) => {
-    if (page === '...') return;
-    router.get('/leads',
-        {
-            ...localFilters.value,
-            page,
-            sort: sortField.value,
-            direction: sortDirection.value,
-        },
-        {
-            preserveState: true,
-            preserveScroll: true,
-        }
-    );
-};
-
-const createLead = () => {
-    router.visit('/leads/create');
-};
-
-const viewLead = (lead) => {
-    router.visit(`/leads/${lead.id}`);
-};
-
-const editLead = (lead) => {
-    router.visit(`/leads/${lead.id}/edit`);
-};
-
-const exportLeads = () => {
-    window.location.href = '/api/crm/leads/export?' + new URLSearchParams(localFilters.value);
 };
 
 const statusLabel = (status) => {
@@ -391,21 +359,6 @@ const formatDate = (date) => {
         year: 'numeric',
     });
 };
-
-const formatLastRefresh = computed(() => {
-    return lastRefreshTime.value.toLocaleTimeString('pt-BR', {
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-    });
-});
-
-// Cleanup on unmount
-onUnmounted(() => {
-    if (refreshInterval) {
-        clearInterval(refreshInterval);
-    }
-});
 </script>
 
 <style scoped lang="scss">
@@ -416,30 +369,7 @@ onUnmounted(() => {
 .page-header__actions {
     display: flex;
     align-items: center;
-    gap: 16px;
-}
-
-.refresh-controls {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding-right: 16px;
-    border-right: 2px solid var(--border-color);
-}
-
-.refresh-time {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 12px;
-    color: var(--text-secondary);
-    padding: 4px 8px;
-    background: var(--bg-secondary);
-    border-radius: 4px;
-
-    i {
-        color: #FF6B35;
-    }
+    gap: 12px;
 }
 
 .btn--ghost {

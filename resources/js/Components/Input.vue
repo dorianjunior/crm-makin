@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed, watch } from 'vue';
+import { useMask } from '@/composables/useMask';
 
 const props = defineProps({
     modelValue: [String, Number],
@@ -22,29 +23,57 @@ const props = defineProps({
         default: 3,
     },
     autofocus: Boolean,
+    mask: String,
+    success: Boolean,
+    showValidation: Boolean,
 });
 
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits(['update:modelValue', 'blur', 'focus', 'input']);
+
+const { applyMask } = useMask();
 
 const input = ref(null);
 const isFocused = ref(false);
+const localValue = ref(props.modelValue || '');
 
 const inputId = `input-${Math.random().toString(36).substring(7)}`;
 
 const hasError = computed(() => !!props.error);
+const hasSuccess = computed(() => props.success && !hasError.value && localValue.value);
+const showValidationIcon = computed(() => props.showValidation && !isFocused.value);
 
 watch(() => props.modelValue, (value) => {
+    localValue.value = value || '';
     if (input.value && input.value.value !== value) {
         input.value.value = value;
     }
 });
 
-const handleFocus = () => {
-    isFocused.value = true;
+const handleInput = (event) => {
+    let value = event.target.value;
+
+    // Aplica máscara se especificada
+    if (props.mask) {
+        value = applyMask(value, props.mask);
+        // Atualiza o campo visualmente
+        if (input.value) {
+            input.value.value = value;
+        }
+    }
+
+    localValue.value = value;
+    emit('update:modelValue', value);
+    emit('input', value);
 };
 
-const handleBlur = () => {
+const handleFocus = (event) => {
+    isFocused.value = true;
+    emit('focus', event);
+};
+
+const handleBlur = (event) => {
     isFocused.value = false;
+    emit('blur', event);
 };
 
 const focus = () => {
@@ -72,6 +101,7 @@ defineExpose({ focus });
                 'input__wrapper',
                 { 'input__wrapper--focused': isFocused },
                 { 'input__wrapper--error': hasError },
+                { 'input__wrapper--success': hasSuccess },
                 { 'input__wrapper--disabled': disabled },
             ]"
         >
@@ -90,7 +120,7 @@ defineExpose({ focus });
                 :maxlength="maxlength"
                 :rows="rows"
                 class="input__field input__field--textarea"
-                @input="emit('update:modelValue', $event.target.value)"
+                @input="handleInput"
                 @focus="handleFocus"
                 @blur="handleBlur"
             />
@@ -108,12 +138,23 @@ defineExpose({ focus });
                 :required="required"
                 :maxlength="maxlength"
                 class="input__field"
-                @input="emit('update:modelValue', $event.target.value)"
+                @input="handleInput"
                 @focus="handleFocus"
                 @blur="handleBlur"
             />
 
-            <i v-if="iconRight" :class="`fas ${iconRight}`" class="input__icon-right"></i>
+            <!-- Validation Icons -->
+            <i
+                v-if="showValidationIcon && hasError"
+                class="fas fa-exclamation-circle input__icon-validation input__icon-validation--error"
+                title="Campo inválido"
+            ></i>
+            <i
+                v-else-if="showValidationIcon && hasSuccess"
+                class="fas fa-check-circle input__icon-validation input__icon-validation--success"
+                title="Campo válido"
+            ></i>
+            <i v-else-if="iconRight" :class="`fas ${iconRight}`" class="input__icon-right"></i>
         </div>
 
         <!-- Helper / Error Text -->
@@ -197,6 +238,7 @@ defineExpose({ focus });
     background: transparent;
     border: none;
     outline: none;
+    transition: all 0.2s ease;
 }
 
 .input__field--textarea {
@@ -228,6 +270,33 @@ defineExpose({ focus });
     margin-right: 16px;
 }
 
+/* Validation Icons */
+.input__icon-validation {
+    flex-shrink: 0;
+    margin-right: 12px;
+    font-size: 18px;
+    animation: fadeIn 0.3s ease;
+}
+
+.input__icon-validation--error {
+    color: var(--color-error);
+}
+
+.input__icon-validation--success {
+    color: var(--color-success);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
 .input__footer {
     display: flex;
     align-items: center;
@@ -243,6 +312,18 @@ defineExpose({ focus });
     gap: 6px;
     color: var(--color-error);
     font-weight: 500;
+    animation: slideIn 0.2s ease;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .input__helper {
@@ -254,6 +335,15 @@ defineExpose({ focus });
     font-size: 11px;
     color: var(--text-muted);
     text-align: right;
+}
+
+/* Success State */
+.input__wrapper--success {
+    border-color: var(--color-success);
+}
+
+.input__wrapper--success:hover {
+    border-color: var(--color-success);
 }
 
 /* Dark mode adjustments */
