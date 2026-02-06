@@ -1,5 +1,5 @@
 <template>
-  <MainLayout>
+  <MainLayout title="Proposta">
     <div class="proposal-form">
       <Breadcrumbs :items="breadcrumbs" />
 

@@ -1,5 +1,5 @@
 <template>
-  <MainLayout>
+  <MainLayout title="Configurações de IA">
     <div class="ai-settings">
       <!-- Header -->
       <div class="page-header">

@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue';
-import { usePage } from '@inertiajs/vue3';
+import { usePage, Head } from '@inertiajs/vue3';
 import { useTheme } from '@/composables/useTheme';
 import Sidebar from './Sidebar.vue';
 import Navbar from './Navbar.vue';
@@ -25,6 +25,7 @@ const toggleSidebar = () => {
 </script>
 
 <template>
+    <Head :title="title" />
     <div class="layout-root">
         <!-- Sidebar -->
         <Sidebar

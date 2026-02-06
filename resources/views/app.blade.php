@@ -5,10 +5,6 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title inertia>{{ config('app.name', 'CRM Makin') }}</title>
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-
         <script>
             (function() {
                 const darkMode = localStorage.getItem('darkMode') === 'true';
@@ -22,7 +18,7 @@
         </script>
 
         <!-- Scripts -->
-        @vite(['resources/css/tailwind.css', 'resources/scss/app.scss', 'resources/js/app.js'])
+        @vite(['resources/scss/app.scss', 'resources/js/app.js'])
         @inertiaHead
     </head>
     <body class="font-sans antialiased">

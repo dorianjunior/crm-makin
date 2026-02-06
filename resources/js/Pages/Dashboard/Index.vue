@@ -1,10 +1,12 @@
 <template>
-    <div class="p-6">
-        <h1 class="text-2xl font-bold mb-4">Dashboards</h1>
-        <p>Página em desenvolvimento.</p>
-    </div>
+    <MainLayout title="Dashboard">
+        <div class="p-6">
+            <h1 class="text-2xl font-bold mb-4">Dashboards</h1>
+            <p>Página em desenvolvimento.</p>
+        </div>
+    </MainLayout>
 </template>
 
 <script setup>
-// Placeholder
+import MainLayout from '@/Layouts/MainLayout.vue';
 </script>

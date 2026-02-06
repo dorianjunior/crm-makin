@@ -1,5 +1,5 @@
 <template>
-  <MainLayout>
+  <MainLayout title="Notificações">
     <div class="page-container">
       <!-- Header -->
       <div class="page-header">

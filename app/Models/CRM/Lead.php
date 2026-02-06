@@ -35,7 +35,7 @@ class Lead extends Model
 
     public function getStatusValueAttribute()
     {
-        return $this->status?->value ?? $this->attributes['status'];
+        return $this->status?->value ?? ($this->attributes['status'] ?? null);
     }
 
     public function company(): BelongsTo

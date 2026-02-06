@@ -11,12 +11,20 @@ class PipelineStage extends Model
 {
     use HasFactory;
 
-    public $timestamps = false;
-
     protected $fillable = [
         'pipeline_id',
         'name',
         'order',
+        'probability',
+        'color',
+    ];
+
+    protected $casts = [
+        'probability' => 'integer',
+    ];
+
+    protected $appends = [
+        'leads_count',
     ];
 
     public function pipeline(): BelongsTo
@@ -29,5 +37,10 @@ class PipelineStage extends Model
         return $this->belongsToMany(Lead::class, 'lead_pipeline')
             ->withPivot('position')
             ->withTimestamps();
+    }
+
+    public function getLeadsCountAttribute(): int
+    {
+        return $this->leads()->count();
     }
 }

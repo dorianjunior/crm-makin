@@ -1,5 +1,5 @@
 <template>
-  <MainLayout>
+  <MainLayout title="Menus de Navegação">
     <div class="page-container">
       <!-- Header -->
       <div class="page-header">

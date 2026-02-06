@@ -1,5 +1,5 @@
 <template>
-  <MainLayout>
+  <MainLayout title="Tarefas">
     <div class="tasks-index">
       <!-- Header -->
       <div class="page-header">

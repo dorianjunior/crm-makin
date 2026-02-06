@@ -1,5 +1,5 @@
 <template>
-  <MainLayout>
+  <MainLayout title="Templates de Prompt">
     <div class="page">
       <Breadcrumbs :items="breadcrumbs" />
 

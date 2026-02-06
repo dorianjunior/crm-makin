@@ -1,5 +1,5 @@
 <template>
-  <MainLayout>
+  <MainLayout title="Página CMS">
     <div class="page-form">
       <Breadcrumbs :items="breadcrumbs" />
 

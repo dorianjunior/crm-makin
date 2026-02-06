@@ -7,9 +7,9 @@
         <div class="page-container">
             <!-- Header -->
             <div class="page-header">
-                <div class="page-header__content">
-                    <h1 class="page-header__title">{{ lead.name }}</h1>
-                    <p class="page-header__subtitle">Detalhes do lead</p>
+                <div>
+                    <h1 class="page-title">{{ lead.name }}</h1>
+                    <p class="page-subtitle">Detalhes do lead</p>
                 </div>
                 <div class="page-header__actions">
                     <button class="btn btn--secondary" @click="goBack">

@@ -1,5 +1,5 @@
 <template>
-  <MainLayout>
+  <MainLayout title="WhatsApp Business">
     <div class="whatsapp-chat">
       <!-- Header -->
       <div class="page-header">

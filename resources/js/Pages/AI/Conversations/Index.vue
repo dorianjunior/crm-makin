@@ -1,5 +1,5 @@
 <template>
-  <MainLayout>
+  <MainLayout title="Conversas com IA">
     <div class="page-container">
       <!-- Header -->
       <div class="page-header">

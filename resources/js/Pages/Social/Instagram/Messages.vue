@@ -1,5 +1,5 @@
 <template>
-  <MainLayout>
+  <MainLayout title="Instagram Direct">
     <div class="instagram-messages">
       <!-- Header -->
       <div class="page-header">

@@ -1,5 +1,5 @@
 <template>
-    <MainLayout>
+    <MainLayout title="Dashboards">
         <div class="page-container">
             <div class="page-header">
                 <div class="page-header__content">

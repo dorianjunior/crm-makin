@@ -6,9 +6,9 @@
 
         <div class="page-container">
             <div class="page-header">
-                <div class="page-header__content">
-                    <h1 class="page-header__title">NOVO LEAD</h1>
-                    <p class="page-header__subtitle">Cadastre um novo lead no sistema</p>
+                <div>
+                    <h1 class="page-title">NOVO LEAD</h1>
+                    <p class="page-subtitle">Cadastre um novo lead no sistema</p>
                 </div>
             </div>
 

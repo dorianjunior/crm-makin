@@ -106,36 +106,28 @@ const isActive = (href) => {
 
         <!-- Navigation -->
         <nav class="sidebar__nav">
-            <div v-for="section in menuItems" :key="section.section">
+            <div v-for="section in menuItems" :key="section.section" class="sidebar__section">
                 <!-- Section Title -->
-                <div v-if="open" class="mb-2 mt-2">
-                    <h3 class="px-3 font-semibold text-tertiary uppercase tracking-wider" style="font-size: 9px; line-height: 1.1; letter-spacing: 0.14em;">
+                <div v-if="open" class="section-header">
+                    <h3 class="section-title">
                         {{ section.section }}
                     </h3>
                 </div>
-                <div v-else class="mb-2">
-                    <div class="h-px bg-gray-300 dark:bg-gray-600"></div>
+                <div v-else class="section-divider">
+                    <div class="divider-line"></div>
                 </div>
 
                 <!-- Menu Items -->
-                <div class="space-y-1">
+                <div class="menu-items">
                     <Link
                         v-for="item in section.items"
                         :key="item.name"
                         :href="item.href"
-                        :class="[
-                            'flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200',
-                            isActive(item.href)
-                                ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400'
-                                : 'text-secondary hover:bg-tertiary'
-                        ]"
+                        :class="['menu-link', { 'menu-link--active': isActive(item.href) }]"
                     >
-                        <i :class="`${item.icon}`" class="w-5 text-center"></i>
-                        <span v-if="open" class="ml-3 flex-1">{{ item.name }}</span>
-                        <span
-                            v-if="open && item.badge"
-                            class="ml-auto px-2 py-0.5 text-xs font-medium bg-red-500 text-white rounded-full"
-                        >
+                        <i :class="`${item.icon}`" class="menu-icon"></i>
+                        <span v-if="open" class="menu-label">{{ item.name }}</span>
+                        <span v-if="open && item.badge" class="menu-badge">
                             {{ item.badge }}
                         </span>
                     </Link>
@@ -171,6 +163,81 @@ const isActive = (href) => {
     padding: 24px 16px 80px;
     height: 100%;
     overflow-y: auto;
+}
+
+.sidebar__section {
+    margin-bottom: 1rem;
+}
+
+.section-header {
+    margin-bottom: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.section-title {
+    padding: 0 0.75rem;
+    font-size: 9px;
+    line-height: 1.1;
+    letter-spacing: 0.14em;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+}
+
+.section-divider {
+    margin-bottom: 0.5rem;
+}
+
+.divider-line {
+    height: 1px;
+    background: var(--border-color);
+}
+
+.menu-items {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.menu-link {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border-radius: 0.5rem;
+    transition: all 200ms ease;
+    color: var(--text-secondary);
+    text-decoration: none;
+}
+
+.menu-link:hover {
+    background: var(--bg-tertiary);
+}
+
+.menu-link--active {
+    background: var(--accent-light, #FFB3A0);
+    color: var(--accent, #FF6B35);
+}
+
+.menu-icon {
+    width: 1.25rem;
+    text-align: center;
+}
+
+.menu-label {
+    margin-left: 0.75rem;
+    flex: 1;
+}
+
+.menu-badge {
+    margin-left: auto;
+    padding: 0.125rem 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    background: #ef4444;
+    color: #ffffff;
+    border-radius: 9999px;
 }
 
 .sidebar__toggle {
@@ -227,19 +294,11 @@ nav::-webkit-scrollbar-track {
 }
 
 nav::-webkit-scrollbar-thumb {
-    background: #d1d5db;
+    background: var(--scrollbar-thumb, #d1d5db);
     border-radius: 3px;
 }
 
 nav::-webkit-scrollbar-thumb:hover {
-    background: #9ca3af;
-}
-
-.dark nav::-webkit-scrollbar-thumb {
-    background: #4b5563;
-}
-
-.dark nav::-webkit-scrollbar-thumb:hover {
-    background: #6b7280;
+    background: var(--scrollbar-thumb-hover, #9ca3af);
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <MainLayout>
+  <MainLayout title="Posts do Blog">
     <div class="page-container">
       <!-- Header -->
       <div class="page-header">

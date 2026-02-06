@@ -1,5 +1,5 @@
 <template>
-  <MainLayout>
+  <MainLayout title="Lead">
     <div class="lead-form">
       <!-- Header -->
       <div class="page-header">

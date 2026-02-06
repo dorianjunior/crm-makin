@@ -1,5 +1,5 @@
 <template>
-  <MainLayout>
+  <MainLayout title="Construtor de Relatórios">
     <div class="reports-builder">
       <!-- Header -->
       <div class="page-header">

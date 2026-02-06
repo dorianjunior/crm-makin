@@ -1,5 +1,5 @@
 <template>
-  <MainLayout>
+  <MainLayout title="Produtos e Serviços">
     <div class="products-page">
       <Breadcrumbs :items="breadcrumbs" />
 

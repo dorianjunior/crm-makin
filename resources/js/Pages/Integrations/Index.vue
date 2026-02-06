@@ -1,5 +1,5 @@
 <template>
-  <MainLayout>
+  <MainLayout title="Integrações">
     <div class="integrations-page">
       <Breadcrumbs :items="breadcrumbs" />
 

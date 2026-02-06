@@ -1,5 +1,5 @@
 <template>
-  <MainLayout>
+  <MainLayout title="Propostas Comerciais">
     <div class="proposals-page">
       <Breadcrumbs :items="breadcrumbs" />
 

@@ -379,6 +379,37 @@
         color: #dc2626;
         border-color: #dc2626;
     }
+
+    // Activity type badges
+    &--type-call {
+        background: #2196F3;
+        color: #fff;
+        border-color: #2196F3;
+    }
+
+    &--type-meeting {
+        background: #4CAF50;
+        color: #fff;
+        border-color: #4CAF50;
+    }
+
+    &--type-email {
+        background: #9C27B0;
+        color: #fff;
+        border-color: #9C27B0;
+    }
+
+    &--type-note {
+        background: #FFEB3B;
+        color: #000;
+        border-color: #000;
+    }
+
+    &--type-task {
+        background: $accent;
+        color: #fff;
+        border-color: $accent;
+    }
 }
 
 // =============================================================================

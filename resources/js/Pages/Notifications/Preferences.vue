@@ -1,5 +1,5 @@
 <template>
-  <MainLayout>
+  <MainLayout title="Preferências">
     <div class="page-container">
       <!-- Header -->
       <div class="page-header">

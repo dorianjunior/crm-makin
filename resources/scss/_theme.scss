@@ -31,6 +31,8 @@
     --color-accent: #{$accent};
     --color-accent-dark: #{$accent-dark};
     --color-accent-light: #{$accent-light};
+    --accent: #{$accent};
+    --accent-light: #{$accent-light};
 
     // Typography
     --font-display: #{$font-display};
@@ -46,6 +48,10 @@
     --color-error-light: #{$error-light};
     --color-info: #{$info};
     --color-info-light: #{$info-light};
+
+    // Scrollbar
+    --scrollbar-thumb: #d1d5db;
+    --scrollbar-thumb-hover: #9ca3af;
 }
 
 // Dark Theme
@@ -70,6 +76,10 @@
     --color-warning-light: rgba(245, 158, 11, 0.2);
     --color-error-light: rgba(239, 68, 68, 0.2);
     --color-info-light: rgba(59, 130, 246, 0.2);
+
+    // Scrollbar for dark mode
+    --scrollbar-thumb: #4b5563;
+    --scrollbar-thumb-hover: #6b7280;
 }
 
 // Theme transition

@@ -1,0 +1,138 @@
+// =============================================================================
+// Forms - Brutalist Form Elements
+// =============================================================================
+
+@use 'variables' as *;
+
+// Form Select (used in filters)
+.form-select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid var(--border-color);
+  background: #fff;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: $font-display;
+
+  &:hover {
+    background: #f8f8f8;
+    border-color: $accent;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: $accent;
+    box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.2);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+// Form Group (label + input pattern)
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  label {
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    font-family: $font-display;
+
+    &.required::after {
+      content: ' *';
+      color: #dc3545;
+    }
+  }
+
+  .form-textarea {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid var(--border-color);
+    font-family: $font-body;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+
+    &:focus {
+      outline: none;
+      border-color: $accent;
+    }
+  }
+
+  .form-hint {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-top: -4px;
+  }
+
+  .checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
+
+    input[type='checkbox'] {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+      accent-color: $accent;
+    }
+  }
+
+  .color-picker {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+
+    .color-input {
+      width: 60px;
+      height: 42px;
+      border: 2px solid var(--border-color);
+      cursor: pointer;
+      padding: 2px;
+
+      &::-webkit-color-swatch-wrapper {
+        padding: 0;
+      }
+
+      &::-webkit-color-swatch {
+        border: 2px solid var(--border-color);
+      }
+    }
+  }
+}
+
+// Filter Item (label + form element)
+.filter-item {
+  label {
+    display: block;
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.5rem;
+    color: #000;
+    font-family: $font-display;
+  }
+}
+
+// Modal Form (specific form layouts)
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}

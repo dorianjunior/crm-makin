@@ -1,5 +1,5 @@
 <template>
-  <MainLayout>
+  <MainLayout title="Analytics de IA">
     <div class="analytics-page">
       <Breadcrumbs :items="breadcrumbs" />
 

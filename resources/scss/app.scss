@@ -1,8 +1,6 @@
 // =============================================================================
 // App SCSS - Main Entry Point
 // =============================================================================
-// Note: Tailwind CSS is now loaded separately from resources/css/tailwind.css
-// This allows proper source directive processing in pure CSS context
 
 // Import Font Awesome
 @use '@fortawesome/fontawesome-free/css/all.css';
@@ -14,8 +12,14 @@
 @use 'theme';
 @use 'components';
 @use 'data-brutalism';
+@use 'forms-brutalist';
+@use 'layout-brutalist';
+@use 'components-brutalist';
+@use 'utilities-brutalist';
 @use 'utilities';
 @use 'sweetalert';
+@use 'pipelines';
+@use 'activities';
 
 // Smooth scroll
 html {

@@ -7,9 +7,9 @@
         <div class="page-container">
             <!-- Header -->
             <div class="page-header">
-                <div class="page-header__content">
-                    <h1 class="page-header__title">LEADS</h1>
-                    <p class="page-header__subtitle">Gerencie seus leads e oportunidades de negócio</p>
+                <div>
+                    <h1 class="page-title">LEADS</h1>
+                    <p class="page-subtitle">Gerencie seus leads e oportunidades de negócio</p>
                 </div>
                 <div class="page-header__actions">
                     <div class="refresh-controls">
@@ -35,7 +35,7 @@
             </div>
 
             <!-- Stats Cards -->
-            <div class="grid grid--4">
+            <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-card__icon">
                         <i class="fas fa-users"></i>
@@ -67,26 +67,24 @@
             </div>
 
             <!-- Filters -->
-            <div class="card" style="margin-top: 32px;">
-                <div class="card__body">
-                    <div class="filters-grid">
-                        <Input v-model="localFilters.search" placeholder="Buscar por nome, email ou telefone..."
-                            icon="fa-search" @input="debouncedSearch" />
+            <div class="filters-card">
+                <div class="filters-grid">
+                    <Input v-model="localFilters.search" placeholder="Buscar por nome, email ou telefone..."
+                        icon="fa-search" @input="debouncedSearch" />
 
-                        <Select v-model="localFilters.status" label="Status" :options="statusOptions"
-                            placeholder="Todos os status" @update:modelValue="loadLeads" />
+                    <Select v-model="localFilters.status" label="Status" :options="statusOptions"
+                        placeholder="Todos os status" @update:modelValue="loadLeads" />
 
-                        <Select v-model="localFilters.source_id" label="Fonte" :options="sourceOptions"
-                            placeholder="Todas as fontes" @update:modelValue="loadLeads" />
+                    <Select v-model="localFilters.source_id" label="Fonte" :options="sourceOptions"
+                        placeholder="Todas as fontes" @update:modelValue="loadLeads" />
 
-                        <Select v-model="localFilters.assigned_to" label="Responsável" :options="userOptions"
-                            placeholder="Todos os responsáveis" @update:modelValue="loadLeads" />
+                    <Select v-model="localFilters.assigned_to" label="Responsável" :options="userOptions"
+                        placeholder="Todos os responsáveis" @update:modelValue="loadLeads" />
 
-                        <button class="btn btn--secondary" @click="clearFilters">
-                            <i class="fas fa-times"></i>
-                            Limpar
-                        </button>
-                    </div>
+                    <button class="btn btn--secondary" @click="clearFilters">
+                        <i class="fas fa-times"></i>
+                        Limpar
+                    </button>
                 </div>
             </div>
 

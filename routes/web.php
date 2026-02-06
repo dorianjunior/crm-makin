@@ -1,7 +1,10 @@
 <?php
 
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Web\ActivityController;
 use App\Http\Controllers\Web\LeadController;
+use App\Http\Controllers\Web\PipelineController;
+use App\Http\Controllers\Web\StageController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -28,12 +31,19 @@ Route::middleware(['auth', 'active'])->group(function () {
 
     // CRM
     Route::resource('leads', LeadController::class);
-    Route::get('/pipelines', function () {
-        return Inertia::render('Pipelines/Index');
-    })->name('pipelines.index');
-    Route::get('/activities', function () {
-        return Inertia::render('Activities/Index');
-    })->name('activities.index');
+
+    // Pipelines
+    Route::resource('pipelines', PipelineController::class)->except(['show', 'create', 'edit']);
+    Route::patch('pipelines/{pipeline}', [PipelineController::class, 'patch'])->name('pipelines.patch');
+    Route::post('pipelines/{pipeline}/set-default', [PipelineController::class, 'setDefault'])->name('pipelines.setDefault');
+    Route::post('pipelines/{pipeline}/stages/reorder', [PipelineController::class, 'reorderStages'])->name('pipelines.reorderStages');
+
+    // Stages
+    Route::resource('stages', StageController::class)->only(['store', 'update', 'destroy']);
+
+    // Activities
+    Route::resource('activities', ActivityController::class)->only(['index', 'store', 'update', 'destroy']);
+
     Route::get('/tasks', function () {
         return Inertia::render('Tasks/Index');
     })->name('tasks.index');

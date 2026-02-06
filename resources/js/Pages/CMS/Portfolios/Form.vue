@@ -1,5 +1,5 @@
 <template>
-  <MainLayout>
+  <MainLayout title="Projeto do Portfólio">
     <div class="portfolio-form-page">
       <Breadcrumbs :items="breadcrumbs" />
 

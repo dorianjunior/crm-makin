@@ -1,5 +1,5 @@
 <template>
-  <MainLayout>
+  <MainLayout title="Post do Blog">
     <div class="posts-form-page">
       <Breadcrumbs :items="breadcrumbs" />
 

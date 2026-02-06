@@ -1,0 +1,226 @@
+// =============================================================================
+// Components - Brutalist Reusable Components
+// =============================================================================
+
+@use 'variables' as *;
+
+// =============================================================================
+// TIMELINE COMPONENT
+// =============================================================================
+
+.timeline {
+  .timeline-group {
+    margin-bottom: 2.5rem;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    .timeline-date {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #000;
+      background: #FFEB3B;
+      padding: 0.5rem 1rem;
+      border: 3px solid #000;
+      margin-bottom: 1rem;
+      width: fit-content;
+      font-family: $font-display;
+
+      i {
+        font-size: 1rem;
+      }
+    }
+
+    .timeline-items {
+      padding-left: 1rem;
+      border-left: 4px solid #e0e0e0;
+
+      .timeline-item {
+        position: relative;
+        margin-bottom: 2rem;
+        padding-left: 3rem;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+
+        .timeline-marker {
+          position: absolute;
+          left: -1.875rem;
+          top: 0.25rem;
+          width: 3rem;
+          height: 3rem;
+          border: 4px solid #000;
+          background: #fff;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 1rem;
+          z-index: 1;
+
+          i {
+            color: #000;
+          }
+        }
+
+        .timeline-content {
+          background: #fff;
+          border: 3px solid #000;
+          padding: 1.25rem;
+          transition: all 0.2s;
+
+          &:hover {
+            border-color: $accent;
+            box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.1);
+          }
+        }
+      }
+    }
+  }
+}
+
+// Timeline loading states
+.timeline-loading {
+  text-align: center;
+  padding: 3rem;
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #666;
+  font-family: $font-display;
+
+  i {
+    margin-right: 0.5rem;
+    color: $accent;
+  }
+}
+
+.timeline-empty {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: #999;
+
+  i {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    display: block;
+    opacity: 0.3;
+  }
+
+  p {
+    font-size: 1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-family: $font-display;
+  }
+}
+
+// =============================================================================
+// PAGINATION COMPONENT
+// =============================================================================
+
+.pagination {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 3px solid #e0e0e0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+
+  .pagination-info {
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #666;
+    font-family: $font-display;
+  }
+
+  .pagination-buttons {
+    display: flex;
+    gap: 0.5rem;
+
+    .pagination-btn {
+      min-width: 2.5rem;
+      height: 2.5rem;
+      padding: 0 0.75rem;
+      border: 3px solid #000;
+      background: #fff;
+      font-weight: 800;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: $font-display;
+
+      &:hover:not(:disabled) {
+        background: $accent;
+        color: #fff;
+        border-color: $accent;
+      }
+
+      &.active {
+        background: #000;
+        color: #fff;
+      }
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      &:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.3);
+      }
+    }
+  }
+}
+
+// Pagination responsive
+@media (max-width: 768px) {
+  .pagination {
+    flex-direction: column;
+    align-items: stretch;
+
+    .pagination-info {
+      text-align: center;
+    }
+
+    .pagination-buttons {
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+  }
+}
+
+// =============================================================================
+// EMPTY STATE COMPONENT (Override from data-brutalism if needed)
+// =============================================================================
+
+.empty-state-inline {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-secondary);
+
+  i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    display: block;
+    opacity: 0.3;
+  }
+
+  p {
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-family: $font-display;
+  }
+}

@@ -1,0 +1,180 @@
+// =============================================================================
+// Utilities - Brutalist Helper Classes
+// =============================================================================
+
+@use 'variables' as *;
+
+// =============================================================================
+// TEXT UTILITIES
+// =============================================================================
+
+.text-brutalist {
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  font-family: $font-display;
+}
+
+.text-danger {
+  color: #dc3545;
+  font-size: 13px;
+  margin: 8px 0;
+  font-weight: 600;
+}
+
+.text-muted {
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+// =============================================================================
+// BORDER UTILITIES
+// =============================================================================
+
+.border-brutalist {
+  border: 3px solid #000;
+}
+
+.border-brutalist-thick {
+  border: 4px solid #000;
+}
+
+.border-bottom-brutalist {
+  border-bottom: 3px solid #000;
+}
+
+// =============================================================================
+// BUTTON ICON UTILITIES
+// =============================================================================
+
+.btn-icon,
+.btn-icon-sm {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: transparent;
+  border: 2px solid var(--border-color);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border-color: var(--text-tertiary);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+
+    &:hover {
+      background: transparent;
+      color: var(--text-secondary);
+      border-color: var(--border-color);
+    }
+  }
+
+  &.btn-danger {
+    &:hover {
+      background: #f8d7da;
+      color: #dc3545;
+      border-color: #dc3545;
+    }
+  }
+
+  i {
+    font-size: 14px;
+  }
+}
+
+.btn-icon-sm {
+  width: 30px;
+  height: 30px;
+
+  i {
+    font-size: 12px;
+  }
+}
+
+// =============================================================================
+// SPACING UTILITIES (Brutalist specific)
+// =============================================================================
+
+.gap-brutalist {
+  gap: 1.5rem;
+}
+
+.gap-brutalist-sm {
+  gap: 0.75rem;
+}
+
+.gap-brutalist-lg {
+  gap: 2rem;
+}
+
+// =============================================================================
+// HOVER EFFECTS
+// =============================================================================
+
+.hover-lift {
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+}
+
+.hover-border-accent {
+  transition: border-color 0.2s ease;
+
+  &:hover {
+    border-color: $accent;
+  }
+}
+
+// =============================================================================
+// BACKGROUND UTILITIES
+// =============================================================================
+
+.bg-primary {
+  background-color: var(--bg-primary);
+}
+
+.bg-secondary {
+  background-color: var(--bg-secondary);
+}
+
+.bg-tertiary {
+  background-color: var(--bg-tertiary);
+}
+
+// =============================================================================
+// TEXT COLOR UTILITIES
+// =============================================================================
+
+.text-primary {
+  color: var(--text-primary);
+}
+
+.text-secondary {
+  color: var(--text-secondary);
+}
+
+.text-tertiary {
+  color: var(--text-tertiary);
+}
+
+// =============================================================================
+// BORDER COLOR UTILITY
+// =============================================================================
+
+.border-color {
+  border-color: var(--border-color);
+}

@@ -17,20 +17,23 @@ class PipelineSeeder extends Seeder
         $companies = Company::all();
 
         foreach ($companies as $company) {
-            // Sales Pipeline
+            // Sales Pipeline (Default)
             $salesPipeline = Pipeline::create([
                 'company_id' => $company->id,
-                'name' => 'Sales Pipeline',
+                'name' => 'Pipeline de Vendas',
+                'description' => 'Pipeline principal para gestão de vendas e negociações',
+                'is_active' => true,
+                'is_default' => true,
             ]);
 
             $salesStages = [
-                ['name' => 'New Lead', 'order' => 1],
-                ['name' => 'Contact Made', 'order' => 2],
-                ['name' => 'Qualification', 'order' => 3],
-                ['name' => 'Proposal Sent', 'order' => 4],
-                ['name' => 'Negotiation', 'order' => 5],
-                ['name' => 'Closed Won', 'order' => 6],
-                ['name' => 'Closed Lost', 'order' => 7],
+                ['name' => 'Novo Lead', 'order' => 1, 'probability' => 10, 'color' => '#94A3B8'],
+                ['name' => 'Primeiro Contato', 'order' => 2, 'probability' => 20, 'color' => '#3B82F6'],
+                ['name' => 'Qualificação', 'order' => 3, 'probability' => 40, 'color' => '#8B5CF6'],
+                ['name' => 'Proposta Enviada', 'order' => 4, 'probability' => 60, 'color' => '#F59E0B'],
+                ['name' => 'Negociação', 'order' => 5, 'probability' => 80, 'color' => '#F97316'],
+                ['name' => 'Fechado Ganho', 'order' => 6, 'probability' => 100, 'color' => '#10B981'],
+                ['name' => 'Fechado Perdido', 'order' => 7, 'probability' => 0, 'color' => '#EF4444'],
             ];
 
             foreach ($salesStages as $stage) {
@@ -38,21 +41,26 @@ class PipelineSeeder extends Seeder
                     'pipeline_id' => $salesPipeline->id,
                     'name' => $stage['name'],
                     'order' => $stage['order'],
+                    'probability' => $stage['probability'],
+                    'color' => $stage['color'],
                 ]);
             }
 
             // Support Pipeline
             $supportPipeline = Pipeline::create([
                 'company_id' => $company->id,
-                'name' => 'Support Pipeline',
+                'name' => 'Pipeline de Suporte',
+                'description' => 'Pipeline para gestão de tickets e atendimento ao cliente',
+                'is_active' => true,
+                'is_default' => false,
             ]);
 
             $supportStages = [
-                ['name' => 'New Ticket', 'order' => 1],
-                ['name' => 'In Progress', 'order' => 2],
-                ['name' => 'Waiting Customer', 'order' => 3],
-                ['name' => 'Resolved', 'order' => 4],
-                ['name' => 'Closed', 'order' => 5],
+                ['name' => 'Novo Ticket', 'order' => 1, 'probability' => 25, 'color' => '#64748B'],
+                ['name' => 'Em Progresso', 'order' => 2, 'probability' => 50, 'color' => '#3B82F6'],
+                ['name' => 'Aguardando Cliente', 'order' => 3, 'probability' => 50, 'color' => '#F59E0B'],
+                ['name' => 'Resolvido', 'order' => 4, 'probability' => 75, 'color' => '#10B981'],
+                ['name' => 'Fechado', 'order' => 5, 'probability' => 100, 'color' => '#6B7280'],
             ];
 
             foreach ($supportStages as $stage) {
@@ -60,6 +68,8 @@ class PipelineSeeder extends Seeder
                     'pipeline_id' => $supportPipeline->id,
                     'name' => $stage['name'],
                     'order' => $stage['order'],
+                    'probability' => $stage['probability'],
+                    'color' => $stage['color'],
                 ]);
             }
         }

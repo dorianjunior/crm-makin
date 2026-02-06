@@ -1,5 +1,5 @@
 <template>
-  <MainLayout>
+  <MainLayout title="Meu Perfil">
     <div class="profile-page">
       <Breadcrumbs :items="breadcrumbs" />
 

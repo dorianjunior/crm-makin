@@ -1,5 +1,5 @@
 <template>
-  <MainLayout>
+  <MainLayout title="Configurações do Sistema">
     <div class="settings-page">
       <Breadcrumbs :items="breadcrumbs" />
 

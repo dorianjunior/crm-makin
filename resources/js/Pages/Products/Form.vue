@@ -1,5 +1,5 @@
 <template>
-  <MainLayout>
+  <MainLayout title="Produto">
     <div class="product-form">
       <Breadcrumbs :items="breadcrumbs" />
 

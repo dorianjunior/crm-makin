@@ -1,5 +1,5 @@
 <template>
-  <MainLayout>
+  <MainLayout title="Funções e Permissões">
     <div class="roles-page">
       <Breadcrumbs :items="breadcrumbs" />
 

@@ -1,5 +1,5 @@
 <template>
-  <MainLayout>
+  <MainLayout title="Usuários">
     <div class="users-page">
       <Breadcrumbs :items="breadcrumbs" />
 
