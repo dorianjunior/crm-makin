@@ -156,6 +156,9 @@
 import { router } from '@inertiajs/vue3';
 import MainLayout from '@/Layouts/MainLayout.vue';
 import Breadcrumbs from '@/Components/Breadcrumbs.vue';
+import { useAlert } from '@/composables/useAlert';
+
+const alert = useAlert();
 
 const props = defineProps({
     lead: Object,
@@ -223,8 +226,7 @@ const sendWhatsapp = () => {
 };
 
 const addNote = () => {
-    // Futuramente implementar modal para adicionar notas
-    alert('Funcionalidade em desenvolvimento');
+    alert.info('Funcionalidade em desenvolvimento');
 };
 </script>
 
