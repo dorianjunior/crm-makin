@@ -119,9 +119,11 @@ export function useAlert() {
             icon: 'warning',
             title,
             text: message,
-            showCancelButton: true,
             confirmButtonText: 'Sim, excluir',
             cancelButtonText: 'Cancelar',
+            denyButtonText: 'Não',
+            showCancelButton: true,
+            showDenyButton: false,
             iconColor: '#ef4444',
             reverseButtons: true,
         });
@@ -137,6 +139,7 @@ export function useAlert() {
             title,
             text: message,
             showCancelButton: true,
+            showDenyButton: false,
             confirmButtonText: confirmText,
             cancelButtonText: cancelText,
             iconColor: '#FF6B35',
@@ -154,6 +157,7 @@ export function useAlert() {
             text: message,
             allowOutsideClick: false,
             allowEscapeKey: false,
+            showDenyButton: false,
             showConfirmButton: false,
             didOpen: () => {
                 Swal.showLoading();
