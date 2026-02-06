@@ -13,18 +13,12 @@
                 </div>
                 <div class="page-header__actions">
                     <div class="refresh-controls">
-                        <button
-                            class="btn btn--sm btn--ghost"
-                            @click="manualRefresh"
-                            title="Atualizar agora"
-                        >
+                        <button class="btn btn--sm btn--ghost" @click="manualRefresh" title="Atualizar agora">
                             <i class="fas fa-sync-alt" :class="{ 'fa-spin': loading }"></i>
                         </button>
-                        <button
-                            :class="['btn', 'btn--sm', autoRefreshEnabled ? 'btn--success' : 'btn--secondary']"
+                        <button :class="['btn', 'btn--sm', autoRefreshEnabled ? 'btn--success' : 'btn--secondary']"
                             @click="toggleAutoRefresh"
-                            :title="autoRefreshEnabled ? 'Desativar atualização automática' : 'Ativar atualização automática'"
-                        >
+                            :title="autoRefreshEnabled ? 'Desativar atualização automática' : 'Ativar atualização automática'">
                             <i :class="autoRefreshEnabled ? 'fas fa-pause' : 'fas fa-play'"></i>
                             {{ autoRefreshEnabled ? 'Auto' : 'Manual' }}
                         </button>
@@ -106,8 +100,8 @@
                     </button>
                 </div>
 
-                <Table :columns="columns" :data="props.leads.data" :loading="loading" empty-text="Nenhum lead encontrado"
-                    hoverable>
+                <Table :columns="columns" :data="props.leads.data" :loading="loading"
+                    empty-text="Nenhum lead encontrado" hoverable>
                     <template #cell-name="{ row }">
                         <div class="cell-name">
                             <strong>{{ row.name }}</strong>
@@ -154,8 +148,9 @@
                     </template>
                 </Table>
 
-                <Pagination :from="props.leads.from" :to="props.leads.to" :total="props.leads.total" :current-page="props.leads.current_page"
-                    :last-page="props.leads.last_page" @page-change="changePage" />
+                <Pagination :from="props.leads.from" :to="props.leads.to" :total="props.leads.total"
+                    :current-page="props.leads.current_page" :last-page="props.leads.last_page"
+                    @page-change="changePage" />
             </div>
         </div>
     </MainLayout>
@@ -283,8 +278,13 @@ const clearFilters = () => {
 };
 
 // Delete lead
-const deleteLead = (lead) => {
-    if (confirm(`Tem certeza que deseja excluir o lead "${lead.name}"?`)) {
+const deleteLead = async (lead) => {
+    const result = await alert.confirmDelete(
+        'Excluir Lead?',
+        `Tem certeza que deseja excluir o lead "${lead.name}"? Esta ação não pode ser desfeita.`
+    );
+
+    if (result.isConfirmed) {
         router.delete(`/leads/${lead.id}`, {
             preserveScroll: true,
             onSuccess: () => {
@@ -456,8 +456,13 @@ onUnmounted(() => {
 }
 
 @keyframes fa-spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 .filters-grid {
