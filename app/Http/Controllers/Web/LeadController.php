@@ -100,6 +100,19 @@ class LeadController extends Controller
         ]);
     }
 
+    public function show(Lead $lead)
+    {
+        if ($lead->company_id !== auth()->user()->company_id) {
+            abort(403, 'Acesso não autorizado');
+        }
+
+        $lead->load(['source', 'assignedUser']);
+
+        return Inertia::render('Leads/Show', [
+            'lead' => $lead,
+        ]);
+    }
+
     public function store(Request $request)
     {
         $validated = $request->validate([
