@@ -21,6 +21,8 @@
 @use 'sweetalert';
 @use 'pipelines';
 @use 'leads';
+@use 'tasks';
+@use 'activities';
 
 // Smooth scroll
 html {

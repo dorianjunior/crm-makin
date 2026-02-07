@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\CRM;
 
+use App\Enums\TaskPriority;
 use App\Enums\TaskStatus;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -17,10 +18,12 @@ class UpdateTaskRequest extends FormRequest
     {
         return [
             'lead_id' => ['nullable', 'exists:leads,id'],
+            'assigned_to' => ['sometimes', 'exists:users,id'],
             'title' => ['sometimes', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'due_date' => ['nullable', 'date'],
             'status' => ['sometimes', Rule::enum(TaskStatus::class)],
+            'priority' => ['sometimes', Rule::enum(TaskPriority::class)],
         ];
     }
 }

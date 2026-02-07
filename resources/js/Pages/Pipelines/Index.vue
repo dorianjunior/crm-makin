@@ -136,20 +136,6 @@
                 </div>
             </div>
 
-            <!-- Modal de confirmação de exclusão Pipeline -->
-            <Modal v-model:visible="showDeletePipelineModal" title="Confirmar Exclusão" @confirm="confirmDeletePipeline">
-                <p>Tem certeza que deseja excluir o pipeline <strong>{{ pipelineToDelete?.name }}</strong>?</p>
-                <p class="text-danger">⚠️ Todos os leads deste pipeline serão movidos para o pipeline padrão.</p>
-                <p class="text-muted">Esta ação não pode ser desfeita.</p>
-            </Modal>
-
-            <!-- Modal de confirmação de exclusão Stage -->
-            <Modal v-model:visible="showDeleteStageModal" title="Confirmar Exclusão" @confirm="confirmDeleteStage">
-                <p>Tem certeza que deseja excluir o estágio <strong>{{ stageToDelete?.name }}</strong>?</p>
-                <p class="text-danger">⚠️ Todos os leads deste estágio serão movidos para o primeiro estágio.</p>
-                <p class="text-muted">Esta ação não pode ser desfeita.</p>
-            </Modal>
-
             <!-- Modal de Pipeline Form -->
             <Modal v-model:visible="showPipelineModal" :title="editingPipeline ? 'Editar Pipeline' : 'Novo Pipeline'"
                 size="large" @confirm="savePipeline">
@@ -212,6 +198,7 @@
 <script setup>
 import { ref, computed } from 'vue';
 import { router } from '@inertiajs/vue3';
+import { useAlert } from '@/composables/useAlert';
 import MainLayout from '@/Layouts/MainLayout.vue';
 import Button from '@/Components/Button.vue';
 import Input from '@/Components/Input.vue';
@@ -232,6 +219,8 @@ const breadcrumbs = [
     { name: 'Pipelines' }
 ];
 
+const alert = useAlert();
+
 const activePipelines = computed(() =>
     props.pipelines?.filter(p => p.is_active).length ?? 0
 );
@@ -243,11 +232,6 @@ const totalStages = computed(() =>
 const totalLeads = computed(() =>
     props.pipelines?.reduce((sum, p) => sum + (p.leads_count || 0), 0) ?? 0
 );
-
-const showDeletePipelineModal = ref(false);
-const pipelineToDelete = ref(null);
-const showDeleteStageModal = ref(false);
-const stageToDelete = ref(null);
 const showPipelineModal = ref(false);
 const showStageModal = ref(false);
 const editingPipeline = ref(null);
@@ -309,6 +293,7 @@ const savePipeline = () => {
             onSuccess: () => {
                 showPipelineModal.value = false;
                 resetPipelineForm();
+                alert.toast('Pipeline atualizado!', 'success', 2000);
             },
         });
     } else {
@@ -316,21 +301,23 @@ const savePipeline = () => {
             onSuccess: () => {
                 showPipelineModal.value = false;
                 resetPipelineForm();
+                alert.toast('Pipeline criado!', 'success', 2000);
             },
         });
     }
 };
 
-const deletePipeline = (pipeline) => {
-    pipelineToDelete.value = pipeline;
-    showDeletePipelineModal.value = true;
-};
+const deletePipeline = async (pipeline) => {
+    const result = await alert.confirmDelete(
+        'Excluir pipeline?',
+        `Tem certeza que deseja excluir o pipeline "${pipeline.name}"? Todos os leads deste pipeline serão movidos para o pipeline padrão. Esta ação não pode ser desfeita.`
+    );
 
-const confirmDeletePipeline = () => {
-    router.delete(`/pipelines/${pipelineToDelete.value.id}`, {
+    if (!result.isConfirmed) return;
+
+    router.delete(`/pipelines/${pipeline.id}`, {
         onSuccess: () => {
-            showDeletePipelineModal.value = false;
-            pipelineToDelete.value = null;
+            alert.toast('Pipeline excluído!', 'success', 2000);
         },
     });
 };
@@ -372,6 +359,7 @@ const saveStage = () => {
             onSuccess: () => {
                 showStageModal.value = false;
                 resetStageForm();
+                alert.toast('Estágio atualizado!', 'success', 2000);
             },
         });
     } else {
@@ -379,21 +367,23 @@ const saveStage = () => {
             onSuccess: () => {
                 showStageModal.value = false;
                 resetStageForm();
+                alert.toast('Estágio criado!', 'success', 2000);
             },
         });
     }
 };
 
-const deleteStage = (stage) => {
-    stageToDelete.value = stage;
-    showDeleteStageModal.value = true;
-};
+const deleteStage = async (stage) => {
+    const result = await alert.confirmDelete(
+        'Excluir estágio?',
+        `Tem certeza que deseja excluir o estágio "${stage.name}"? Todos os leads deste estágio serão movidos para o primeiro estágio. Esta ação não pode ser desfeita.`
+    );
 
-const confirmDeleteStage = () => {
-    router.delete(`/stages/${stageToDelete.value.id}`, {
+    if (!result.isConfirmed) return;
+
+    router.delete(`/stages/${stage.id}`, {
         onSuccess: () => {
-            showDeleteStageModal.value = false;
-            stageToDelete.value = null;
+            alert.toast('Estágio excluído!', 'success', 2000);
         },
     });
 };

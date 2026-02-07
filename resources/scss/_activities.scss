@@ -1,0 +1,489 @@
+// =============================================================================
+// Activities - Timeline Brutalist Design
+// =============================================================================
+
+@use 'variables' as *;
+
+// =============================================================================
+// Timeline Card
+// =============================================================================
+
+.timeline-card {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  margin-bottom: 2rem;
+
+  .card-title {
+    font-size: 1.25rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 0;
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-family: $font-display;
+    color: var(--text-primary);
+
+    i {
+      color: $accent;
+      font-size: 1.125rem;
+    }
+  }
+}
+
+// =============================================================================
+// Timeline Loading & Empty States
+// =============================================================================
+
+.timeline-loading,
+.timeline-empty {
+  padding: 4rem 2rem;
+  text-align: center;
+  color: var(--text-secondary);
+  font-family: $font-body;
+
+  i {
+    font-size: 3rem;
+    color: var(--text-tertiary);
+    margin-bottom: 1rem;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+  }
+}
+
+.timeline-loading i {
+  color: $accent;
+}
+
+// =============================================================================
+// Timeline Structure
+// =============================================================================
+
+.timeline {
+  padding: 2rem;
+  position: relative;
+
+  @media (max-width: $breakpoint-md) {
+    padding: 1rem;
+  }
+}
+
+// =============================================================================
+// Timeline Group (Date Section)
+// =============================================================================
+
+.timeline-group {
+  margin-bottom: 3rem;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.timeline-date {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 1.25rem;
+  background: $accent;
+  border: 1px solid $accent;
+  font-family: $font-display;
+  font-size: 0.875rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #fff;
+  margin-bottom: 1.5rem;
+  position: relative;
+  z-index: 2;
+
+  i {
+    color: #fff;
+    font-size: 1rem;
+  }
+
+  @media (max-width: $breakpoint-md) {
+    font-size: 0.75rem;
+    padding: 0.375rem 1rem;
+  }
+}
+
+// =============================================================================
+// Timeline Items Container
+// =============================================================================
+
+.timeline-items {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  position: relative;
+  padding-left: 2rem;
+
+  // Vertical line connecting items
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: var(--border-color);
+  }
+
+  @media (max-width: $breakpoint-md) {
+    padding-left: 1.5rem;
+  }
+}
+
+// =============================================================================
+// Timeline Item
+// =============================================================================
+
+.timeline-item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1.5rem;
+  position: relative;
+  align-items: start;
+
+  @media (max-width: $breakpoint-md) {
+    gap: 1rem;
+  }
+}
+
+// =============================================================================
+// Timeline Marker (Icon Circle)
+// =============================================================================
+
+.timeline-marker {
+  width: 48px;
+  height: 48px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 2;
+  transition: all 0.2s ease;
+
+  i {
+    font-size: 1.125rem;
+    color: var(--text-secondary);
+    transition: all 0.2s ease;
+  }
+
+  // Type-specific colors
+  &.marker-call {
+    i { color: #2196F3; }
+  }
+
+  &.marker-meeting {
+    i { color: #4CAF50; }
+  }
+
+  &.marker-email {
+    i { color: #9C27B0; }
+  }
+
+  &.marker-note {
+    i { color: #FFC107; }
+  }
+
+  &.marker-task {
+    i { color: $accent; }
+  }
+
+  // Hover effect
+  .timeline-item:hover & {
+    transform: scale(1.1);
+    border-color: $accent;
+
+    i {
+      transform: scale(1.1);
+    }
+  }
+
+  @media (max-width: $breakpoint-md) {
+    width: 40px;
+    height: 40px;
+
+    i {
+      font-size: 1rem;
+    }
+  }
+}
+
+// =============================================================================
+// Timeline Content
+// =============================================================================
+
+.timeline-content {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  padding: 1.5rem;
+  transition: all 0.2s ease;
+  min-width: 0;
+
+  .timeline-item:hover & {
+    border-color: $accent;
+    transform: translateX(4px);
+  }
+
+  @media (max-width: $breakpoint-md) {
+    padding: 1rem;
+  }
+}
+
+// =============================================================================
+// Activity Header
+// =============================================================================
+
+.activity-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.activity-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.activity-type {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  border: 1px solid var(--border-color);
+  font-family: $font-display;
+  font-size: 0.6875rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+
+  // Type-specific styles
+  &.type-call {
+    border-color: #2196F3;
+    color: #2196F3;
+  }
+
+  &.type-meeting {
+    border-color: #4CAF50;
+    color: #4CAF50;
+  }
+
+  &.type-email {
+    border-color: #9C27B0;
+    color: #9C27B0;
+  }
+
+  &.type-note {
+    border-color: #FFC107;
+    color: #FFC107;
+  }
+
+  &.type-task {
+    border-color: $accent;
+    color: $accent;
+  }
+}
+
+.activity-time {
+  font-family: $font-mono;
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+
+  i {
+    font-size: 0.625rem;
+  }
+}
+
+.activity-user {
+  font-family: $font-body;
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+
+  i {
+    color: $accent;
+    font-size: 0.875rem;
+  }
+}
+
+// =============================================================================
+// Activity Lead Link
+// =============================================================================
+
+.activity-lead {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  background: var(--bg-secondary);
+  border-left: 3px solid $accent;
+
+  i {
+    color: $accent;
+    font-size: 0.875rem;
+  }
+
+  a {
+    font-family: $font-body;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: all 0.2s ease;
+
+    &:hover {
+      color: $accent;
+      transform: translateX(2px);
+    }
+  }
+}
+
+// =============================================================================
+// Activity Description
+// =============================================================================
+
+.activity-description {
+  font-family: $font-body;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  font-weight: 500;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+// =============================================================================
+// Activity Notes
+// =============================================================================
+
+.activity-notes {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: var(--bg-secondary);
+  border-left: 3px solid var(--border-color);
+  font-family: $font-body;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  margin-bottom: 0.75rem;
+  font-style: italic;
+
+  i {
+    color: var(--text-tertiary);
+    font-size: 0.875rem;
+    margin-top: 0.125rem;
+    flex-shrink: 0;
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+// =============================================================================
+// Activity Duration
+// =============================================================================
+
+.activity-duration {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: $font-mono;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+
+  i {
+    color: $accent;
+    font-size: 0.875rem;
+  }
+}
+
+// =============================================================================
+// Responsive Adjustments
+// =============================================================================
+
+@media (max-width: $breakpoint-md) {
+  .timeline-group {
+    margin-bottom: 2rem;
+  }
+
+  .timeline-items {
+    gap: 1rem;
+  }
+
+  .activity-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .activity-info {
+    width: 100%;
+  }
+
+  .activity-user {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: $breakpoint-sm) {
+  .timeline-date {
+    font-size: 0.6875rem;
+    padding: 0.375rem 0.875rem;
+
+    i {
+      font-size: 0.875rem;
+    }
+  }
+
+  .timeline-marker {
+    width: 36px;
+    height: 36px;
+
+    i {
+      font-size: 0.875rem;
+    }
+  }
+
+  .activity-type {
+    font-size: 0.625rem;
+    padding: 0.25rem 0.625rem;
+  }
+}

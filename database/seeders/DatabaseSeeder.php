@@ -22,6 +22,8 @@ class DatabaseSeeder extends Seeder
             ProductSeeder::class,
             MessageTemplateSeeder::class,
             LeadSeeder::class,
+            TaskSeeder::class,
+            ActivitySeeder::class,
         ]);
 
         $this->command->info('✅ Database seeded successfully!');

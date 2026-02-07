@@ -1,26 +1,29 @@
 <template>
-    <Head title="Atividades" />
-    <MainLayout>
-        <div class="activities-index">
+    <MainLayout title="Atividades">
+        <template #breadcrumbs>
+            <Breadcrumbs :items="breadcrumbs" />
+        </template>
+
+        <div class="page-container">
             <!-- Header -->
             <div class="page-header">
                 <div>
                     <h1 class="page-title">Atividades</h1>
-                    <Breadcrumbs :items="breadcrumbs" />
+                    <p class="page-subtitle">Acompanhe todas as atividades e interações com leads</p>
                 </div>
             </div>
 
             <!-- Filters -->
             <div class="filters-card">
                 <div class="filters-grid">
-                    <Input v-model="filters.search" placeholder="Buscar atividades..."
-                        icon="fa-search" @input="debouncedSearch" />
+                    <Input v-model="filters.search" placeholder="Buscar atividades..." icon="fa-search"
+                        @input="debouncedSearch" />
 
-                    <Select v-model="filters.type" label="Tipo" :options="typeOptions"
-                        placeholder="Todos os tipos" @update:modelValue="loadActivities" />
+                    <Select v-model="filters.type" label="Tipo" :options="typeOptions" placeholder="Todos os tipos"
+                        @update:modelValue="loadActivities" />
 
-                    <Select v-model="filters.lead_id" label="Lead" :options="leadOptions"
-                        placeholder="Todos os leads" @update:modelValue="loadActivities" />
+                    <Select v-model="filters.lead_id" label="Lead" :options="leadOptions" placeholder="Todos os leads"
+                        @update:modelValue="loadActivities" />
 
                     <Select v-model="filters.user_id" label="Usuário" :options="userOptions"
                         placeholder="Todos os usuários" @update:modelValue="loadActivities" />
@@ -113,18 +116,15 @@
                 </div>
 
                 <!-- Pagination -->
-                <div v-if="activities.data.length > 0" class="pagination">
-                    <div class="pagination-info">
-                        Mostrando {{ activities.from }} a {{ activities.to }} de {{ activities.total }} registros
-                    </div>
-                    <div class="pagination-buttons">
-                        <button @click="changePage(page)" v-for="page in paginationPages" :key="page"
-                            :class="['pagination-btn', { active: page === activities.current_page }]"
-                            :disabled="page === '...'">
-                            {{ page }}
-                        </button>
-                    </div>
-                </div>
+                <Pagination
+                    v-if="activities.data.length > 0"
+                    :from="activities.from"
+                    :to="activities.to"
+                    :total="activities.total"
+                    :current-page="activities.current_page"
+                    :last-page="activities.last_page"
+                    @page-change="changePage"
+                />
             </div>
         </div>
     </MainLayout>
@@ -132,12 +132,14 @@
 
 <script setup>
 import { ref, computed } from 'vue';
-import { router, Head } from '@inertiajs/vue3';
+import { router } from '@inertiajs/vue3';
+import { useAlert } from '@/composables/useAlert';
 import MainLayout from '@/Layouts/MainLayout.vue';
 import Input from '@/Components/Input.vue';
 import Select from '@/Components/Select.vue';
 import StatCard from '@/Components/StatCard.vue';
 import Breadcrumbs from '@/Components/Breadcrumbs.vue';
+import Pagination from '@/Components/Pagination.vue';
 
 const props = defineProps({
     activities: Object,
@@ -146,9 +148,11 @@ const props = defineProps({
     stats: Object,
 });
 
+const alert = useAlert();
+
 const breadcrumbs = [
-    { label: 'Dashboard', to: '/dashboard' },
-    { label: 'Atividades', active: true }
+    { name: 'Dashboard', href: '/dashboard' },
+    { name: 'Atividades' }
 ];
 
 const loading = ref(false);
@@ -194,28 +198,6 @@ const groupedActivities = computed(() => {
     return groups;
 });
 
-const paginationPages = computed(() => {
-    const pages = [];
-    const current = props.activities.current_page;
-    const last = props.activities.last_page;
-
-    if (last <= 7) {
-        for (let i = 1; i <= last; i++) {
-            pages.push(i);
-        }
-    } else {
-        if (current <= 3) {
-            pages.push(1, 2, 3, 4, '...', last);
-        } else if (current >= last - 2) {
-            pages.push(1, '...', last - 3, last - 2, last - 1, last);
-        } else {
-            pages.push(1, '...', current - 1, current, current + 1, '...', last);
-        }
-    }
-
-    return pages;
-});
-
 let searchTimeout = null;
 const debouncedSearch = () => {
     clearTimeout(searchTimeout);
@@ -230,6 +212,9 @@ const loadActivities = () => {
         preserveState: true,
         preserveScroll: true,
         onFinish: () => loading.value = false,
+        onError: () => {
+            alert.error('Erro ao carregar', 'Não foi possível carregar as atividades.');
+        },
     });
 };
 
@@ -241,6 +226,7 @@ const clearFilters = () => {
         user_id: '',
     };
     loadActivities();
+    alert.toast('Filtros limpos!', 'success');
 };
 
 const changePage = (page) => {

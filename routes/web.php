@@ -5,6 +5,7 @@ use App\Http\Controllers\Web\ActivityController;
 use App\Http\Controllers\Web\LeadController;
 use App\Http\Controllers\Web\PipelineController;
 use App\Http\Controllers\Web\StageController;
+use App\Http\Controllers\Web\TaskController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -44,9 +45,10 @@ Route::middleware(['auth', 'active'])->group(function () {
     // Activities
     Route::resource('activities', ActivityController::class)->only(['index', 'store', 'update', 'destroy']);
 
-    Route::get('/tasks', function () {
-        return Inertia::render('Tasks/Index');
-    })->name('tasks.index');
+    // Tasks
+    Route::resource('tasks', TaskController::class)->only(['index', 'store', 'update', 'destroy']);
+    Route::patch('tasks/{task}/toggle-complete', [TaskController::class, 'toggleComplete'])->name('tasks.toggleComplete');
+
     Route::get('/products', function () {
         return Inertia::render('Products/Index');
     })->name('products.index');
