@@ -4,27 +4,30 @@
             <Breadcrumbs :items="breadcrumbs" />
         </template>
 
-        <!-- Header -->
-        <div class="page-header">
-            <div>
-                <h1 class="layout-title">Pipelines de Vendas</h1>
-                <p class="page-subtitle">Gerencie seus pipelines e estágios de vendas</p>
+        <div class="page-container">
+            <!-- Header -->
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">Pipelines de Vendas</h1>
+                    <p class="page-subtitle">Gerencie seus pipelines e estágios de vendas</p>
+                </div>
+                <div class="page-header__actions">
+                    <Button variant="success" icon="fa fa-plus" @click="createPipeline">
+                        Novo Pipeline
+                    </Button>
+                </div>
             </div>
-            <Button variant="success" icon="fa fa-plus" @click="createPipeline">
-                Novo Pipeline
-            </Button>
-        </div>
 
-        <!-- Stats -->
-        <div class="stats-grid">
-            <StatCard title="Total de Pipelines" :value="pipelines?.length ?? 0" icon="fa fa-layer-group" color="blue" />
-            <StatCard title="Pipelines Ativos" :value="activePipelines" icon="fa fa-check-circle" color="green" />
-            <StatCard title="Total de Estágios" :value="totalStages" icon="fa fa-list" color="purple" />
-            <StatCard title="Leads em Pipelines" :value="totalLeads" icon="fa fa-users" color="orange" />
-        </div>
+            <!-- Stats -->
+            <div class="stats-grid">
+                <StatCard title="Total de Pipelines" :value="pipelines?.length ?? 0" icon="fa fa-layer-group" color="blue" />
+                <StatCard title="Pipelines Ativos" :value="activePipelines" icon="fa fa-check-circle" color="green" />
+                <StatCard title="Total de Estágios" :value="totalStages" icon="fa fa-list" color="purple" />
+                <StatCard title="Leads em Pipelines" :value="totalLeads" icon="fa fa-users" color="orange" />
+            </div>
 
-        <!-- Pipelines List -->
-        <div class="pipelines-grid">
+            <!-- Pipelines List -->
+            <div class="pipelines-grid">
                 <div v-for="pipeline in pipelines" :key="pipeline.id" class="pipeline-card">
                     <div class="pipeline-header">
                         <div class="pipeline-info">
@@ -133,75 +136,76 @@
                 </div>
             </div>
 
-        <!-- Modal de confirmação de exclusão Pipeline -->
-        <Modal v-model:visible="showDeletePipelineModal" title="Confirmar Exclusão" @confirm="confirmDeletePipeline">
-            <p>Tem certeza que deseja excluir o pipeline <strong>{{ pipelineToDelete?.name }}</strong>?</p>
-            <p class="text-danger">⚠️ Todos os leads deste pipeline serão movidos para o pipeline padrão.</p>
-            <p class="text-muted">Esta ação não pode ser desfeita.</p>
-        </Modal>
+            <!-- Modal de confirmação de exclusão Pipeline -->
+            <Modal v-model:visible="showDeletePipelineModal" title="Confirmar Exclusão" @confirm="confirmDeletePipeline">
+                <p>Tem certeza que deseja excluir o pipeline <strong>{{ pipelineToDelete?.name }}</strong>?</p>
+                <p class="text-danger">⚠️ Todos os leads deste pipeline serão movidos para o pipeline padrão.</p>
+                <p class="text-muted">Esta ação não pode ser desfeita.</p>
+            </Modal>
 
-        <!-- Modal de confirmação de exclusão Stage -->
-        <Modal v-model:visible="showDeleteStageModal" title="Confirmar Exclusão" @confirm="confirmDeleteStage">
-            <p>Tem certeza que deseja excluir o estágio <strong>{{ stageToDelete?.name }}</strong>?</p>
-            <p class="text-danger">⚠️ Todos os leads deste estágio serão movidos para o primeiro estágio.</p>
-            <p class="text-muted">Esta ação não pode ser desfeita.</p>
-        </Modal>
+            <!-- Modal de confirmação de exclusão Stage -->
+            <Modal v-model:visible="showDeleteStageModal" title="Confirmar Exclusão" @confirm="confirmDeleteStage">
+                <p>Tem certeza que deseja excluir o estágio <strong>{{ stageToDelete?.name }}</strong>?</p>
+                <p class="text-danger">⚠️ Todos os leads deste estágio serão movidos para o primeiro estágio.</p>
+                <p class="text-muted">Esta ação não pode ser desfeita.</p>
+            </Modal>
 
-        <!-- Modal de Pipeline Form -->
-        <Modal v-model:visible="showPipelineModal" :title="editingPipeline ? 'Editar Pipeline' : 'Novo Pipeline'"
-            size="large" @confirm="savePipeline">
-            <div class="modal-form">
-                <div class="form-group">
-                    <label class="required">Nome do Pipeline</label>
-                    <Input v-model="pipelineForm.name" placeholder="Ex: Vendas B2B, Vendas Consultoria..." />
-                </div>
+            <!-- Modal de Pipeline Form -->
+            <Modal v-model:visible="showPipelineModal" :title="editingPipeline ? 'Editar Pipeline' : 'Novo Pipeline'"
+                size="large" @confirm="savePipeline">
+                <div class="modal-form">
+                    <div class="form-group">
+                        <label class="required">Nome do Pipeline</label>
+                        <Input v-model="pipelineForm.name" placeholder="Ex: Vendas B2B, Vendas Consultoria..." />
+                    </div>
 
-                <div class="form-group">
-                    <label>Descrição</label>
-                    <textarea v-model="pipelineForm.description" class="form-textarea"
-                        placeholder="Descreva o propósito deste pipeline..." rows="3"></textarea>
-                </div>
+                    <div class="form-group">
+                        <label>Descrição</label>
+                        <textarea v-model="pipelineForm.description" class="form-textarea"
+                            placeholder="Descreva o propósito deste pipeline..." rows="3"></textarea>
+                    </div>
 
-                <div class="form-group">
-                    <label class="checkbox-label">
-                        <input type="checkbox" v-model="pipelineForm.is_active" />
-                        <span>Pipeline ativo</span>
-                    </label>
-                </div>
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" v-model="pipelineForm.is_active" />
+                            <span>Pipeline ativo</span>
+                        </label>
+                    </div>
 
-                <div class="form-group">
-                    <label class="checkbox-label">
-                        <input type="checkbox" v-model="pipelineForm.is_default" />
-                        <span>Definir como pipeline padrão</span>
-                    </label>
-                </div>
-            </div>
-        </Modal>
-
-        <!-- Modal de Stage Form -->
-        <Modal v-model:visible="showStageModal" :title="editingStage ? 'Editar Estágio' : 'Novo Estágio'"
-            @confirm="saveStage">
-            <div class="modal-form">
-                <div class="form-group">
-                    <label class="required">Nome do Estágio</label>
-                    <Input v-model="stageForm.name" placeholder="Ex: Prospecção, Proposta, Fechamento..." />
-                </div>
-
-                <div class="form-group">
-                    <label class="required">Probabilidade de Conversão (%)</label>
-                    <Input v-model="stageForm.probability" type="number" min="0" max="100" placeholder="0-100" />
-                    <small class="form-hint">Percentual de chance do lead fechar neste estágio</small>
-                </div>
-
-                <div class="form-group">
-                    <label class="required">Cor</label>
-                    <div class="color-picker">
-                        <input v-model="stageForm.color" type="color" class="color-input" />
-                        <Input v-model="stageForm.color" placeholder="#000000" />
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" v-model="pipelineForm.is_default" />
+                            <span>Definir como pipeline padrão</span>
+                        </label>
                     </div>
                 </div>
-            </div>
-        </Modal>
+            </Modal>
+
+            <!-- Modal de Stage Form -->
+            <Modal v-model:visible="showStageModal" :title="editingStage ? 'Editar Estágio' : 'Novo Estágio'"
+                @confirm="saveStage">
+                <div class="modal-form">
+                    <div class="form-group">
+                        <label class="required">Nome do Estágio</label>
+                        <Input v-model="stageForm.name" placeholder="Ex: Prospecção, Proposta, Fechamento..." />
+                    </div>
+
+                    <div class="form-group">
+                        <label class="required">Probabilidade de Conversão (%)</label>
+                        <Input v-model="stageForm.probability" type="number" min="0" max="100" placeholder="0-100" />
+                        <small class="form-hint">Percentual de chance do lead fechar neste estágio</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="required">Cor</label>
+                        <div class="color-picker">
+                            <input v-model="stageForm.color" type="color" class="color-input" />
+                            <Input v-model="stageForm.color" placeholder="#000000" />
+                        </div>
+                    </div>
+                </div>
+            </Modal>
+        </div>
     </MainLayout>
 </template>
 
