@@ -1,6 +1,6 @@
 <template>
   <MainLayout title="Produtos e Serviços">
-    <div class="products-page">
+    <div class="page-container">
       <Breadcrumbs :items="breadcrumbs" />
 
       <div class="page-header">
@@ -46,17 +46,18 @@
       <div class="filters-card">
         <div class="filters-grid">
           <div class="filter-item">
-            <label>Buscar</label>
+            <label class="form-label">Buscar</label>
             <Input
               v-model="filters.search"
               placeholder="Nome ou SKU..."
+              @input="loadProducts"
               icon="fa fa-search"
             />
           </div>
 
           <div class="filter-item">
-            <label>Tipo</label>
-            <select v-model="filters.type" class="form-select">
+            <label class="form-label">Tipo</label>
+            <select v-model="filters.type" @change="loadProducts" class="form-select">
               <option value="">Todos</option>
               <option value="product">Produto</option>
               <option value="service">Serviço</option>
@@ -64,8 +65,8 @@
           </div>
 
           <div class="filter-item">
-            <label>Status</label>
-            <select v-model="filters.active" class="form-select">
+            <label class="form-label">Status</label>
+            <select v-model="filters.active" @change="loadProducts" class="form-select">
               <option value="">Todos</option>
               <option value="1">Ativo</option>
               <option value="0">Inativo</option>
@@ -73,10 +74,6 @@
           </div>
 
           <div class="filter-actions">
-            <Button variant="secondary" @click="applyFilters">
-              <i class="fa fa-filter"></i>
-              Filtrar
-            </Button>
             <Button variant="secondary" @click="clearFilters">
               <i class="fa fa-times"></i>
               Limpar
@@ -88,10 +85,20 @@
       <!-- View Toggle -->
       <div class="view-controls">
         <div class="view-toggle">
-          <button @click="viewMode = 'grid'" :class="{ active: viewMode === 'grid' }" class="toggle-btn">
-            <i class="fa fa-th"></i>
+          <button
+            @click="viewMode = 'grid'"
+            :class="{ active: viewMode === 'grid' }"
+            class="toggle-btn"
+            title="Grade"
+          >
+            <i class="fa fa-th-large"></i>
           </button>
-          <button @click="viewMode = 'list'" :class="{ active: viewMode === 'list' }" class="toggle-btn">
+          <button
+            @click="viewMode = 'list'"
+            :class="{ active: viewMode === 'list' }"
+            class="toggle-btn"
+            title="Lista"
+          >
             <i class="fa fa-list"></i>
           </button>
         </div>
@@ -102,37 +109,46 @@
         <div v-for="product in products.data" :key="product.id" class="product-card">
           <div class="product-image">
             <img v-if="product.image" :src="product.image" :alt="product.name" />
-            <div v-else class="image-placeholder"><i class="fa fa-box"></i></div>
+            <span v-else class="image-placeholder">
+              <i class="fa fa-box"></i>
+            </span>
             <span v-if="!product.active" class="inactive-badge">Inativo</span>
           </div>
 
           <div class="product-content">
             <div class="product-header">
-              <h3>{{ product.name }}</h3>
-              <span :class="['type-badge', product.type]">{{ product.type === 'product' ? 'Produto' : 'Serviço' }}</span>
+              <h3 class="product-name">{{ product.name }}</h3>
+              <span class="type-badge" :class="product.type">
+                {{ product.type === 'product' ? 'Produto' : 'Serviço' }}
+              </span>
             </div>
 
-            <p v-if="product.description" class="product-description">{{ product.description }}</p>
+            <p v-if="product.description" class="product-description">
+              {{ truncate(product.description, 100) }}
+            </p>
 
             <div class="product-meta">
               <div class="meta-item">
-                <span class="label">SKU:</span>
-                <span class="value">{{ product.sku || 'N/A' }}</span>
+                <i class="fa fa-barcode"></i>
+                <span>{{ product.sku || 'Sem SKU' }}</span>
               </div>
-              <div class="meta-item">
-                <span class="label">Preço:</span>
-                <span class="value price">{{ formatCurrency(product.price) }}</span>
+              <div class="meta-item price">
+                <i class="fa fa-dollar-sign"></i>
+                <strong>{{ formatCurrency(product.price) }}</strong>
               </div>
             </div>
 
             <div class="product-actions">
-              <Button variant="secondary" size="sm" @click="editProduct(product)">
+              <Button variant="secondary" size="sm" @click="editProduct(product)" title="Editar">
                 <i class="fa fa-edit"></i>
               </Button>
-              <Button variant="ghost" size="sm" @click="duplicateProduct(product)">
+              <Button variant="secondary" size="sm" @click="duplicateProduct(product)" title="Duplicar">
                 <i class="fa fa-copy"></i>
               </Button>
-              <Button variant="danger" size="sm" @click="deleteProduct(product)">
+              <Button variant="secondary" size="sm" @click="toggleProductStatus(product)" :title="product.active ? 'Desativar' : 'Ativar'">
+                <i :class="product.active ? 'fa fa-eye-slash' : 'fa fa-eye'"></i>
+              </Button>
+              <Button variant="danger" size="sm" @click="deleteProduct(product)" title="Excluir">
                 <i class="fa fa-trash"></i>
               </Button>
             </div>
@@ -157,24 +173,22 @@
           <tbody>
             <tr v-for="product in products.data" :key="product.id">
               <td>
-                <div class="product-info">
-                  <div class="product-thumb">
-                    <img v-if="product.image" :src="product.image" :alt="product.name" />
-                    <i v-else class="fa fa-box"></i>
-                  </div>
-                  <div>
-                    <strong>{{ product.name }}</strong>
-                    <p v-if="product.description">{{ truncate(product.description, 50) }}</p>
-                  </div>
+                <div class="product-name-cell">
+                  <strong>{{ product.name }}</strong>
+                  <small v-if="product.description">{{ truncate(product.description, 50) }}</small>
                 </div>
               </td>
               <td>{{ product.sku || 'N/A' }}</td>
               <td>
-                <span :class="['type-badge', product.type]">{{ product.type === 'product' ? 'Produto' : 'Serviço' }}</span>
+                <span class="type-badge" :class="product.type">
+                  {{ product.type === 'product' ? 'Produto' : 'Serviço' }}
+                </span>
               </td>
               <td class="price">{{ formatCurrency(product.price) }}</td>
               <td>
-                <span :class="['status-badge', product.active ? 'active' : 'inactive']">{{ product.active ? 'Ativo' : 'Inativo' }}</span>
+                <span :class="['status-badge', product.active ? 'active' : 'inactive']">
+                  {{ product.active ? 'Ativo' : 'Inativo' }}
+                </span>
               </td>
               <td>{{ formatDate(product.created_at) }}</td>
               <td>
@@ -232,6 +246,7 @@ const page = usePage();
 const alert = useAlert();
 
 const viewMode = ref('grid');
+let searchTimeout = null;
 
 // Initialize filters from server props so URLs are SSR-friendly
 const filters = ref({
@@ -262,14 +277,20 @@ const truncate = (text, length) => {
 };
 
 const loadProducts = () => {
-  router.get('/products', filters.value, {
-    preserveState: true,
-  });
+  // Debounce search
+  if (searchTimeout) clearTimeout(searchTimeout);
+
+  searchTimeout = setTimeout(() => {
+    router.get('/products', filters.value, {
+      preserveState: true,
+      preserveScroll: true,
+    });
+  }, 300);
 };
 
 const clearFilters = () => {
   filters.value = { search: '', type: '', active: '' };
-  loadProducts();
+  router.get('/products', {}, { preserveState: true });
   alert.toast('Filtros limpos!', 'success');
 };
 
@@ -285,10 +306,10 @@ const duplicateProduct = async (product) => {
   const res = await alert.confirm('Duplicar produto?', `Deseja duplicar "${product.name}"?`);
   if (!res.isConfirmed) return;
 
-  // Use API endpoint for duplication if exists, otherwise fallback
   router.post(`/products/${product.id}/duplicate`, {}, {
     preserveState: true,
-    onSuccess: () => alert.toast('Produto duplicado!', 'success')
+    onSuccess: () => alert.toast('Produto duplicado!', 'success'),
+    onError: () => alert.toast('Erro ao duplicar produto', 'error')
   });
 };
 
@@ -297,7 +318,8 @@ const toggleProductStatus = (product) => {
     active: !product.active
   }, {
     preserveState: true,
-    onSuccess: () => alert.toast('Status atualizado!', 'success')
+    onSuccess: () => alert.toast('Status atualizado!', 'success'),
+    onError: () => alert.toast('Erro ao atualizar status', 'error')
   });
 };
 
@@ -307,12 +329,16 @@ const deleteProduct = async (product) => {
 
   router.delete(`/products/${product.id}`, {
     preserveState: true,
-    onSuccess: () => alert.toast('Produto excluído!', 'success')
+    onSuccess: () => alert.toast('Produto excluído!', 'success'),
+    onError: () => alert.toast('Erro ao excluir produto', 'error')
   });
 };
 
 const handlePageChange = (page) => {
-  router.get('/products', { ...filters.value, page }, { preserveState: true });
+  router.get('/products', { ...filters.value, page }, {
+    preserveState: true,
+    preserveScroll: true
+  });
 };
 
 // Show flash messages (server redirects) using toast
