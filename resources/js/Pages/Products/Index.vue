@@ -65,7 +65,7 @@
 
           <div class="filter-item">
             <label>Status</label>
-            <select v-model="filters.is_active" class="form-select">
+            <select v-model="filters.active" class="form-select">
               <option value="">Todos</option>
               <option value="1">Ativo</option>
               <option value="0">Inativo</option>
@@ -185,8 +185,8 @@
                   <button @click="duplicateProduct(product)" class="action-btn" title="Duplicar">
                     <i class="fa fa-copy"></i>
                   </button>
-                  <button @click="toggleProductStatus(product)" class="action-btn" :title="product.is_active ? 'Desativar' : 'Ativar'">
-                    <i :class="product.is_active ? 'fa fa-eye-slash' : 'fa fa-eye'"></i>
+                  <button @click="toggleProductStatus(product)" class="action-btn" :title="product.active ? 'Desativar' : 'Ativar'">
+                    <i :class="product.active ? 'fa fa-eye-slash' : 'fa fa-eye'"></i>
                   </button>
                   <button @click="deleteProduct(product)" class="action-btn danger" title="Excluir">
                     <i class="fa fa-trash"></i>
@@ -268,7 +268,7 @@ const loadProducts = () => {
 };
 
 const clearFilters = () => {
-  filters.value = { search: '', type: '', is_active: '' };
+  filters.value = { search: '', type: '', active: '' };
   loadProducts();
   alert.toast('Filtros limpos!', 'success');
 };
@@ -294,7 +294,7 @@ const duplicateProduct = async (product) => {
 
 const toggleProductStatus = (product) => {
   router.put(`/products/${product.id}`, {
-    is_active: !product.is_active
+    active: !product.active
   }, {
     preserveState: true,
     onSuccess: () => alert.toast('Status atualizado!', 'success')

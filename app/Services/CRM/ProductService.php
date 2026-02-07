@@ -98,7 +98,7 @@ class ProductService
     public function getStats(int $companyId): array
     {
         $total = Product::where('company_id', $companyId)->count();
-        $active = Product::where('company_id', $companyId)->where('is_active', true)->count();
+        $active = Product::where('company_id', $companyId)->where('active', true)->count();
         $inactive = max(0, $total - $active);
         $totalValue = (float) Product::where('company_id', $companyId)->sum('price');
 
