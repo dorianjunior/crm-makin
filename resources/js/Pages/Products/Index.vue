@@ -88,18 +88,10 @@
       <!-- View Toggle -->
       <div class="view-controls">
         <div class="view-toggle">
-          <button
-            @click="viewMode = 'grid'"
-            :class="{ active: viewMode === 'grid' }"
-            class="toggle-btn"
-          >
+          <button @click="viewMode = 'grid'" :class="{ active: viewMode === 'grid' }" class="toggle-btn">
             <i class="fa fa-th"></i>
           </button>
-          <button
-            @click="viewMode = 'list'"
-            :class="{ active: viewMode === 'list' }"
-            class="toggle-btn"
-          >
+          <button @click="viewMode = 'list'" :class="{ active: viewMode === 'list' }" class="toggle-btn">
             <i class="fa fa-list"></i>
           </button>
         </div>
@@ -109,28 +101,18 @@
       <div v-if="viewMode === 'grid'" class="products-grid">
         <div v-for="product in products.data" :key="product.id" class="product-card">
           <div class="product-image">
-            <img
-              v-if="product.image"
-              :src="product.image"
-              :alt="product.name"
-            >
-            <div v-else class="image-placeholder">
-              <i class="fa fa-box"></i>
-            </div>
-            <span v-if="!product.is_active" class="inactive-badge">Inativo</span>
+            <img v-if="product.image" :src="product.image" :alt="product.name" />
+            <div v-else class="image-placeholder"><i class="fa fa-box"></i></div>
+            <span v-if="!product.active" class="inactive-badge">Inativo</span>
           </div>
 
           <div class="product-content">
             <div class="product-header">
               <h3>{{ product.name }}</h3>
-              <span :class="['type-badge', product.type]">
-                {{ product.type === 'product' ? 'Produto' : 'Serviço' }}
-              </span>
+              <span :class="['type-badge', product.type]">{{ product.type === 'product' ? 'Produto' : 'Serviço' }}</span>
             </div>
 
-            <p v-if="product.description" class="product-description">
-              {{ product.description }}
-            </p>
+            <p v-if="product.description" class="product-description">{{ product.description }}</p>
 
             <div class="product-meta">
               <div class="meta-item">
@@ -144,11 +126,13 @@
             </div>
 
             <div class="product-actions">
-              <Button variant="secondary" size="small" @click="editProduct(product)">
+              <Button variant="secondary" size="sm" @click="editProduct(product)">
                 <i class="fa fa-edit"></i>
-                Editar
               </Button>
-              <Button variant="danger" size="small" @click="deleteProduct(product)">
+              <Button variant="ghost" size="sm" @click="duplicateProduct(product)">
+                <i class="fa fa-copy"></i>
+              </Button>
+              <Button variant="danger" size="sm" @click="deleteProduct(product)">
                 <i class="fa fa-trash"></i>
               </Button>
             </div>
@@ -175,7 +159,7 @@
               <td>
                 <div class="product-info">
                   <div class="product-thumb">
-                    <img v-if="product.image" :src="product.image" :alt="product.name">
+                    <img v-if="product.image" :src="product.image" :alt="product.name" />
                     <i v-else class="fa fa-box"></i>
                   </div>
                   <div>
@@ -186,15 +170,11 @@
               </td>
               <td>{{ product.sku || 'N/A' }}</td>
               <td>
-                <span :class="['type-badge', product.type]">
-                  {{ product.type === 'product' ? 'Produto' : 'Serviço' }}
-                </span>
+                <span :class="['type-badge', product.type]">{{ product.type === 'product' ? 'Produto' : 'Serviço' }}</span>
               </td>
               <td class="price">{{ formatCurrency(product.price) }}</td>
               <td>
-                <span :class="['status-badge', product.is_active ? 'active' : 'inactive']">
-                  {{ product.is_active ? 'Ativo' : 'Inativo' }}
-                </span>
+                <span :class="['status-badge', product.active ? 'active' : 'inactive']">{{ product.active ? 'Ativo' : 'Inativo' }}</span>
               </td>
               <td>{{ formatDate(product.created_at) }}</td>
               <td>
@@ -205,11 +185,7 @@
                   <button @click="duplicateProduct(product)" class="action-btn" title="Duplicar">
                     <i class="fa fa-copy"></i>
                   </button>
-                  <button
-                    @click="toggleProductStatus(product)"
-                    class="action-btn"
-                    :title="product.is_active ? 'Desativar' : 'Ativar'"
-                  >
+                  <button @click="toggleProductStatus(product)" class="action-btn" :title="product.is_active ? 'Desativar' : 'Ativar'">
                     <i :class="product.is_active ? 'fa fa-eye-slash' : 'fa fa-eye'"></i>
                   </button>
                   <button @click="deleteProduct(product)" class="action-btn danger" title="Excluir">
@@ -222,56 +198,51 @@
         </table>
 
         <!-- Pagination -->
-        <div class="pagination">
-          <button
-            @click="goToPage(products.current_page - 1)"
-            :disabled="!products.prev_page_url"
-            class="pagination-btn"
-          >
-            <i class="fa fa-chevron-left"></i>
-          </button>
-
-          <span class="pagination-info">
-            Página {{ products.current_page }} de {{ products.last_page }}
-          </span>
-
-          <button
-            @click="goToPage(products.current_page + 1)"
-            :disabled="!products.next_page_url"
-            class="pagination-btn"
-          >
-            <i class="fa fa-chevron-right"></i>
-          </button>
-        </div>
+        <Pagination
+          :from="products.from"
+          :to="products.to"
+          :total="products.total"
+          :current-page="products.current_page"
+          :last-page="products.last_page"
+          @page-change="handlePageChange"
+        />
       </div>
     </div>
   </MainLayout>
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import { router } from '@inertiajs/vue3';
+import { ref, watch } from 'vue';
+import { router, usePage } from '@inertiajs/vue3';
+import { useAlert } from '@/composables/useAlert';
 import MainLayout from '@/Layouts/MainLayout.vue';
 import Breadcrumbs from '@/Components/Breadcrumbs.vue';
 import Button from '@/Components/Button.vue';
 import Input from '@/Components/Input.vue';
 import StatCard from '@/Components/StatCard.vue';
+import Pagination from '@/Components/Pagination.vue';
 
 const props = defineProps({
   products: Object,
-  stats: Object
+  stats: Object,
+  filters: Object,
 });
+
+const page = usePage();
+const alert = useAlert();
 
 const viewMode = ref('grid');
 
+// Initialize filters from server props so URLs are SSR-friendly
 const filters = ref({
-  search: '',
-  type: '',
-  is_active: ''
+  search: props.filters?.search || '',
+  type: props.filters?.type || '',
+  active: props.filters?.active || '',
 });
 
 const breadcrumbs = [
-  { label: 'Produtos' }
+  { name: 'Dashboard', href: '/dashboard' },
+  { name: 'Produtos' }
 ];
 
 const formatCurrency = (value) => {
@@ -290,20 +261,16 @@ const truncate = (text, length) => {
   return text.length > length ? text.substring(0, length) + '...' : text;
 };
 
-const applyFilters = () => {
+const loadProducts = () => {
   router.get('/products', filters.value, {
     preserveState: true,
-    preserveScroll: true
   });
 };
 
 const clearFilters = () => {
-  filters.value = {
-    search: '',
-    type: '',
-    is_active: ''
-  };
-  applyFilters();
+  filters.value = { search: '', type: '', is_active: '' };
+  loadProducts();
+  alert.toast('Filtros limpos!', 'success');
 };
 
 const createProduct = () => {
@@ -314,38 +281,45 @@ const editProduct = (product) => {
   router.visit(`/products/${product.id}/edit`);
 };
 
-const duplicateProduct = (product) => {
-  if (confirm(`Duplicar o produto "${product.name}"?`)) {
-    router.post(`/products/${product.id}/duplicate`, {}, {
-      preserveScroll: true
-    });
-  }
+const duplicateProduct = async (product) => {
+  const res = await alert.confirm('Duplicar produto?', `Deseja duplicar "${product.name}"?`);
+  if (!res.isConfirmed) return;
+
+  // Use API endpoint for duplication if exists, otherwise fallback
+  router.post(`/products/${product.id}/duplicate`, {}, {
+    preserveState: true,
+    onSuccess: () => alert.toast('Produto duplicado!', 'success')
+  });
 };
 
 const toggleProductStatus = (product) => {
   router.put(`/products/${product.id}`, {
     is_active: !product.is_active
   }, {
-    preserveScroll: true
-  });
-};
-
-const deleteProduct = (product) => {
-  if (confirm(`Tem certeza que deseja excluir o produto "${product.name}"?`)) {
-    router.delete(`/products/${product.id}`, {
-      preserveScroll: true
-    });
-  }
-};
-
-const goToPage = (page) => {
-  router.get('/products', {
-    ...filters.value,
-    page
-  }, {
     preserveState: true,
-    preserveScroll: true
+    onSuccess: () => alert.toast('Status atualizado!', 'success')
   });
 };
+
+const deleteProduct = async (product) => {
+  const res = await alert.confirmDelete('Excluir produto?', `Tem certeza que deseja excluir "${product.name}"?`);
+  if (!res.isConfirmed) return;
+
+  router.delete(`/products/${product.id}`, {
+    preserveState: true,
+    onSuccess: () => alert.toast('Produto excluído!', 'success')
+  });
+};
+
+const handlePageChange = (page) => {
+  router.get('/products', { ...filters.value, page }, { preserveState: true });
+};
+
+// Show flash messages (server redirects) using toast
+watch(() => page.props.value.flash, (flash) => {
+  if (flash?.success) alert.toast(flash.success, 'success');
+  if (flash?.error) alert.toast(flash.error, 'error');
+});
+
 </script>
 

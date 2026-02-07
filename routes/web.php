@@ -49,9 +49,11 @@ Route::middleware(['auth', 'active'])->group(function () {
     Route::resource('tasks', TaskController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::patch('tasks/{task}/toggle-complete', [TaskController::class, 'toggleComplete'])->name('tasks.toggleComplete');
 
-    Route::get('/products', function () {
-        return Inertia::render('Products/Index');
-    })->name('products.index');
+    use App\Http\Controllers\Web\ProductController;
+
+    // Products - Inertia page wired to backend controller
+    Route::resource('products', ProductController::class)->only(['index','store','update','destroy']);
+    Route::post('products/{product}/duplicate', [ProductController::class, 'duplicate'])->name('products.duplicate');
     Route::get('/proposals', function () {
         return Inertia::render('Proposals/Index');
     })->name('proposals.index');

@@ -62,4 +62,51 @@ class ProductService
             ->where('name', 'like', "%{$term}%")
             ->get();
     }
+
+    /**
+     * Get paginated products for index page with filters
+     */
+    public function getForIndex(int $companyId, array $filters = [], int $perPage = 15)
+    {
+        $query = Product::where('company_id', $companyId)
+            ->with('company');
+
+        if (!empty($filters['search'])) {
+            $term = $filters['search'];
+            $query->where(function ($q) use ($term) {
+                $q->where('name', 'like', "%{$term}%")
+                  ->orWhere('sku', 'like', "%{$term}%");
+            });
+        }
+
+        if (isset($filters['type']) && $filters['type'] !== '') {
+            $query->where('type', $filters['type']);
+        }
+
+        if (isset($filters['active']) && $filters['active'] !== '') {
+            $query->where('active', (bool) $filters['active']);
+        }
+
+        return $query->orderBy('created_at', 'desc')
+            ->paginate($perPage)
+            ->withQueryString();
+    }
+
+    /**
+     * Get simple stats for products overview
+     */
+    public function getStats(int $companyId): array
+    {
+        $total = Product::where('company_id', $companyId)->count();
+        $active = Product::where('company_id', $companyId)->where('is_active', true)->count();
+        $inactive = max(0, $total - $active);
+        $totalValue = (float) Product::where('company_id', $companyId)->sum('price');
+
+        return [
+            'total' => $total,
+            'active' => $active,
+            'inactive' => $inactive,
+            'total_value' => $totalValue,
+        ];
+    }
 }
