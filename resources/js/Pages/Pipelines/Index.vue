@@ -4,28 +4,27 @@
             <Breadcrumbs :items="breadcrumbs" />
         </template>
 
-        <div class="page-container">
-            <!-- Header -->
-            <div class="page-header">
-                <div>
-                    <h1 class="page-title">Pipelines de Vendas</h1>
-                    <p class="page-subtitle">Gerencie seus pipelines e estágios de vendas</p>
-                </div>
-                <Button variant="success" icon="fa fa-plus" @click="createPipeline">
-                    Novo Pipeline
-                </Button>
+        <!-- Header -->
+        <div class="page-header">
+            <div>
+                <h1 class="layout-title">Pipelines de Vendas</h1>
+                <p class="page-subtitle">Gerencie seus pipelines e estágios de vendas</p>
             </div>
+            <Button variant="success" icon="fa fa-plus" @click="createPipeline">
+                Novo Pipeline
+            </Button>
+        </div>
 
-            <!-- Stats -->
-            <div class="stats-grid">
-                <StatCard title="Total de Pipelines" :value="pipelines?.length ?? 0" icon="fa fa-layer-group" color="blue" />
-                <StatCard title="Pipelines Ativos" :value="activePipelines" icon="fa fa-check-circle" color="green" />
-                <StatCard title="Total de Estágios" :value="totalStages" icon="fa fa-list" color="purple" />
-                <StatCard title="Leads em Pipelines" :value="totalLeads" icon="fa fa-users" color="orange" />
-            </div>
+        <!-- Stats -->
+        <div class="stats-grid">
+            <StatCard title="Total de Pipelines" :value="pipelines?.length ?? 0" icon="fa fa-layer-group" color="blue" />
+            <StatCard title="Pipelines Ativos" :value="activePipelines" icon="fa fa-check-circle" color="green" />
+            <StatCard title="Total de Estágios" :value="totalStages" icon="fa fa-list" color="purple" />
+            <StatCard title="Leads em Pipelines" :value="totalLeads" icon="fa fa-users" color="orange" />
+        </div>
 
-            <!-- Pipelines List -->
-            <div class="pipelines-grid">
+        <!-- Pipelines List -->
+        <div class="pipelines-grid">
                 <div v-for="pipeline in pipelines" :key="pipeline.id" class="pipeline-card">
                     <div class="pipeline-header">
                         <div class="pipeline-info">
@@ -133,7 +132,6 @@
                     </Button>
                 </div>
             </div>
-        </div>
 
         <!-- Modal de confirmação de exclusão Pipeline -->
         <Modal v-model:visible="showDeletePipelineModal" title="Confirmar Exclusão" @confirm="confirmDeletePipeline">
@@ -405,3 +403,5 @@ const updateStagesOrder = (pipeline) => {
     router.post(`/pipelines/${pipeline.id}/stages/reorder`, { stages: order });
 };
 </script>
+
+<!-- Styles moved to resources/scss/_pipelines.scss -->

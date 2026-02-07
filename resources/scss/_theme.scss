@@ -52,6 +52,14 @@
     // Scrollbar
     --scrollbar-thumb: #d1d5db;
     --scrollbar-thumb-hover: #9ca3af;
+
+    // Layout Metrics
+    --sidebar-open: #{$sidebar-width-open};
+    --sidebar-closed: #{$sidebar-width-closed};
+    --navbar-height: #{$navbar-height};
+
+    // Z-index
+    --z-content: #{$z-content};
 }
 
 // Dark Theme

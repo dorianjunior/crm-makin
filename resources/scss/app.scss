@@ -19,6 +19,8 @@
 @use 'utilities-brutalist';
 @use 'utilities';
 @use 'sweetalert';
+@use 'pipelines';
+@use 'leads';
 
 // Smooth scroll
 html {

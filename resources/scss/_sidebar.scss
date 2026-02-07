@@ -48,12 +48,12 @@
     margin-bottom: $spacing-md;
 }
 
-.section-header {
+.sidebar__section-header {
     margin-bottom: $spacing-sm;
     margin-top: $spacing-sm;
 }
 
-.section-title {
+.sidebar__section-title {
     padding: 0 0.75rem;
     font-size: 9px;
     line-height: 1.1;
@@ -63,11 +63,11 @@
     color: var(--text-tertiary);
 }
 
-.section-divider {
+.sidebar__section-divider {
     margin-bottom: $spacing-sm;
 }
 
-.divider-line {
+.sidebar__divider-line {
     height: 1px;
     background: var(--border-color);
 }
@@ -76,13 +76,13 @@
 // Menu Items
 // =============================================================================
 
-.menu-items {
+.sidebar__menu-items {
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
 }
 
-.menu-link {
+.sidebar__menu-link {
     display: flex;
     align-items: center;
     padding: $spacing-sm 0.75rem;
@@ -98,22 +98,24 @@
     }
 
     &--active {
-        background: $accent-light;
+        background: var(--bg-secondary);
         color: $accent;
+        border-left: 3px solid $accent;
+        padding-left: calc($spacing-sm + 0.75rem - 3px);
     }
 }
 
-.menu-icon {
+.sidebar__menu-icon {
     width: 1.25rem;
     text-align: center;
 }
 
-.menu-label {
+.sidebar__menu-label {
     margin-left: 0.75rem;
     flex: 1;
 }
 
-.menu-badge {
+.sidebar__menu-badge {
     margin-left: auto;
     padding: 0.125rem $spacing-sm;
     font-size: 0.75rem;

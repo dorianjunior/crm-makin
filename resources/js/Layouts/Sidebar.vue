@@ -108,26 +108,26 @@ const isActive = (href) => {
         <nav class="sidebar__nav">
             <div v-for="section in menuItems" :key="section.section" class="sidebar__section">
                 <!-- Section Title -->
-                <div v-if="open" class="section-header">
-                    <h3 class="section-title">
+                <div v-if="open" class="sidebar__section-header">
+                    <h3 class="sidebar__section-title">
                         {{ section.section }}
                     </h3>
                 </div>
-                <div v-else class="section-divider">
-                    <div class="divider-line"></div>
+                <div v-else class="sidebar__section-divider">
+                    <div class="sidebar__divider-line"></div>
                 </div>
 
                 <!-- Menu Items -->
-                <div class="menu-items">
+                <div class="sidebar__menu-items">
                     <Link
                         v-for="item in section.items"
                         :key="item.name"
                         :href="item.href"
-                        :class="['menu-link', { 'menu-link--active': isActive(item.href) }]"
+                        :class="['sidebar__menu-link', { 'sidebar__menu-link--active': isActive(item.href) }]"
                     >
-                        <i :class="`${item.icon}`" class="menu-icon"></i>
-                        <span v-if="open" class="menu-label">{{ item.name }}</span>
-                        <span v-if="open && item.badge" class="menu-badge">
+                        <i :class="`${item.icon}`" class="sidebar__menu-icon"></i>
+                        <span v-if="open" class="sidebar__menu-label">{{ item.name }}</span>
+                        <span v-if="open && item.badge" class="sidebar__menu-badge">
                             {{ item.badge }}
                         </span>
                     </Link>

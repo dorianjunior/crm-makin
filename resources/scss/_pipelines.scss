@@ -1,0 +1,425 @@
+// =============================================================================
+// Pipelines - Page-Specific Styles
+// =============================================================================
+
+@use 'variables' as *;
+
+// =============================================================================
+// Pipelines Grid Layout
+// =============================================================================
+
+.pipelines-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+// =============================================================================
+// Pipeline Card
+// =============================================================================
+
+.pipeline-card {
+  background: var(--bg-primary);
+  border: 3px solid var(--border-color);
+  padding: 0;
+  transition: border-color $transition-fast ease;
+
+  &:hover {
+    border-color: var(--border-bold);
+  }
+}
+
+.pipeline-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 1.5rem;
+  border-bottom: 2px solid var(--border-color);
+
+  h3 {
+    font-size: 1.25rem;
+    font-weight: 800;
+    font-family: $font-display;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    color: var(--text-primary);
+    margin: 0 0 0.5rem 0;
+  }
+}
+
+.pipeline-info {
+  flex: 1;
+}
+
+.pipeline-description {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin: 0.5rem 0 0.75rem 0;
+  line-height: 1.5;
+}
+
+.pipeline-meta {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+
+  .badge {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border: 2px solid;
+
+    &.badge-success {
+      background: #d1fae5;
+      color: #10b981;
+      border-color: #10b981;
+    }
+
+    &.badge-danger {
+      background: #fee2e2;
+      color: #ef4444;
+      border-color: #ef4444;
+    }
+
+    &.badge-primary {
+      background: #fef3c7;
+      color: #f59e0b;
+      border-color: #f59e0b;
+    }
+
+    i {
+      margin-right: 0.25rem;
+    }
+  }
+}
+
+.pipeline-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-start;
+}
+
+.btn-icon {
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--border-color);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all $transition-fast ease;
+
+  &:hover {
+    border-color: $accent;
+    color: $accent;
+  }
+
+  &.btn-danger:hover {
+    border-color: $error;
+    color: $error;
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+
+    &:hover {
+      border-color: var(--border-color);
+      color: var(--text-primary);
+    }
+  }
+}
+
+// =============================================================================
+// Pipeline Stats
+// =============================================================================
+
+.pipeline-stats {
+  display: flex;
+  gap: 2rem;
+  padding: 1rem 1.5rem;
+  background: var(--bg-secondary);
+  border-bottom: 2px solid var(--border-color);
+
+  .stat-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+
+    i {
+      color: $accent;
+      font-size: 1rem;
+    }
+
+    span {
+      font-weight: 500;
+    }
+  }
+}
+
+// =============================================================================
+// Stages Container
+// =============================================================================
+
+.stages-container {
+  padding: 1.5rem;
+}
+
+.stages-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+
+  h4 {
+    font-size: 0.875rem;
+    font-weight: 700;
+    font-family: $font-display;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-tertiary);
+    margin: 0;
+  }
+}
+
+.btn-add-stage {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: var(--bg-secondary);
+  border: 2px solid var(--border-color);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all $transition-fast ease;
+
+  &:hover {
+    background: var(--bg-primary);
+    border-color: $accent;
+    color: $accent;
+  }
+
+  i {
+    font-size: 0.75rem;
+  }
+}
+
+// =============================================================================
+// Stages List (Draggable)
+// =============================================================================
+
+.stages-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.stage-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: var(--bg-secondary);
+  border: 2px solid var(--border-color);
+  transition: all $transition-fast ease;
+
+  &:hover {
+    background: var(--bg-primary);
+    border-color: var(--border-bold);
+  }
+}
+
+.stage-handle {
+  cursor: grab;
+  color: var(--text-tertiary);
+  padding: 0 0.25rem;
+
+  &:active {
+    cursor: grabbing;
+  }
+
+  i {
+    font-size: 1rem;
+  }
+}
+
+.stage-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.stage-name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.stage-meta {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+
+  .stage-leads,
+  .stage-probability {
+    font-weight: 500;
+  }
+}
+
+.stage-color {
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--border-color);
+  flex-shrink: 0;
+}
+
+.stage-actions {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.btn-icon-sm {
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--border-color);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all $transition-fast ease;
+
+  i {
+    font-size: 0.75rem;
+  }
+
+  &:hover {
+    border-color: $accent;
+    color: $accent;
+  }
+
+  &.btn-danger:hover {
+    border-color: $error;
+    color: $error;
+  }
+}
+
+// =============================================================================
+// Empty States
+// =============================================================================
+
+.stages-empty {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-tertiary);
+
+  i {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+  }
+
+  p {
+    font-size: 0.875rem;
+    margin: 0;
+  }
+}
+
+.empty-state {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 4rem 2rem;
+  background: var(--bg-primary);
+  border: 3px dashed var(--border-color);
+
+  i {
+    font-size: 4rem;
+    color: var(--text-tertiary);
+    opacity: 0.3;
+    margin-bottom: 1.5rem;
+    display: block;
+  }
+
+  h3 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    font-family: $font-display;
+    text-transform: uppercase;
+    color: var(--text-primary);
+    margin: 0 0 0.5rem 0;
+    letter-spacing: 0.02em;
+  }
+
+  p {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin: 0 0 1.5rem 0;
+  }
+}
+
+// =============================================================================
+// Responsive Breakpoints
+// =============================================================================
+
+@media (max-width: $breakpoint-lg) {
+  .pipelines-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .pipeline-header {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .pipeline-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}
+
+@media (max-width: $breakpoint-md) {
+  .stage-item {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .stage-color {
+    order: -1;
+  }
+
+  .stage-handle {
+    order: -2;
+  }
+}
+
+@media (max-width: $breakpoint-sm) {
+  .pipelines-grid {
+    gap: 1rem;
+  }
+
+  .stages-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .btn-add-stage {
+    width: 100%;
+    justify-content: center;
+  }
+}

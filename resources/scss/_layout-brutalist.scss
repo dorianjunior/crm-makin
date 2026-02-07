@@ -28,7 +28,7 @@
 
 .layout-main {
   position: relative;
-  z-index: $z-content;
+  z-index: var(--z-content);
   padding: 0 1.5rem 2.5rem;
   overflow-x: hidden;
 }
@@ -58,6 +58,72 @@
 }
 
 // =============================================================================
+// Page Container (Padrão para todas as páginas)
+// =============================================================================
+
+.page-container {
+  padding: 2rem;
+
+  @media (max-width: $breakpoint-md) {
+    padding: 1rem;
+  }
+}
+
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  gap: 1rem;
+
+  @media (max-width: $breakpoint-md) {
+    flex-direction: column;
+  }
+}
+
+.page-title {
+  font-size: 2rem;
+  font-weight: 800;
+  font-family: $font-display;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: var(--text-primary);
+  margin: 0 0 0.5rem 0;
+  line-height: 1.2;
+
+  @media (max-width: $breakpoint-md) {
+    font-size: 1.5rem;
+  }
+}
+
+.page-subtitle {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.page-header__actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-shrink: 0;
+
+  @media (max-width: $breakpoint-md) {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+// =============================================================================
+// Content Grid (Para páginas de detalhes)
+// =============================================================================
+
+.content-grid {
+  display: grid;
+  gap: 1.5rem;
+}
+
+// =============================================================================
 // Custom Scrollbar for Main Content
 // =============================================================================
 
@@ -71,18 +137,18 @@ main::-webkit-scrollbar-track {
 }
 
 main::-webkit-scrollbar-thumb {
-  background: var(--scrollbar-thumb, #cbd5e0);
+  background: var(--scrollbar-thumb);
   border-radius: 4px;
 }
 
 main::-webkit-scrollbar-thumb:hover {
-  background: var(--scrollbar-thumb-hover, #a0aec0);
+  background: var(--scrollbar-thumb-hover);
 }
 
 // Firefox scrollbar
 main {
   scrollbar-width: thin;
-  scrollbar-color: var(--scrollbar-thumb, #cbd5e0) transparent;
+  scrollbar-color: var(--scrollbar-thumb) transparent;
 }
 
 // =============================================================================

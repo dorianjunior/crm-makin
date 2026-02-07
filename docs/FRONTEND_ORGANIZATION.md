@@ -1,7 +1,7 @@
 # Frontend Architecture & Design System - CRM Makin
 
-**Design Philosophy:** Data Brutalism - Editorial Brutalist Style  
-**DFII Score:** 13/15 (Excellent)  
+**Design Philosophy:** Data Brutalism - Editorial Brutalist Style
+**DFII Score:** 13/15 (Excellent)
 **Última atualização:** 2026-02-07
 
 > **🆕 ÚLTIMA REFATORAÇÃO:** MainLayout migrado para SCSS global (_layout-brutalist.scss)
@@ -9,7 +9,7 @@
 
 ## 📐 Filosofia de Design
 
-Dashboard CRM com **tipografia oversized estrutural**, **layout assimétrico** e **paleta monocromática** + accent color único. 
+Dashboard CRM com **tipografia oversized estrutural**, **layout assimétrico** e **paleta monocromática** + accent color único.
 
 ### Princípios Core:
 - 🔢 Números gigantes (64px) dominam stat cards
@@ -120,6 +120,8 @@ resources/scss/
 ├── _components-brutalist.scss        # Timeline, pagination, etc
 ├── _utilities-brutalist.scss         # Classes utilitárias
 │
+├── _pipelines.scss                   # ✅ Pipelines page-specific
+├── _leads.scss                       # ✅ Leads page-specific
 ├── _sweetalert.scss                  # SweetAlert customizado
 └── _utilities.scss                   # Utilitários gerais
 ```
@@ -128,16 +130,102 @@ resources/scss/
 
 | Arquivo | Linhas | Propósito | Prioridade |
 |---------|--------|-----------|------------|
-| `_data-brutalism.scss` | ~390 | Componentes core | **Crítico** |
-| `_forms-brutalist.scss` | ~130 | Formulários | Alta |
-| `_layout-brutalist.scss` | ~100 | Layouts | Alta |
+| `_data-brutalism.scss` | ~470 | Componentes core + info-grid | **Crítico** |
+| `_forms-brutalist.scss` | ~230 | Formulários + form-grid | Alta |
+| `_layout-brutalist.scss` | ~235 | Layouts + page-* classes | **Crítico** |
 | `_components-brutalist.scss` | ~210 | Timeline, pagination | Alta |
 | `_utilities-brutalist.scss` | ~100 | Utilitários | Média |
 | `_navbar.scss` | ~470 | Navbar | Alta |
 | `_sidebar.scss` | ~190 | Sidebar | Alta |
+| `_pipelines.scss` | ~450 | Página Pipelines (específico) | Baixa |
+| `_leads.scss` | ~220 | Páginas Leads (específico) | Baixa |
 
-**Total Brutalist System:** ~1,590 linhas  
-**CSS Final:** ~112KB (compilado)
+**Total Brutalist System:** ~2,575 linhas  
+**CSS Final:** ~114KB (compilado)
+
+---
+
+## 📐 Classes Globais Padronizadas
+
+### Layout de Página (definidas em `_layout-brutalist.scss`)
+
+```scss
+.page-container          // Container principal (padding responsivo)
+.page-header             // Cabeçalho da página (flex, space-between)
+.page-title              // Título principal (2rem, Space Grotesk, uppercase)
+.page-subtitle           // Subtítulo (0.875rem, text-secondary)
+.page-header__actions    // Botões de ação no header
+.content-grid            // Grid para páginas de detalhes
+```
+
+### Componentes de Informação (definidas em `_data-brutalism.scss`)
+
+```scss
+.info-grid               // Grid responsivo para itens de info
+.info-item               // Container de item de informação
+.info-item__label        // Label com ícone (uppercase, 0.75rem)
+.info-item__value        // Valor da informação (0.875rem)
+.info-link               // Link com accent color
+```
+
+### Formulários (definidas em `_forms-brutalist.scss`)
+
+```scss
+.form-grid               // Grid 2 colunas para formulários
+.form-label              // Label de campo (0.875rem, font-weight: 600)
+.form-textarea           // Textarea com borda accent no focus
+.form-error              // Mensagem de erro (color: error)
+.form-section            // Seção de formulário com border-bottom
+.section-title           // Título de seção (1rem, Space Grotesk, com ícone)
+.form-actions            // Footer de ações do formulário
+.form-card               // Card wrapper para formulários
+```
+
+### Cards (definidas em `_data-brutalism.scss`)
+
+```scss
+.card                    // Card básico com border 2px
+.card__header            // Header do card com border-bottom
+.card__title             // Título do card (0.875rem, uppercase)
+.card__body              // Corpo do card (padding 1.5rem)
+.card__footer            // Footer do card com border-top
+```
+
+---
+
+## 🎯 Convenções de Nomenclatura
+
+### Classes Globais vs Específicas
+
+**Usar em `_layout-brutalist.scss` (Global):**
+- Classes de estrutura de página: `.page-*`, `.layout-*`, `.content-*`
+- Aplicam-se a TODAS as páginas do sistema
+
+**Usar em `_forms-brutalist.scss` (Global):**
+- Classes de formulário: `.form-*`, `.section-*`
+- Aplicam-se a TODOS os formulários do sistema
+
+**Usar em `_data-brutalism.scss` (Global):**
+- Componentes reutilizáveis: `.card`, `.info-*`, `.btn`, `.badge`
+- Aplicam-se em MÚLTIPLAS páginas
+
+**Usar em `_[pagename].scss` (Específico):**
+- Classes únicas da página: `.pipelines-grid`, `.pipeline-card`
+- Estilos que aparecem em APENAS UMA página ou feature
+- Exemplo: `.refresh-controls` (só em Leads), `.stages-container` (só em Pipelines)
+
+### Regra de Ouro
+
+> "Se 3 ou mais páginas usam, é global. Se só 1-2 páginas usam, é específico."
+
+---
+| `_navbar.scss` | ~470 | Navbar | Alta |
+| `_sidebar.scss` | ~190 | Sidebar | Alta |
+| `_pipelines.scss` | ~450 | Página Pipelines | Média |
+| `_leads.scss` | ~520 | Páginas Leads | Média |
+
+**Total Brutalist System:** ~2,630 linhas
+**CSS Final:** ~125KB (compilado)
 
 ---
 
@@ -889,9 +977,45 @@ Ao fazer mudanças:
 - 🎯 Consistência: 100% - todos estilos centralizados
 - 🔧 Manutenibilidade: Melhorada - única fonte de verdade
 
+---
+
+### 2026-02-07: Refatoração do Pipelines/Index.vue ✅
+
+**Objetivo:** Migrar estilos específicos da página Pipelines para SCSS global, seguindo padrão estabelecido.
+
+**Mudanças:**
+
+1. **Pipelines/Index.vue**
+   - ✅ Removido: Wrapper `.page-container` desnecessário
+   - ✅ Atualizado: `.page-title` → `.layout-title` (classe global)
+   - ✅ Adicionado: Comentário apontando para `_pipelines.scss`
+   - 📦 Resultado: Template mais limpo e consistente
+
+2. **_pipelines.scss** (NOVO)
+   - ✅ Criado: Arquivo específico para página Pipelines (450+ linhas)
+   - ✅ Classes:
+     - `.pipelines-grid` - Grid responsivo de pipelines
+     - `.pipeline-card` - Card individual de pipeline
+     - `.pipeline-header`, `.pipeline-stats` - Seções do card
+     - `.stages-container`, `.stages-list` - Container de estágios
+     - `.stage-item` - Item de estágio (draggable)
+     - `.empty-state` - Estado vazio
+   - ✅ Suporte a drag & drop (VueDraggable)
+   - ✅ Responsive breakpoints completos
+   - 📏 Princípios brutalist: borders de 2-3px, cores limitadas, tipografia uppercase
+
+3. **app.scss**
+   - ✅ Adicionado: `@use 'pipelines';`
+
+**Impacto:**
+- 📦 CSS Bundle: 113.60 KB → **118.91 KB** (+5.31 KB)
+- ⚡ Build time: ~25s → ~34s (carga do novo arquivo)
+- 🎯 Código específico: Isolado em arquivo dedicado
+- 🔧 Manutenibilidade: Estilos de Pipelines centralizados
+
 **Próximas páginas para refatorar:**
 1. ✅ Leads/Index.vue (já refatorado - referência)
-2. 🔄 Pipelines/Index.vue
+2. ✅ Pipelines/Index.vue (CONCLUÍDO)
 3. 🔄 Activities/Index.vue
 4. 🔄 Tasks/Index.vue
 5. 🔄 Products/Index.vue
@@ -1034,19 +1158,56 @@ ls -lh public/build/assets/*.css # CSS < 150KB
 **Solução:** Verificar ordem de importação no `app.scss`. Específicos devem vir depois de gerais.
 
 ### Problema: "Build lento"
-**Solução:** 
+**Solução:**
 1. Verificar imports circulares
 2. Remover `@import` antigos (usar `@use`)
 3. Evitar deep nesting (> 4 níveis)
 
 ### Problema: "Componente Vue não encontrado"
-**Solução:** 
+**Solução:**
 1. Verificar export em `Components/index.js`
 2. Usar import correto: `import { Button } from '@/Components'`
 
 ---
 
-## 📖 Referências Rápidas
+## � Histórico de Refatorações
+
+### 2026-02-07: Refatoração das Páginas Leads ✅
+
+**Arquivos Criados:**
+- `resources/scss/_leads.scss` (~520 linhas)
+
+**Páginas Refatoradas:**
+- ✅ `Leads/Index.vue` - Removido 130 linhas de scoped styles
+- ✅ `Leads/Show.vue` - Removido 140 linhas de scoped styles
+- ✅ `Leads/Create.vue` - Removido 60 linhas de scoped styles
+- ✅ `Leads/Edit.vue` - Removido 60 linhas de scoped styles
+- ℹ️ `Leads/Form.vue` - Já seguia o padrão (sem scoped styles)
+
+**Estilos Consolidados:**
+- `.page-container`, `.page-header`, `.page-title` - Estrutura básica
+- `.refresh-controls`, `.refresh-time` - Controles específicos Index
+- `.filters-grid` - Grade de filtros
+- `.table__header`, `.cell-*`, `.action-buttons` - Estilos de tabela
+- `.info-grid`, `.info-item`, `.action-card` - Página de detalhes
+- `.form-grid`, `.form-label`, `.form-textarea` - Formulários
+- `.lead-form`, `.form-section`, `.section-title` - Form avançado
+
+**Impacto:**
+- ✅ Build: 27.61s (estável)
+- ✅ CSS: 124.69 KB (+5.78 KB vs Pipelines)
+- ✅ ~390 linhas removidas dos componentes Vue
+- ✅ Todas as páginas Leads agora usam SCSS global
+
+**Próximas páginas:**
+- [ ] Activities/Index.vue
+- [ ] Tasks/Index.vue
+- [ ] Products/Index.vue
+- [ ] Proposals/Index.vue
+
+---
+
+## �📖 Referências Rápidas
 
 ### Comandos Úteis
 ```bash
@@ -1064,6 +1225,6 @@ grep -r "classe" resources/scss/  # Buscar classe CSS
 
 ---
 
-**Mantido por:** GitHub Copilot (Claude Sonnet 4.5)  
-**Última atualização:** 2026-02-07  
+**Mantido por:** GitHub Copilot (Claude Sonnet 4.5)
+**Última atualização:** 2026-02-07
 **Próxima revisão:** 2026-05-07
