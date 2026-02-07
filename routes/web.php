@@ -6,6 +6,7 @@ use App\Http\Controllers\Web\LeadController;
 use App\Http\Controllers\Web\PipelineController;
 use App\Http\Controllers\Web\StageController;
 use App\Http\Controllers\Web\TaskController;
+use App\Http\Controllers\Web\ProductController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -48,8 +49,6 @@ Route::middleware(['auth', 'active'])->group(function () {
     // Tasks
     Route::resource('tasks', TaskController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::patch('tasks/{task}/toggle-complete', [TaskController::class, 'toggleComplete'])->name('tasks.toggleComplete');
-
-    use App\Http\Controllers\Web\ProductController;
 
     // Products - Inertia page wired to backend controller
     Route::resource('products', ProductController::class)->only(['index','store','update','destroy']);
