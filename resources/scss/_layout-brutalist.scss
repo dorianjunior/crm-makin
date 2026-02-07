@@ -4,9 +4,94 @@
 
 @use 'variables' as *;
 
+// =============================================================================
+// Main Layout Structure
+// =============================================================================
+
+.layout-root {
+  min-height: 100vh;
+  background-color: var(--bg-secondary);
+  position: relative;
+}
+
+.layout-shell {
+  min-height: 100vh;
+  padding-left: var(--sidebar-open);
+  padding-top: calc(var(--navbar-height) + 1rem);
+  transition: padding $transition-normal ease;
+  width: 100%;
+
+  &--closed {
+    padding-left: var(--sidebar-closed);
+  }
+}
+
+.layout-main {
+  position: relative;
+  z-index: $z-content;
+  padding: 0 1.5rem 2.5rem;
+  overflow-x: hidden;
+}
+
+.layout-breadcrumbs {
+  margin-bottom: 1rem;
+}
+
+.layout-header {
+  margin-bottom: 1.5rem;
+}
+
+.layout-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  font-family: $font-display;
+  color: var(--text-primary);
+  line-height: 1.2;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.layout-content {
+  background: var(--bg-primary);
+  padding: 1.5rem;
+  border: 2px solid var(--border-color);
+}
+
+// =============================================================================
+// Custom Scrollbar for Main Content
+// =============================================================================
+
+main::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+main::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+main::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb, #cbd5e0);
+  border-radius: 4px;
+}
+
+main::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover, #a0aec0);
+}
+
+// Firefox scrollbar
+main {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb, #cbd5e0) transparent;
+}
+
+// =============================================================================
+// Page Components
+// =============================================================================
+
 // Filters Card (filter sections)
 .filters-card {
-  background: #fff;
+  background: var(--bg-primary);
   border: 2px solid var(--border-color);
   padding: 1.5rem;
   margin-bottom: 2rem;
@@ -28,7 +113,7 @@
 
 // Content Card (generic card with border)
 .content-card {
-  background: #fff;
+  background: var(--bg-primary);
   border: 4px solid #000;
   padding: 2rem;
 
@@ -51,12 +136,25 @@
   }
 }
 
-// Responsive breakpoints
-@media (max-width: 768px) {
-  .page-header {
-    .page-title {
-      font-size: 1.5rem;
-    }
+// =============================================================================
+// Responsive Breakpoints
+// =============================================================================
+
+@media (max-width: $breakpoint-lg) {
+  .layout-shell,
+  .layout-shell--closed {
+    padding-left: 0;
+    padding-top: calc(var(--navbar-height) + 0.75rem);
+  }
+
+  .layout-main {
+    padding: 0 1rem 2rem;
+  }
+}
+
+@media (max-width: $breakpoint-md) {
+  .layout-title {
+    font-size: 1.5rem;
   }
 
   .filters-card .filters-grid {
@@ -69,10 +167,8 @@
   }
 }
 
-@media (max-width: 480px) {
-  .page-header {
-    .page-title {
-      font-size: 1.25rem;
-    }
+@media (max-width: $breakpoint-sm) {
+  .layout-title {
+    font-size: 1.25rem;
   }
 }

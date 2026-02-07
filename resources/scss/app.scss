@@ -10,7 +10,8 @@
 @use 'mixins' as *;
 @use 'base';
 @use 'theme';
-@use 'components';
+@use 'navbar';
+@use 'sidebar';
 @use 'data-brutalism';
 @use 'forms-brutalist';
 @use 'layout-brutalist';
@@ -18,8 +19,6 @@
 @use 'utilities-brutalist';
 @use 'utilities';
 @use 'sweetalert';
-@use 'pipelines';
-@use 'activities';
 
 // Smooth scroll
 html {
