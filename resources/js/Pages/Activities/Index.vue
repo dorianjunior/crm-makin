@@ -28,6 +28,7 @@
                         <i class="fa fa-filter"></i>
                         <span>FILTROS</span>
                     </div>
+                    <Button variant="ghost" size="sm" @click="clearFilters">Limpar filtros</Button>
                 </div>
                 <div class="filters-grid">
                     <Input v-model="filters.search" placeholder="Buscar atividades..." icon="fa-search"
@@ -41,11 +42,6 @@
 
                     <Select v-model="filters.user_id" label="Usuário" :options="userOptions"
                         placeholder="Todos os usuários" @update:modelValue="loadActivities" />
-
-                    <button class="btn btn--secondary" @click="clearFilters">
-                        <i class="fas fa-times"></i>
-                        Limpar
-                    </button>
                 </div>
             </div>
 
@@ -135,6 +131,7 @@ import { ref, computed } from 'vue';
 import { router } from '@inertiajs/vue3';
 import { useAlert } from '@/composables/useAlert';
 import MainLayout from '@/Layouts/MainLayout.vue';
+import Button from '@/Components/Button.vue';
 import Input from '@/Components/Input.vue';
 import Select from '@/Components/Select.vue';
 import StatCard from '@/Components/StatCard.vue';

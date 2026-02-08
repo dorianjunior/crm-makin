@@ -206,6 +206,34 @@ export function useAlert() {
         });
     };
 
+    /**
+     * Prompt dialog (input field)
+     */
+    const prompt = (title, label, value = '', inputType = 'text', placeholder = '', readonly = false) => {
+        return Swal.fire({
+            ...getBaseConfig(true),
+            title,
+            input: inputType,
+            inputLabel: label,
+            inputValue: value,
+            inputPlaceholder: placeholder,
+            inputAttributes: {
+                readonly: readonly,
+            },
+            showCancelButton: !readonly,
+            showConfirmButton: !readonly,
+            confirmButtonText: readonly ? '' : 'Confirmar',
+            cancelButtonText: 'Cancelar',
+            closeButtonHtml: readonly ? '<i class="fas fa-times"></i>' : '',
+            showCloseButton: readonly,
+            inputValidator: (value) => {
+                if (!value && !readonly) {
+                    return 'Este campo é obrigatório';
+                }
+            },
+        });
+    };
+
     return {
         success,
         error,
@@ -216,5 +244,6 @@ export function useAlert() {
         loading,
         close,
         toast,
+        prompt,
     };
 }

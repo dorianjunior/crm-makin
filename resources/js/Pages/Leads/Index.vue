@@ -73,6 +73,7 @@
                         <i class="fa fa-filter"></i>
                         <span>FILTROS</span>
                     </div>
+                    <Button variant="ghost" size="sm" @click="clearFilters">Limpar filtros</Button>
                 </div>
                 <div class="filters-grid">
                     <Input v-model="localFilters.search" placeholder="Buscar por nome, email ou telefone..."
@@ -86,11 +87,6 @@
 
                     <Select v-model="localFilters.assigned_to" label="Responsável" :options="userOptions"
                         placeholder="Todos os responsáveis" @update:modelValue="loadLeads" />
-
-                    <button class="btn btn--secondary" @click="clearFilters">
-                        <i class="fas fa-times"></i>
-                        Limpar
-                    </button>
                 </div>
             </div>
 

@@ -74,4 +74,50 @@ class SiteService
 
         return $site->fresh();
     }
+
+    public function getForIndex(int $companyId, array $filters = [], int $perPage = 15)
+    {
+        $query = Site::where('company_id', $companyId)
+            ->with('company')
+            ->withCount(['pages', 'posts'])
+            ->orderBy('created_at', 'desc');
+
+        // Search filter
+        if (!empty($filters['search'])) {
+            $search = $filters['search'];
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('domain', 'like', "%{$search}%");
+            });
+        }
+
+        // Status filter
+        if (!empty($filters['status'])) {
+            $isActive = $filters['status'] === 'active';
+            $query->where('active', $isActive);
+        }
+
+        return $query->paginate($perPage);
+    }
+
+    public function getStats(int $companyId): array
+    {
+        $baseQuery = Site::where('company_id', $companyId);
+
+        return [
+            'total' => (clone $baseQuery)->count(),
+            'active' => (clone $baseQuery)->where('active', true)->count(),
+            'inactive' => (clone $baseQuery)->where('active', false)->count(),
+            'total_pages' => (clone $baseQuery)->withCount('pages')->get()->sum('pages_count'),
+            'total_posts' => (clone $baseQuery)->withCount('posts')->get()->sum('posts_count'),
+        ];
+    }
+
+    public function findByCompany(int $id, int $companyId)
+    {
+        return Site::where('id', $id)
+            ->where('company_id', $companyId)
+            ->with(['pages', 'posts', 'menus'])
+            ->first();
+    }
 }

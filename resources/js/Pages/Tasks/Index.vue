@@ -40,6 +40,7 @@
                         <i class="fa fa-filter"></i>
                         <span>FILTROS</span>
                     </div>
+                    <Button variant="ghost" size="sm" @click="clearFilters">Limpar filtros</Button>
                 </div>
 
                 <div class="filters-grid">
@@ -54,11 +55,6 @@
 
                     <Select v-model="filters.assigned_to" label="Responsável" :options="userOptions" placeholder="Todos"
                         @update:modelValue="loadTasks" />
-
-                    <button class="btn btn--secondary" @click="clearFilters" title="Limpar todos os filtros">
-                        <i class="fas fa-times"></i>
-                        Limpar
-                    </button>
                 </div>
 
                 <div v-if="hasActiveFilters" class="active-filters">

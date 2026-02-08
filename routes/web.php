@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\CMS\SiteController;
 use App\Http\Controllers\ProposalController;
 use App\Http\Controllers\Web\ActivityController;
 use App\Http\Controllers\Web\LeadController;
@@ -62,9 +63,10 @@ Route::middleware(['auth', 'active'])->group(function () {
     Route::get('proposals/{proposal}/download', [ProposalController::class, 'download'])->name('proposals.download');
 
     // CMS
-    Route::get('/sites', function () {
-        return Inertia::render('Sites/Index');
-    })->name('sites.index');
+    Route::resource('sites', SiteController::class)->only(['index','store','update','destroy']);
+    Route::post('sites/{site}/regenerate-api-key', [SiteController::class, 'regenerateApiKey'])->name('sites.regenerateApiKey');
+    Route::patch('sites/{site}/toggle-active', [SiteController::class, 'toggleActive'])->name('sites.toggleActive');
+
     Route::get('/pages', function () {
         return Inertia::render('Pages/Index');
     })->name('pages.index');

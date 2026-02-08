@@ -32,6 +32,7 @@
                         <i class="fa fa-filter"></i>
                         <span>FILTROS</span>
                     </div>
+                    <Button variant="ghost" size="sm" @click="clearFilters">Limpar filtros</Button>
                 </div>
                 <div class="filters-grid">
                     <Input v-model="filters.search" label="Buscar" placeholder="Nome ou SKU..." @input="loadProducts"
@@ -42,13 +43,6 @@
 
                     <Select v-model="filters.active" label="Status" :options="statusOptions"
                         @update:modelValue="loadProducts" />
-
-                    <div style="display: flex; align-items: flex-end;">
-                        <Button variant="secondary" @click="clearFilters">
-                            <i class="fa fa-times"></i>
-                            Limpar Filtros
-                        </Button>
-                    </div>
                 </div>
             </div>
 

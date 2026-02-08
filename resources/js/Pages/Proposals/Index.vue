@@ -31,6 +31,7 @@
                         <i class="fa fa-filter"></i>
                         <span>FILTROS</span>
                     </div>
+                    <Button variant="ghost" size="sm" @click="clearFilters">Limpar filtros</Button>
                 </div>
                 <div class="filters-grid">
                     <Input v-model="filters.search" placeholder="Buscar por lead ou número..." icon="fa-search"
@@ -41,11 +42,6 @@
 
                     <Select v-model="filters.period" :options="periodOptions" placeholder="Todos os períodos"
                         @change="loadProposals" />
-
-                    <Button variant="secondary" @click="clearFilters">
-                        <i class="fa fa-times"></i>
-                        Limpar Filtros
-                    </Button>
                 </div>
             </div>
 
