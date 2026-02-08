@@ -134,6 +134,31 @@ Cria **8 leads exemplo** com diferentes status:
 - William Garcia (new)
 - Sophia Rodriguez (contacted)
 
+### 10. ProposalSeeder
+Cria **10 propostas exemplo** com diferentes status e itens:
+
+#### Propostas por Status:
+- **Draft (2)**: Propostas em elaboração
+- **Sent (2)**: Propostas enviadas aguardando visualização
+- **Viewed (2)**: Propostas visualizadas pelo cliente
+- **Accepted (2)**: Propostas aceitas
+- **Rejected (1)**: Proposta recusada pelo cliente
+- **Expired (1)**: Proposta expirada
+
+#### Exemplos de Propostas:
+1. **PROP-2026-0001** - Consultoria + Gestão de Redes Sociais
+2. **PROP-2026-0002** - Website Institucional + SEO + Manutenção
+3. **PROP-2026-0003** - Sistema CRM + Treinamento + Manutenção
+4. **PROP-2026-0004** - Landing Page + Marketing (Aceita)
+5. **PROP-2026-0005** - E-commerce Completo + Dashboard (Aceita)
+
+Cada proposta inclui:
+- Número único (PROP-YYYY-NNNN)
+- Múltiplos itens (produtos/serviços)
+- Cálculo automático do valor total
+- Datas de validade
+- Notas descritivas
+
 ## 🚀 Como Usar
 
 ### Executar todos os seeders:
@@ -146,11 +171,38 @@ php artisan db:seed
 php artisan db:seed --class=PermissionSeeder
 php artisan db:seed --class=RoleSeeder
 php artisan db:seed --class=CompanySeeder
+php artisan db:seed --class=ProposalSeeder
 ```
 
 ### Resetar e popular novamente:
 ```bash
 php artisan migrate:fresh --seed
+```
+
+## 🐳 Executar no Docker
+
+### Via Makefile (recomendado):
+```bash
+# Executar todos os seeders
+make seed
+
+# Resetar banco e popular novamente (⚠️ apaga todos os dados!)
+make migrate-fresh
+
+# Executar instalação completa (primeira vez)
+make install
+```
+
+### Via Docker Compose:
+```bash
+# Executar seeders
+docker-compose exec app php artisan db:seed
+
+# Executar seeder específico
+docker-compose exec app php artisan db:seed --class=ProposalSeeder
+
+# Resetar e popular
+docker-compose exec app php artisan migrate:fresh --seed
 ```
 
 ## 📋 Ordem de Execução
@@ -166,6 +218,7 @@ A ordem é importante devido às dependências:
 7. **ProductSeeder** - Depende de companies
 8. **MessageTemplateSeeder** - Depende de companies
 9. **LeadSeeder** - Depende de companies, sources e users
+10. **ProposalSeeder** - Depende de leads e products
 
 ## 🔑 Credenciais de Teste
 
@@ -188,8 +241,32 @@ Após executar os seeders, o banco terá:
 - ✅ 6 Pipelines (2 por empresa)
 - ✅ 30 Pipeline Stages
 - ✅ 36 Lead Sources (12 por empresa)
-- ✅ 8 Products
+- ✅ 8 Products (por empresa)
 - ✅ 8 Message Templates
 - ✅ 8 Leads
+- ✅ 10 Proposals (com ~30 itens)
 
-**Total: ~170+ registros criados**
+**Total: ~200+ registros criados**
+
+## 💡 Dicas
+
+### Para desenvolvimento:
+```bash
+# No Docker (via Makefile)
+make migrate-fresh  # Recria banco com seeders
+
+# Em modo watch para desenvolvimento
+make dev
+```
+
+### Para testar propostas:
+1. Execute `make seed` ou `make migrate-fresh`
+2. Faça login com `admin@demo.com` / `password`
+3. Navegue até a seção de Propostas
+4. Veja as 10 propostas criadas com diferentes status
+
+### Personalizar dados:
+Para adicionar suas próprias propostas de teste, edite:
+- `database/seeders/ProposalSeeder.php`
+- Adicione novos itens ao array `$proposalsData`
+- Execute: `make seed` ou `docker-compose exec app php artisan db:seed --class=ProposalSeeder`
