@@ -21,6 +21,18 @@
                 </div>
             </div>
 
+            <!-- Stats -->
+            <div class="stats-grid">
+                <StatCard title="Total de Tarefas" :value="stats.total" icon="fa fa-tasks" color="blue"
+                    @click="showComingSoon('Detalhes de Tarefas')" />
+                <StatCard title="Pendentes" :value="stats.pending" icon="fa fa-clock" color="orange"
+                    @click="showComingSoon('Filtrar Pendentes')" />
+                <StatCard title="Em Andamento" :value="stats.in_progress" icon="fa fa-spinner" color="purple"
+                    @click="showComingSoon('Filtrar Em Andamento')" />
+                <StatCard title="Concluídas" :value="stats.completed" icon="fa fa-check-circle" color="green"
+                    @click="showComingSoon('Filtrar Concluídas')" />
+            </div>
+
             <!-- Filters -->
             <div class="filters-card">
                 <div class="filters-header">
@@ -28,40 +40,20 @@
                         <i class="fa fa-filter"></i>
                         <span>FILTROS</span>
                     </div>
-                    <div class="view-toggles">
-                        <button
-                            :class="['view-toggle', { active: viewMode === 'grid' }]"
-                            @click="viewMode = 'grid'"
-                            title="Visualização em Grade">
-                            <i class="fa fa-th-large"></i>
-                        </button>
-                        <button
-                            :class="['view-toggle', { active: viewMode === 'calendar' }]"
-                            @click="showComingSoon('Visualização em Calendário')"
-                            title="Visualização em Calendário">
-                            <i class="fa fa-calendar-alt"></i>
-                        </button>
-                        <button
-                            :class="['view-toggle', { active: viewMode === 'list' }]"
-                            @click="showComingSoon('Visualização em Lista')"
-                            title="Visualização em Lista">
-                            <i class="fa fa-list"></i>
-                        </button>
-                    </div>
                 </div>
 
                 <div class="filters-grid">
-                    <Input v-model="filters.search" placeholder="Buscar tarefas..."
-                        icon="fa-search" @input="debouncedSearch" />
+                    <Input v-model="filters.search" placeholder="Buscar tarefas..." icon="fa-search"
+                        @input="debouncedSearch" />
 
-                    <Select v-model="filters.status" label="Status" :options="statusOptions"
-                        placeholder="Todos" @update:modelValue="loadTasks" />
+                    <Select v-model="filters.status" label="Status" :options="statusOptions" placeholder="Todos"
+                        @update:modelValue="loadTasks" />
 
-                    <Select v-model="filters.priority" label="Prioridade" :options="priorityOptions"
-                        placeholder="Todas" @update:modelValue="loadTasks" />
+                    <Select v-model="filters.priority" label="Prioridade" :options="priorityOptions" placeholder="Todas"
+                        @update:modelValue="loadTasks" />
 
-                    <Select v-model="filters.assigned_to" label="Responsável" :options="userOptions"
-                        placeholder="Todos" @update:modelValue="loadTasks" />
+                    <Select v-model="filters.assigned_to" label="Responsável" :options="userOptions" placeholder="Todos"
+                        @update:modelValue="loadTasks" />
 
                     <button class="btn btn--secondary" @click="clearFilters" title="Limpar todos os filtros">
                         <i class="fas fa-times"></i>
@@ -90,16 +82,22 @@
                 </div>
             </div>
 
-            <!-- Stats -->
-            <div class="stats-grid">
-                <StatCard title="Total de Tarefas" :value="stats.total" icon="fa fa-tasks" color="blue"
-                    @click="showComingSoon('Detalhes de Tarefas')" />
-                <StatCard title="Pendentes" :value="stats.pending" icon="fa fa-clock" color="orange"
-                    @click="showComingSoon('Filtrar Pendentes')" />
-                <StatCard title="Em Andamento" :value="stats.in_progress" icon="fa fa-spinner" color="purple"
-                    @click="showComingSoon('Filtrar Em Andamento')" />
-                <StatCard title="Concluídas" :value="stats.completed" icon="fa fa-check-circle" color="green"
-                    @click="showComingSoon('Filtrar Concluídas')" />
+            <!-- View Toggle -->
+            <div class="view-controls">
+                <div class="view-toggle">
+                    <button :class="['toggle-btn', { active: viewMode === 'grid' }]" @click="viewMode = 'grid'"
+                        title="Visualização em Grade">
+                        <i class="fa fa-th-large"></i>
+                    </button>
+                    <button :class="['toggle-btn', { active: viewMode === 'calendar' }]"
+                        @click="showComingSoon('Visualização em Calendário')" title="Visualização em Calendário">
+                        <i class="fa fa-calendar-alt"></i>
+                    </button>
+                    <button :class="['toggle-btn', { active: viewMode === 'list' }]"
+                        @click="showComingSoon('Visualização em Lista')" title="Visualização em Lista">
+                        <i class="fa fa-list"></i>
+                    </button>
+                </div>
             </div>
 
             <!-- Tasks Grid -->
@@ -114,7 +112,9 @@
                     </div>
                     <h2 class="empty-state__title">NENHUMA TAREFA ENCONTRADA</h2>
                     <p class="empty-state__subtitle">
-                        {{ hasActiveFilters ? 'Nenhuma tarefa corresponde aos filtros aplicados' : 'Crie sua primeira tarefa para começar a organizar seu trabalho' }}
+                        {{ hasActiveFilters ?
+                        'Nenhuma tarefa corresponde aos filtros aplicados' :
+                        'Crie sua primeira tarefa para começar a organizar seu trabalho' }}
                     </p>
 
                     <div class="empty-state__actions">
@@ -203,82 +203,75 @@
                 </div>
 
                 <!-- Pagination -->
-                <Pagination
-                    v-if="tasks.data.length > 0"
-                    :from="tasks.from"
-                    :to="tasks.to"
-                    :total="tasks.total"
-                    :current-page="tasks.current_page"
-                    :last-page="tasks.last_page"
-                    @page-change="changePage"
-                />
+                <Pagination v-if="tasks.data.length > 0" :from="tasks.from" :to="tasks.to" :total="tasks.total"
+                    :current-page="tasks.current_page" :last-page="tasks.last_page" @page-change="changePage" />
             </div>
 
             <!-- Modal de criação/edição de tarefa -->
-        <Modal v-model:visible="showTaskModal" :title="editingTask ? 'Editar Tarefa' : 'Nova Tarefa'" size="large"
-            @confirm="saveTask">
-            <div class="modal-form">
-                <div class="form-group">
-                    <label class="required">Título</label>
-                    <Input v-model="taskForm.title" placeholder="Digite o título da tarefa" />
-                </div>
-
-                <div class="form-group">
-                    <label>Descrição</label>
-                    <textarea v-model="taskForm.description" class="form-textarea"
-                        placeholder="Descreva os detalhes da tarefa..." rows="4"></textarea>
-                </div>
-
-                <div class="form-row">
+            <Modal v-model:visible="showTaskModal" :title="editingTask ? 'Editar Tarefa' : 'Nova Tarefa'" size="large"
+                @confirm="saveTask">
+                <div class="modal-form">
                     <div class="form-group">
-                        <label class="required">Status</label>
-                        <select v-model="taskForm.status" class="form-select">
-                            <option value="pending">Pendente</option>
-                            <option value="in_progress">Em Andamento</option>
-                            <option value="completed">Concluída</option>
-                            <option value="cancelled">Cancelada</option>
-                        </select>
+                        <label class="required">Título</label>
+                        <Input v-model="taskForm.title" placeholder="Digite o título da tarefa" />
                     </div>
 
                     <div class="form-group">
-                        <label class="required">Prioridade</label>
-                        <select v-model="taskForm.priority" class="form-select">
-                            <option value="low">Baixa</option>
-                            <option value="medium">Média</option>
-                            <option value="high">Alta</option>
-                            <option value="urgent">Urgente</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Data de Vencimento</label>
-                        <Input v-model="taskForm.due_date" type="datetime-local" />
+                        <label>Descrição</label>
+                        <textarea v-model="taskForm.description" class="form-textarea"
+                            placeholder="Descreva os detalhes da tarefa..." rows="4"></textarea>
                     </div>
 
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="required">Status</label>
+                            <select v-model="taskForm.status" class="form-select">
+                                <option value="pending">Pendente</option>
+                                <option value="in_progress">Em Andamento</option>
+                                <option value="completed">Concluída</option>
+                                <option value="cancelled">Cancelada</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="required">Prioridade</label>
+                            <select v-model="taskForm.priority" class="form-select">
+                                <option value="low">Baixa</option>
+                                <option value="medium">Média</option>
+                                <option value="high">Alta</option>
+                                <option value="urgent">Urgente</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Data de Vencimento</label>
+                            <Input v-model="taskForm.due_date" type="datetime-local" />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Responsável</label>
+                            <select v-model="taskForm.assigned_to" class="form-select">
+                                <option value="">Nenhum</option>
+                                <option v-for="user in users" :key="user.id" :value="user.id">
+                                    {{ user.name }}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+
                     <div class="form-group">
-                        <label>Responsável</label>
-                        <select v-model="taskForm.assigned_to" class="form-select">
+                        <label>Lead Relacionado</label>
+                        <select v-model="taskForm.lead_id" class="form-select">
                             <option value="">Nenhum</option>
-                            <option v-for="user in users" :key="user.id" :value="user.id">
-                                {{ user.name }}
+                            <option v-for="lead in leads" :key="lead.id" :value="lead.id">
+                                {{ lead.name }}
                             </option>
                         </select>
                     </div>
                 </div>
-
-                <div class="form-group">
-                    <label>Lead Relacionado</label>
-                    <select v-model="taskForm.lead_id" class="form-select">
-                        <option value="">Nenhum</option>
-                        <option v-for="lead in leads" :key="lead.id" :value="lead.id">
-                            {{ lead.name }}
-                        </option>
-                    </select>
-                </div>
-            </div>
-        </Modal>
+            </Modal>
         </div>
     </MainLayout>
 </template>
@@ -341,9 +334,9 @@ const userOptions = computed(() => [
 
 const hasActiveFilters = computed(() => {
     return filters.value.search ||
-           filters.value.status ||
-           filters.value.priority ||
-           filters.value.assigned_to;
+        filters.value.status ||
+        filters.value.priority ||
+        filters.value.assigned_to;
 });
 
 const getUserName = (userId) => {
@@ -398,7 +391,8 @@ const changePage = (page) => {
     });
 };
 
-const resetTaskForm = () => {    taskForm.value = {
+const resetTaskForm = () => {
+    taskForm.value = {
         title: '',
         description: '',
         status: 'pending',

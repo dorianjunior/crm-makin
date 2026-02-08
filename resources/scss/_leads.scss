@@ -60,25 +60,6 @@
 }
 
 // =============================================================================
-// Filters Grid (Index page - específico de Leads)
-// =============================================================================
-
-.filters-grid {
-  display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr auto;
-  gap: 1rem;
-  align-items: end;
-
-  @media (max-width: $breakpoint-xl) {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  @media (max-width: $breakpoint-md) {
-    grid-template-columns: 1fr;
-  }
-}
-
-// =============================================================================
 // Table Cells (Index page - específico de Leads)
 // =============================================================================
 

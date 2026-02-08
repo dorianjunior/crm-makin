@@ -68,6 +68,12 @@
 
             <!-- Filters -->
             <div class="filters-card">
+                <div class="filters-header">
+                    <div class="filters-title">
+                        <i class="fa fa-filter"></i>
+                        <span>FILTROS</span>
+                    </div>
+                </div>
                 <div class="filters-grid">
                     <Input v-model="localFilters.search" placeholder="Buscar por nome, email ou telefone..."
                         icon="fa-search" @input="debouncedSearch" />

@@ -155,26 +155,76 @@ main {
 // Page Components
 // =============================================================================
 
-// Filters Card (filter sections)
-.filters-card {
-  background: var(--bg-primary);
-  border: 2px solid var(--border-color);
-  padding: 1.5rem;
-  margin-bottom: 2rem;
-
-  .filters-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1.5rem;
-  }
-}
-
 // Stats Grid (metrics cards layout)
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 1.5rem;
   margin-bottom: 2rem;
+}
+
+// Filters Card (filter sections)
+.filters-card {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.filters-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr auto;
+  gap: 1rem;
+  align-items: end;
+
+  @media (max-width: $breakpoint-lg) {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  @media (max-width: $breakpoint-md) {
+    grid-template-columns: 1fr;
+  }
+}
+
+// View Controls (grid/list toggle)
+.view-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.view-toggle {
+  display: inline-flex;
+  gap: 0;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+
+  .toggle-btn {
+    background: var(--bg-primary);
+    border: none;
+    border-right: 1px solid var(--border-color);
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    color: var(--text-secondary);
+    transition: all $transition-fast;
+    font-size: 1rem;
+
+    &:last-child {
+      border-right: none;
+    }
+
+    &:hover {
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+    }
+
+    &.active {
+      background: $accent;
+      color: #fff;
+    }
+  }
 }
 
 // Content Card (generic card with border)
@@ -221,11 +271,6 @@ main {
 @media (max-width: $breakpoint-md) {
   .layout-title {
     font-size: 1.5rem;
-  }
-
-  .filters-card .filters-grid {
-    grid-template-columns: 1fr;
-    gap: 1rem;
   }
 
   .stats-grid {

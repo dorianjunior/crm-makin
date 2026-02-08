@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\ProposalController;
 use App\Http\Controllers\Web\ActivityController;
 use App\Http\Controllers\Web\LeadController;
 use App\Http\Controllers\Web\PipelineController;
@@ -53,9 +54,12 @@ Route::middleware(['auth', 'active'])->group(function () {
     // Products - Inertia page wired to backend controller
     Route::resource('products', ProductController::class)->only(['index','store','update','destroy']);
     Route::post('products/{product}/duplicate', [ProductController::class, 'duplicate'])->name('products.duplicate');
-    Route::get('/proposals', function () {
-        return Inertia::render('Proposals/Index');
-    })->name('proposals.index');
+
+    // Proposals - Inertia page wired to backend controller
+    Route::resource('proposals', ProposalController::class)->only(['index','store','update','destroy']);
+    Route::post('proposals/{proposal}/duplicate', [ProposalController::class, 'duplicate'])->name('proposals.duplicate');
+    Route::post('proposals/{proposal}/send', [ProposalController::class, 'send'])->name('proposals.send');
+    Route::get('proposals/{proposal}/download', [ProposalController::class, 'download'])->name('proposals.download');
 
     // CMS
     Route::get('/sites', function () {

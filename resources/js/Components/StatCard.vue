@@ -1,7 +1,13 @@
 <script setup>
-defineProps({
+import { computed } from 'vue';
+
+const props = defineProps({
     title: String,
     value: [String, Number],
+    fontSize: {
+        type: String,
+        default: '64px',
+    },
     icon: String,
     iconColor: {
         type: String,
@@ -10,6 +16,18 @@ defineProps({
     trend: String,
     trendValue: String,
     trendUp: Boolean,
+});
+
+// Auto-adjust font size based on value length
+const dynamicFontSize = computed(() => {
+    const valueStr = String(props.value || '');
+    const length = valueStr.length;
+
+    if (length <= 6) return '64px';
+    if (length <= 10) return '48px';
+    if (length <= 15) return '36px';
+    if (length <= 20) return '28px';
+    return '22px';
 });
 </script>
 
@@ -21,7 +39,7 @@ defineProps({
         </div>
 
         <div class="stat__label">{{ title }}</div>
-        <div class="stat__number">{{ value }}</div>
+        <div class="stat__number" :style="{ fontSize: dynamicFontSize }">{{ value }}</div>
 
         <div v-if="trend" class="stat__trend">
             <span :class="['stat__trend-value', trendUp ? 'is-up' : 'is-down']">
@@ -98,6 +116,8 @@ defineProps({
     line-height: 1;
     color: var(--text-primary);
     transition: color 180ms ease;
+    word-break: break-word;
+    max-width: calc(100% - 60px);
 }
 
 .stat:hover .stat__number { color: #ff6b35; }

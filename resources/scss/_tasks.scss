@@ -28,40 +28,6 @@
   }
 }
 
-// View Toggles
-.view-toggles {
-  display: flex;
-  gap: 0.25rem;
-  background: var(--bg-secondary);
-  padding: 0.25rem;
-  border: 2px solid var(--border-color);
-}
-
-.view-toggle {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  border: 2px solid transparent;
-  background: transparent;
-  color: var(--text-secondary);
-  cursor: pointer;
-  transition: all 180ms ease;
-  font-size: 0.875rem;
-
-  &:hover:not(.active) {
-    background: var(--bg-tertiary);
-    color: var(--text-primary);
-  }
-
-  &.active {
-    background: var(--bg-primary);
-    border-color: var(--color-accent);
-    color: var(--color-accent);
-  }
-}
-
 // Active Filters Tags
 .active-filters {
   display: flex;

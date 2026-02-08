@@ -13,8 +13,22 @@
                 </div>
             </div>
 
+            <!-- Stats -->
+            <div class="stats-grid">
+                <StatCard title="Total de Atividades" :value="stats.total" icon="fa fa-clipboard-list" color="blue" />
+                <StatCard title="Hoje" :value="stats.today" icon="fa fa-calendar-day" color="green" />
+                <StatCard title="Esta Semana" :value="stats.this_week" icon="fa fa-calendar-week" color="purple" />
+                <StatCard title="Este Mês" :value="stats.this_month" icon="fa fa-calendar" color="orange" />
+            </div>
+
             <!-- Filters -->
             <div class="filters-card">
+                <div class="filters-header">
+                    <div class="filters-title">
+                        <i class="fa fa-filter"></i>
+                        <span>FILTROS</span>
+                    </div>
+                </div>
                 <div class="filters-grid">
                     <Input v-model="filters.search" placeholder="Buscar atividades..." icon="fa-search"
                         @input="debouncedSearch" />
@@ -33,14 +47,6 @@
                         Limpar
                     </button>
                 </div>
-            </div>
-
-            <!-- Stats -->
-            <div class="stats-grid">
-                <StatCard title="Total de Atividades" :value="stats.total" icon="fa fa-clipboard-list" color="blue" />
-                <StatCard title="Hoje" :value="stats.today" icon="fa fa-calendar-day" color="green" />
-                <StatCard title="Esta Semana" :value="stats.this_week" icon="fa fa-calendar-week" color="purple" />
-                <StatCard title="Este Mês" :value="stats.this_month" icon="fa fa-calendar" color="orange" />
             </div>
 
             <!-- Timeline -->
@@ -116,15 +122,9 @@
                 </div>
 
                 <!-- Pagination -->
-                <Pagination
-                    v-if="activities.data.length > 0"
-                    :from="activities.from"
-                    :to="activities.to"
-                    :total="activities.total"
-                    :current-page="activities.current_page"
-                    :last-page="activities.last_page"
-                    @page-change="changePage"
-                />
+                <Pagination v-if="activities.data.length > 0" :from="activities.from" :to="activities.to"
+                    :total="activities.total" :current-page="activities.current_page" :last-page="activities.last_page"
+                    @page-change="changePage" />
             </div>
         </div>
     </MainLayout>

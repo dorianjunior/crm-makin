@@ -116,20 +116,6 @@
   }
 }
 
-// Filter Item (label + form element)
-.filter-item {
-  label {
-    display: block;
-    text-transform: uppercase;
-    font-weight: 700;
-    font-size: 0.75rem;
-    letter-spacing: 0.5px;
-    margin-bottom: 0.5rem;
-    color: #000;
-    font-family: $font-display;
-  }
-}
-
 // Modal Form (specific form layouts)
 .modal-form {
   display: flex;
