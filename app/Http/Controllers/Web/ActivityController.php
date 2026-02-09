@@ -27,7 +27,7 @@ class ActivityController extends Controller
         $users = $this->activityService->getUsersForCompany($companyId);
         $stats = $this->activityService->getStats($companyId);
 
-        return Inertia::render('Activities/Index', [
+        return Inertia::render('CRM/Activities/Index', [
             'activities' => $activities,
             'leads' => $leads,
             'users' => $users,

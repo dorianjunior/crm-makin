@@ -25,7 +25,7 @@ class ProposalController extends Controller
         $proposals = $this->proposalService->getForIndex($companyId, $filters, 15);
         $stats = $this->proposalService->getStats($companyId);
 
-        return Inertia::render('Proposals/Index', [
+        return Inertia::render('CRM/Proposals/Index', [
             'proposals' => $proposals,
             'stats' => $stats,
             'filters' => $filters,

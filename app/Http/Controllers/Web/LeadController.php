@@ -65,7 +65,7 @@ class LeadController extends Controller
         $sources = LeadSource::where('company_id', $companyId)->get();
         $users = User::where('company_id', $companyId)->get();
 
-        return Inertia::render('Leads/Index', [
+        return Inertia::render('CRM/Leads/Index', [
             'leads' => $leads,
             'stats' => $stats,
             'sources' => $sources,
@@ -94,7 +94,7 @@ class LeadController extends Controller
         $sources = LeadSource::where('company_id', $companyId)->get();
         $users = User::where('company_id', $companyId)->get();
 
-        return Inertia::render('Leads/Create', [
+        return Inertia::render('CRM/Leads/Create', [
             'sources' => $sources,
             'users' => $users,
         ]);
@@ -108,7 +108,7 @@ class LeadController extends Controller
 
         $lead->load(['source', 'assignedUser']);
 
-        return Inertia::render('Leads/Show', [
+        return Inertia::render('CRM/Leads/Show', [
             'lead' => $lead,
         ]);
     }
@@ -145,7 +145,7 @@ class LeadController extends Controller
         $sources = LeadSource::where('company_id', $companyId)->get();
         $users = User::where('company_id', $companyId)->get();
 
-        return Inertia::render('Leads/Edit', [
+        return Inertia::render('CRM/Leads/Edit', [
             'lead' => $lead,
             'sources' => $sources,
             'users' => $users,

@@ -1,268 +1,316 @@
 <template>
-  <MainLayout title="Sites CMS">
-    <div class="page-container">
-      <!-- Header -->
-      <div class="page-header">
-        <div class="page-header__content">
-          <h1 class="page-header__title">SITES CMS</h1>
-          <p class="page-header__subtitle">Gerencie seus sites e conteúdos</p>
-        </div>
-        <div class="page-header__actions">
-          <button class="btn" @click="createSite">
-            <i class="fas fa-plus"></i>
-            Novo Site
-          </button>
-        </div>
-      </div>
+    <MainLayout title="Sites">
+        <template #breadcrumbs>
+            <Breadcrumbs :items="breadcrumbs" />
+        </template>
 
-      <!-- Stats -->
-      <div class="grid grid--4">
-        <div class="stat-card">
-          <div class="stat-card__label">Total de Sites</div>
-          <div class="stat-card__value">{{ stats.total }}</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-card__label">Sites Ativos</div>
-          <div class="stat-card__value">{{ stats.active }}</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-card__label">Total de Páginas</div>
-          <div class="stat-card__value">{{ stats.total_pages }}</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-card__label">Conteúdos Publicados</div>
-          <div class="stat-card__value">{{ stats.published }}</div>
-        </div>
-      </div>
-
-      <!-- Sites Grid -->
-      <div v-if="sites && sites.length > 0" class="sites-grid">
-        <div v-for="site in sites" :key="site.id" class="site-card">
-          <div class="site-card__header">
-            <div class="site-card__info">
-              <h3 class="site-card__name">{{ site.name }}</h3>
-              <a :href="site.domain" target="_blank" class="site-card__domain">
-                <i class="fas fa-external-link-alt"></i>
-                {{ site.domain }}
-              </a>
-            </div>
-            <span :class="['badge', `badge--${site.is_active ? 'success' : 'danger'}`]">
-              {{ site.is_active ? 'ATIVO' : 'INATIVO' }}
-            </span>
-          </div>
-
-          <div class="site-card__body">
-            <p v-if="site.description" class="site-card__description">
-              {{ site.description }}
-            </p>
-
-            <div class="site-card__meta">
-              <div class="meta-item">
-                <i class="fas fa-file-alt"></i>
-                {{ site.pages_count }} páginas
-              </div>
-              <div class="meta-item">
-                <i class="fas fa-blog"></i>
-                {{ site.posts_count }} posts
-              </div>
-              <div class="meta-item">
-                <i class="fas fa-briefcase"></i>
-                {{ site.portfolios_count }} portfólios
-              </div>
+        <div class="page-container">
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">Sites CMS</h1>
+                    <p class="page-subtitle">Gerencie os sites da sua empresa</p>
+                </div>
+                <Button variant="primary" @click="openCreateModal">
+                    <i class="fas fa-plus"></i>
+                    Novo Site
+                </Button>
             </div>
 
-            <div class="site-card__tech">
-              <span class="tech-badge">{{ site.theme }}</span>
-              <span v-if="site.custom_domain" class="tech-badge">Custom Domain</span>
-              <span v-if="site.ssl_enabled" class="tech-badge">SSL</span>
+            <!-- Stats -->
+            <div class="stats-grid">
+                <StatCard title="Total de Sites" :value="stats.total" icon="fa-globe" />
+                <StatCard title="Ativos" :value="stats.active" icon="fa-check-circle" />
+                <StatCard title="Inativos" :value="stats.inactive" icon="fa-times-circle" />
+                <StatCard title="Total de Páginas" :value="stats.total_pages" icon="fa-file-alt" />
+                <StatCard title="Total de Posts" :value="stats.total_posts" icon="fa-blog" />
             </div>
-          </div>
 
-          <div class="site-card__actions">
-            <button class="btn btn--sm" @click="manageSite(site.id)">
-              <i class="fas fa-cog"></i>
-              Gerenciar
-            </button>
-            <button class="btn btn--sm btn--secondary" @click="editSite(site.id)">
-              <i class="fas fa-edit"></i>
-              Editar
-            </button>
-            <button class="btn btn--sm btn--secondary" @click="viewSite(site.domain)">
-              <i class="fas fa-eye"></i>
-              Visualizar
-            </button>
-          </div>
+            <!-- Filters -->
+            <div class="filters-card">
+                <div class="filters-header">
+                    <div class="filters-title">
+                        <i class="fa fa-filter"></i>
+                        <span>FILTROS</span>
+                    </div>
+                    <Button variant="ghost" size="sm" @click="clearFilters">Limpar filtros</Button>
+                </div>
+                <div class="filters-grid">
+                    <Input v-model="filters.search" placeholder="Buscar por nome ou domínio..." icon="fa-search"
+                        @input="loadSites" />
+
+                    <Select v-model="filters.status" :options="statusOptions" @change="loadSites" />
+                </div>
+            </div>
+
+            <!-- Sites Table -->
+            <Table :columns="tableColumns" :data="sites.data" striped hoverable>
+                <template #cell-name="{ row }">
+                    <div class="info-item__value">
+                        <strong>{{ row.name }}</strong>
+                        <br>
+                        <a :href="`https://${row.domain}`" target="_blank" class="info-link">
+                            {{ row.domain }}
+                            <i class="fas fa-external-link-alt" style="font-size: 0.75rem; margin-left: 4px;"></i>
+                        </a>
+                    </div>
+                </template>
+
+                <template #cell-status="{ row }">
+                    <span :class="['badge', row.active ? 'badge--success' : 'badge--error']">
+                        {{ row.active ? 'Ativo' : 'Inativo' }}
+                    </span>
+                </template>
+
+                <template #cell-pages_count="{ row }">
+                    <span class="stat-number" style="font-size: 1rem;">
+                        {{ row.pages_count || 0 }}
+                    </span>
+                </template>
+
+                <template #cell-posts_count="{ row }">
+                    <span class="stat-number" style="font-size: 1rem;">
+                        {{ row.posts_count || 0 }}
+                    </span>
+                </template>
+
+                <template #cell-created_at="{ row }">
+                    {{ formatDate(row.created_at) }}
+                </template>
+
+                <template #cell-actions="{ row }">
+                    <div class="action-buttons">
+                        <Button variant="ghost" size="sm" @click="viewSite(row)" title="Ver site">
+                            <i class="fas fa-eye"></i>
+                        </Button>
+                        <Button variant="ghost" size="sm" @click="editSite(row)" title="Editar">
+                            <i class="fas fa-edit"></i>
+                        </Button>
+                        <Button variant="ghost" size="sm" @click="showApiKey(row)" title="Ver API Key">
+                            <i class="fas fa-key"></i>
+                        </Button>
+                        <Button variant="ghost" size="sm" @click="toggleActive(row)"
+                            :title="row.active ? 'Desativar' : 'Ativar'">
+                            <i :class="['fas', row.active ? 'fa-toggle-on' : 'fa-toggle-off']"></i>
+                        </Button>
+                        <Button variant="danger" size="sm" @click="deleteSite(row)" title="Excluir">
+                            <i class="fas fa-trash"></i>
+                        </Button>
+                    </div>
+                </template>
+            </Table>
+
+            <!-- Pagination -->
+            <Pagination :current-page="sites.current_page" :last-page="sites.last_page" :from="sites.from"
+                :to="sites.to" :total="sites.total" @page-change="handlePageChange" />
         </div>
-      </div>
 
-      <!-- Empty State -->
-      <div v-else class="empty-state">
-        <i class="fas fa-globe empty-state__icon"></i>
-        <h3 class="empty-state__title">Nenhum site criado</h3>
-        <p class="empty-state__text">Crie seu primeiro site para começar a gerenciar conteúdo</p>
-        <button class="btn" @click="createSite">
-          <i class="fas fa-plus"></i>
-          Criar Primeiro Site
-        </button>
-      </div>
-    </div>
-  </MainLayout>
+    </MainLayout>
 </template>
 
 <script setup>
+import { ref } from 'vue';
 import { router } from '@inertiajs/vue3';
 import MainLayout from '@/Layouts/MainLayout.vue';
+import Breadcrumbs from '@/Components/Breadcrumbs.vue';
+import Button from '@/Components/Button.vue';
+import Input from '@/Components/Input.vue';
+import Select from '@/Components/Select.vue';
+import StatCard from '@/Components/StatCard.vue';
+import Table from '@/Components/Table.vue';
+import Pagination from '@/Components/Pagination.vue';
+import { useAlert } from '@/Composables/useAlert';
+
+const { toast, confirmDelete, prompt } = useAlert();
 
 const props = defineProps({
-  sites: Array,
-  stats: Object,
+    sites: Object,
+    stats: Object,
+    filters: Object
 });
 
-const createSite = () => {
-  router.visit('/cms/sites/create');
+const filters = ref({
+    search: props.filters?.search || '',
+    status: props.filters?.status || ''
+});
+
+let searchTimeout = null;
+
+const breadcrumbs = [
+    { label: 'Sites' }
+];
+
+const statusOptions = [
+    { value: '', label: 'Todos os status' },
+    { value: 'active', label: 'Ativos' },
+    { value: 'inactive', label: 'Inativos' }
+];
+
+const tableColumns = [
+    { field: 'name', label: 'Nome / Domínio', width: '30%' },
+    { field: 'status', label: 'Status', width: '12%' },
+    { field: 'pages_count', label: 'Páginas', width: '10%', align: 'center' },
+    { field: 'posts_count', label: 'Posts', width: '10%', align: 'center' },
+    { field: 'created_at', label: 'Criado em', width: '15%' },
+    { field: 'actions', label: 'Ações', width: '23%', align: 'center' }
+];
+
+const formatDate = (date) => {
+    if (!date) return 'N/A';
+    return new Date(date).toLocaleDateString('pt-BR');
 };
 
-const manageSite = (id) => {
-  router.visit(`/cms/sites/${id}/manage`);
+const loadSites = () => {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+        router.get('/sites', filters.value, {
+            preserveState: true,
+            preserveScroll: true
+        });
+    }, 300);
 };
 
-const editSite = (id) => {
-  router.visit(`/cms/sites/${id}/edit`);
+const clearFilters = () => {
+    filters.value = {
+        search: '',
+        status: ''
+    };
+    router.get('/sites', filters.value, {
+        preserveState: true,
+        preserveScroll: true,
+        onSuccess: () => {
+            toast('Filtros limpos com sucesso', 'success');
+        }
+    });
 };
 
-const viewSite = (domain) => {
-  window.open(domain, '_blank');
+const openCreateModal = async () => {
+    const result = await prompt(
+        'Novo Site',
+        'Nome do site',
+        '',
+        'text',
+        'Digite o nome do site'
+    );
+
+    if (result.isConfirmed && result.value) {
+        const domain = await prompt(
+            'Novo Site',
+            'Domínio do site',
+            '',
+            'text',
+            'exemplo.com.br'
+        );
+
+        if (domain.isConfirmed && domain.value) {
+            router.post('/sites', {
+                name: result.value,
+                domain: domain.value,
+                active: true
+            }, {
+                preserveScroll: true,
+                onSuccess: () => {
+                    toast('Site criado com sucesso!', 'success');
+                },
+                onError: (errors) => {
+                    const errorMessages = Object.values(errors).flat().join(', ');
+                    toast(errorMessages, 'error');
+                }
+            });
+        }
+    }
+};
+
+const viewSite = (site) => {
+    window.open(`https://${site.domain}`, '_blank');
+};
+
+const editSite = async (site) => {
+    const result = await prompt(
+        'Editar Site',
+        'Nome do site',
+        site.name,
+        'text',
+        'Digite o nome do site'
+    );
+
+    if (result.isConfirmed && result.value) {
+        const domain = await prompt(
+            'Editar Site',
+            'Domínio do site',
+            site.domain,
+            'text',
+            'exemplo.com.br'
+        );
+
+        if (domain.isConfirmed && domain.value) {
+            router.put(`/sites/${site.id}`, {
+                name: result.value,
+                domain: domain.value
+            }, {
+                preserveScroll: true,
+                onSuccess: () => {
+                    toast('Site atualizado com sucesso!', 'success');
+                },
+                onError: (errors) => {
+                    const errorMessages = Object.values(errors).flat().join(', ');
+                    toast(errorMessages, 'error');
+                }
+            });
+        }
+    }
+};
+
+const showApiKey = async (site) => {
+    await prompt(
+        'API Key',
+        `API Key do site ${site.name}`,
+        site.api_key,
+        'text',
+        '',
+        true // readonly
+    );
+};
+
+const toggleActive = async (site) => {
+    const action = site.active ? 'desativar' : 'ativar';
+    const confirmed = await confirmDelete(
+        `${action.charAt(0).toUpperCase() + action.slice(1)} site`,
+        `Tem certeza que deseja ${action} o site ${site.name}?`
+    );
+
+    if (confirmed) {
+        router.patch(`/sites/${site.id}/toggle-active`, {}, {
+            preserveScroll: true,
+            onSuccess: () => {
+                toast(`Site ${action}do com sucesso!`, 'success');
+            }
+        });
+    }
+};
+
+const deleteSite = async (site) => {
+    const confirmed = await confirmDelete(
+        'Excluir site',
+        `Tem certeza que deseja excluir o site ${site.name}? Esta ação não pode ser desfeita.`
+    );
+
+    if (confirmed) {
+        router.delete(`/sites/${site.id}`, {
+            preserveScroll: true,
+            onSuccess: () => {
+                toast('Site excluído com sucesso!', 'success');
+            }
+        });
+    }
+};
+
+const handlePageChange = (page) => {
+    router.get('/sites', {
+        ...filters.value,
+        page
+    }, {
+        preserveState: true,
+        preserveScroll: true
+    });
 };
 </script>
-
-<style scoped lang="scss">
-.page-container {
-  padding: 32px;
-}
-
-.sites-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-  gap: 24px;
-  margin-top: 32px;
-}
-
-.site-card {
-  border: 2px solid var(--border-color);
-  background: var(--bg-primary);
-  display: flex;
-  flex-direction: column;
-  transition: all 0.2s ease;
-
-  &:hover {
-    border-color: #FF6B35;
-    transform: translateY(-2px);
-  }
-
-  &__header {
-    padding: 24px;
-    border-bottom: 2px solid var(--border-color);
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 16px;
-  }
-
-  &__info {
-    flex: 1;
-    min-width: 0;
-  }
-
-  &__name {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 24px;
-    font-weight: 700;
-    margin: 0 0 8px;
-    color: var(--text-primary);
-  }
-
-  &__domain {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 13px;
-    color: #FF6B35;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    transition: transform 0.2s ease;
-
-    &:hover {
-      transform: translateX(4px);
-    }
-  }
-
-  &__body {
-    padding: 24px;
-    flex: 1;
-  }
-
-  &__description {
-    font-size: 14px;
-    line-height: 1.6;
-    color: var(--text-secondary);
-    margin: 0 0 20px;
-  }
-
-  &__meta {
-    display: flex;
-    gap: 16px;
-    flex-wrap: wrap;
-    margin-bottom: 20px;
-
-    .meta-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 13px;
-      color: var(--text-secondary);
-
-      i {
-        color: #FF6B35;
-      }
-    }
-  }
-
-  &__tech {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-
-    .tech-badge {
-      padding: 4px 12px;
-      border: 2px solid var(--border-color);
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--text-secondary);
-    }
-  }
-
-  &__actions {
-    padding: 16px 24px;
-    border-top: 2px solid var(--border-color);
-    display: flex;
-    gap: 8px;
-  }
-}
-
-@media (max-width: 768px) {
-  .sites-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .site-card__actions {
-    flex-direction: column;
-
-    .btn {
-      width: 100%;
-    }
-  }
-}
-</style>

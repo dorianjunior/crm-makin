@@ -45,7 +45,7 @@ class PipelineController extends Controller
                 ];
             });
 
-        return Inertia::render('Pipelines/Index', [
+        return Inertia::render('CRM/Pipelines/Index', [
             'pipelines' => $pipelines,
         ]);
     }

@@ -24,7 +24,7 @@ class ProductController extends Controller
         $products = $this->productService->getForIndex($companyId, $filters, 15);
         $stats = $this->productService->getStats($companyId);
 
-        return Inertia::render('Products/Index', [
+        return Inertia::render('CRM/Products/Index', [
             'products' => $products,
             'stats' => $stats,
             'filters' => $filters,

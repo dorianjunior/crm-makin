@@ -68,27 +68,27 @@ Route::middleware(['auth', 'active'])->group(function () {
     Route::patch('sites/{site}/toggle-active', [SiteController::class, 'toggleActive'])->name('sites.toggleActive');
 
     Route::get('/pages', function () {
-        return Inertia::render('Pages/Index');
+        return Inertia::render('CMS/Pages/Index');
     })->name('pages.index');
     Route::get('/posts', function () {
-        return Inertia::render('Posts/Index');
+        return Inertia::render('CMS/Posts/Index');
     })->name('posts.index');
     Route::get('/portfolios', function () {
-        return Inertia::render('Portfolios/Index');
+        return Inertia::render('CMS/Portfolios/Index');
     })->name('portfolios.index');
     Route::get('/menus', function () {
-        return Inertia::render('Menus/Index');
+        return Inertia::render('CMS/Menus/Index');
     })->name('menus.index');
 
     // Social
     Route::get('/instagram', function () {
-        return Inertia::render('Instagram/Index');
+        return Inertia::render('Social/Instagram/Messages');
     })->name('instagram.index');
     Route::get('/whatsapp', function () {
-        return Inertia::render('Whatsapp/Index');
+        return Inertia::render('Social/WhatsApp/Chat');
     })->name('whatsapp.index');
     Route::get('/message-templates', function () {
-        return Inertia::render('MessageTemplates/Index');
+        return Inertia::render('Social/MessageTemplates/Index');
     })->name('message-templates.index');
 
     // IA & Automação
@@ -120,7 +120,7 @@ Route::middleware(['auth', 'active'])->group(function () {
 
     // Configurações
     Route::get('/company', function () {
-        return Inertia::render('Companies/Index');
+        return Inertia::render('CRM/Companies/Index');
     })->name('company.index');
     Route::get('/users', function () {
         return Inertia::render('Admin/Users/Index');
@@ -129,7 +129,7 @@ Route::middleware(['auth', 'active'])->group(function () {
         return Inertia::render('Admin/Roles/Index');
     })->name('roles.index');
     Route::get('/permissions', function () {
-        return Inertia::render('Permissions/Index');
+        return Inertia::render('Admin/Index');
     })->name('permissions.index');
 
     // Outros

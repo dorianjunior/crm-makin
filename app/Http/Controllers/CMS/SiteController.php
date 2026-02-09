@@ -25,7 +25,7 @@ class SiteController extends Controller
         $sites = $this->siteService->getForIndex($companyId, $filters, 15);
         $stats = $this->siteService->getStats($companyId);
 
-        return Inertia::render('Sites/Index', [
+        return Inertia::render('CMS/Sites/Index', [
             'sites' => $sites,
             'stats' => $stats,
             'filters' => $filters,

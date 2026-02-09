@@ -27,7 +27,7 @@ class TaskController extends Controller
         $users = $this->taskService->getUsersForCompany($companyId);
         $stats = $this->taskService->getStats($companyId);
 
-        return Inertia::render('Tasks/Index', [
+        return Inertia::render('CRM/Tasks/Index', [
             'tasks' => $tasks,
             'leads' => $leads,
             'users' => $users,

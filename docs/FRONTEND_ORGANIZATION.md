@@ -2,10 +2,81 @@
 
 **Design Philosophy:** Data Brutalism - Editorial Brutalist Style
 **DFII Score:** 13/15 (Excellent)
-**Última atualização:** 2026-02-07
+**Última atualização:** 2026-02-09
 
-> **🆕 ÚLTIMA REFATORAÇÃO:** MainLayout migrado para SCSS global (_layout-brutalist.scss)
+> **🆕 ESTRUTURA ATUALIZADA:** Páginas organizadas por módulos (CRM, CMS, AI, Admin, Social)
+> **🔄 REFATORAÇÃO COMPLETA:** MainLayout migrado para SCSS global (_layout-brutalist.scss)
 > Todas as páginas agora devem usar classes globais em vez de `<style scoped>`
+
+## 📐 Estrutura de Diretórios
+
+A aplicação está organizada por módulos para melhor manutenibilidade e escalabilidade:
+
+```
+resources/js/Pages/
+├── Auth/                    # ✅ Autenticação
+│   └── Login.vue
+├── Dashboard/              # ✅ Dashboard principal
+│   └── Index.vue
+├── Profile/                # ✅ Perfil do usuário
+│   └── Index.vue
+├── CRM/                    # ✅ Módulo CRM completo
+│   ├── Leads/             #   - Gestão de leads (Index, Create, Edit, Show)
+│   ├── Companies/         #   - Gestão de empresas
+│   ├── Activities/        #   - Atividades dos leads
+│   ├── Tasks/             #   - Tarefas
+│   ├── Pipelines/         #   - Pipelines de vendas
+│   ├── Products/          #   - Produtos
+│   └── Proposals/         #   - Propostas comerciais
+├── CMS/                    # ✅ Módulo CMS
+│   ├── Sites/             #   - Gestão de sites
+│   ├── Pages/             #   - Páginas estáticas
+│   ├── Posts/             #   - Blog/Posts
+│   ├── Portfolios/        #   - Portfólios
+│   └── Menus/             #   - Menus de navegação
+├── AI/                     # ✅ Módulo de Inteligência Artificial
+│   ├── Conversations/     #   - Chat com IA
+│   ├── PromptTemplates/   #   - Templates de prompts
+│   ├── Analytics.vue      #   - Analytics de IA
+│   └── Settings/          #   - Configurações IA
+├── Admin/                  # ✅ Módulo de Administração
+│   ├── Users/             #   - Gestão de usuários
+│   ├── Roles/             #   - Roles
+│   └── Index.vue          #   - Permissões (dashboard admin)
+├── Social/                 # ✅ Módulo de Integrações Sociais
+│   ├── Instagram/         #   - Integração Instagram
+│   ├── WhatsApp/          #   - Integração WhatsApp
+│   ├── MessageTemplates/  #   - Templates de mensagens
+│   └── Index.vue          #   - Dashboard social
+├── Reports/                # ✅ Relatórios e Dashboards
+│   ├── Index.vue
+│   └── Builder.vue
+├── Settings/               # ✅ Configurações gerais
+│   └── Index.vue
+├── Notifications/          # ✅ Notificações
+│   ├── Index.vue
+│   └── Preferences.vue
+├── Help/                   # ✅ Ajuda
+│   └── Index.vue
+└── Error/                  # ✅ Páginas de erro
+    └── NotFound.vue
+```
+
+### 🎯 Vantagens desta Estrutura
+
+1. **Escalabilidade** - Projeto cresce de forma organizada
+2. **Manutenibilidade** - Fácil encontrar e editar componentes
+3. **Separação de responsabilidades** - Cada módulo isolado
+4. **Performance** - Code splitting automático por módulo
+5. **Trabalho em equipe** - Diferentes devs em módulos diferentes
+6. **Alinhamento com backend** - Estrutura espelha `app/Http/Controllers`
+
+### 📏 Regras de Organização
+
+- **Módulos principais** (CRM, CMS, AI, Admin, Social) = Subpastas organizadas
+- **Páginas compartilhadas** (Auth, Dashboard, Profile, Notifications, etc.) = Raiz ou pasta própria
+- **Componentes reutilizáveis** = `resources/js/Components/`
+- **Layouts** = `resources/js/Layouts/`
 
 ## 📐 Filosofia de Design
 
@@ -720,16 +791,18 @@ onMounted(() => {
 ### Fase 3: Migração
 
 Ordem de refatoração das páginas:
-1. **Leads** (referência) ✅
-2. **Pipelines** - Similar a Leads
-3. **Activities** - Timeline + Filters
-4. **Tasks** - Lista + Filters
-5. **Products** - CRUD simples
-6. **Proposals** - Formulário complexo
-7. **Sites/Pages** - CMS
-8. **Instagram/WhatsApp** - Social
-9. **AI** - Chat interface
-10. **Reports** - Dashboards
+1. **CRM/Leads** (referência) ✅
+2. **CRM/Pipelines** ✅
+3. **CRM/Activities** - Timeline + Filters
+4. **CRM/Tasks** - Lista + Filters
+5. **CRM/Products** - CRUD simples
+6. **CRM/Proposals** - Formulário complexo
+7. **CMS/Sites** - Gestão de sites ✅
+8. **CMS/Pages** - Gestão de páginas
+9. **Social/Instagram** - Integração social
+10. **Social/WhatsApp** - Chat interface
+11. **AI/Conversations** - Chat com IA
+12. **Reports** - Dashboards
 
 ---
 
@@ -941,6 +1014,57 @@ Ao fazer mudanças:
 4. **Pergunte** se não tiver certeza sobre decisão de design
 
 ---## 🔄 Histórico de Refatorações
+
+### 2026-02-09: Reorganização por Módulos ✅
+
+**Objetivo:** Separar páginas por módulos (CRM, CMS, AI, Admin, Social) para melhor organização e escalabilidade.
+
+**Mudanças:**
+
+1. **Estrutura de Diretórios**
+   - ✅ Criado: `Pages/CRM/` com 7 subpastas (Leads, Companies, Activities, Tasks, Pipelines, Products, Proposals)
+   - ✅ Criado: `Pages/CMS/` com 5 subpastas (Sites, Pages, Posts, Portfolios, Menus)
+   - ✅ Criado: `Pages/Admin/` com estrutura de administração (Users, Roles, Permissions)
+   - ✅ Criado: `Pages/Social/` com integrações sociais (Instagram, WhatsApp, MessageTemplates)
+   - ✅ Mantido: `Pages/AI/` (já existia, ajustado)
+
+2. **Arquivos Movidos** (~40 arquivos .vue)
+   - ✅ Módulo CRM: Leads, Companies, Activities, Tasks, Pipelines, Products, Proposals
+   - ✅ Módulo CMS: Sites, Pages, Posts, Portfolios, Menus
+   - ✅ Módulo Admin: Permissions
+   - ✅ Módulo Social: Integrations
+
+3. **Controllers Atualizados** (7 controllers)
+   - ✅ `LeadController.php` - Inertia::render com CRM/Leads/*
+   - ✅ `ActivityController.php` - CRM/Activities/Index
+   - ✅ `TaskController.php` - CRM/Tasks/Index
+   - ✅ `PipelineController.php` - CRM/Pipelines/Index
+   - ✅ `ProductController.php` - CRM/Products/Index
+   - ✅ `ProposalController.php` - CRM/Proposals/Index
+   - ✅ `SiteController.php` - CMS/Sites/Index
+
+4. **Rotas Atualizadas**
+   - ✅ `web.php` - 15 rotas Inertia::render atualizadas para novos caminhos
+
+**Impacto:**
+- 🎯 Organização: Estrutura modular clara e escalável
+- 📦 Manutenibilidade: Fácil localizar arquivos por módulo
+- 🔧 Code splitting: Melhor performance com lazy loading por módulo
+- 📚 Documentação: README.md e FRONTEND_ORGANIZATION.md atualizados
+
+**Estrutura Final:**
+```
+Pages/
+├── Auth/, Dashboard/, Profile/    # Páginas globais
+├── CRM/                           # Módulo CRM (7 subpastas)
+├── CMS/                           # Módulo CMS (5 subpastas)
+├── AI/                            # Módulo AI
+├── Admin/                         # Módulo Admin
+├── Social/                        # Módulo Social
+└── Reports/, Settings/, etc.      # Outras páginas
+```
+
+---
 
 ### 2026-02-07: Refatoração do MainLayout ✅
 

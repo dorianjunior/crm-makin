@@ -14,6 +14,7 @@ Sistema de CRM (Customer Relationship Management) completo desenvolvido com Lara
 - [API Endpoints](#api-endpoints)
 - [Autenticação](#autenticação)
 - [Estrutura do Banco](#estrutura-do-banco)
+- [Estrutura do Frontend](#estrutura-do-frontend)
 - [Documentação](#documentação)
 
 ## 🎯 Sobre o Projeto
@@ -83,6 +84,7 @@ CRM Makin é uma solução completa de gestão de relacionamento com clientes qu
 ## 🛠️ Tecnologias
 
 - **Backend:** Laravel 12 (PHP 8.2+)
+- **Frontend:** Vue 3 + Inertia.js + SCSS
 - **Database:** MySQL 8.4
 - **Authentication:** Laravel Sanctum
 - **Containerization:** Docker & Docker Compose
@@ -442,11 +444,63 @@ Veja a [documentação de autenticação](docs/AUTHENTICATION.md).
 - **files** - Arquivos
 - **system_logs** - Logs de auditoria
 
+## 🎨 Estrutura do Frontend
+
+O frontend está organizado por módulos para melhor manutenibilidade e escalabilidade:
+
+```
+resources/js/Pages/
+├── Auth/                    # Autenticação (Login, Register)
+├── Dashboard/               # Dashboard principal
+├── Profile/                 # Perfil do usuário
+├── CRM/                     # 📊 Módulo CRM
+│   ├── Leads/              #   - Gestão de leads
+│   ├── Companies/          #   - Gestão de empresas
+│   ├── Activities/         #   - Atividades
+│   ├── Tasks/              #   - Tarefas
+│   ├── Pipelines/          #   - Pipelines de vendas
+│   ├── Products/           #   - Produtos
+│   └── Proposals/          #   - Propostas comerciais
+├── CMS/                     # 📝 Módulo CMS
+│   ├── Sites/              #   - Gestão de sites
+│   ├── Pages/              #   - Páginas
+│   ├── Posts/              #   - Posts/Blog
+│   ├── Portfolios/         #   - Portfólios
+│   └── Menus/              #   - Menus
+├── AI/                      # 🤖 Módulo AI
+│   ├── Conversations/      #   - Conversas com IA
+│   ├── PromptTemplates/    #   - Templates de prompts
+│   └── Settings/           #   - Configurações IA
+├── Admin/                   # ⚙️ Módulo Admin
+│   ├── Users/              #   - Gestão de usuários
+│   └── Roles/              #   - Roles e permissões
+├── Social/                  # 💬 Módulo Social
+│   ├── Instagram/          #   - Integração Instagram
+│   ├── WhatsApp/           #   - Integração WhatsApp
+│   └── MessageTemplates/   #   - Templates de mensagens
+├── Reports/                 # 📊 Relatórios
+├── Settings/                # ⚙️ Configurações gerais
+├── Notifications/           # 🔔 Notificações
+└── Error/                   # ❌ Páginas de erro
+```
+
+### Design System
+
+O sistema utiliza **Data Brutalism** como filosofia de design:
+- Tipografia oversized estrutural (Space Grotesk)
+- Bordas sólidas de 2-3px (sem sombras)
+- Paleta monocromática + accent color único (#FF6B35)
+- Layouts assimétricos
+- Foco em dados e funcionalidade
+
+Veja mais em [FRONTEND_ORGANIZATION.md](docs/FRONTEND_ORGANIZATION.md).
+
 ## 📚 Documentação
 
 - [API Endpoints](docs/API_ENDPOINTS.md) - Documentação completa da API
 - [Autenticação](docs/AUTHENTICATION.md) - Como usar autenticação Sanctum
 - [Seeders](docs/SEEDERS.md) - Detalhes sobre os dados de exemplo
+- [Organização do Frontend](docs/FRONTEND_ORGANIZATION.md) - Estrutura, componentes e design system
 
 ## 🧪 Testes
 
