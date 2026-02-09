@@ -71,7 +71,7 @@ class ProductController extends Controller
 
         $data = $product->toArray();
         unset($data['id'], $data['created_at'], $data['updated_at']);
-        $data['name'] = $data['name'] . ' (Cópia)';
+        $data['name'] = $data['name'].' (Cópia)';
 
         $this->productService->create($data);
 

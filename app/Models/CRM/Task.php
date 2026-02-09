@@ -120,11 +120,10 @@ class Task extends Model
 
     public function getIsOverdueAttribute(): bool
     {
-        if (!$this->due_date || $this->status === TaskStatus::COMPLETED) {
+        if (! $this->due_date || $this->status === TaskStatus::COMPLETED) {
             return false;
         }
 
         return $this->due_date->isPast();
     }
 }
-

@@ -58,7 +58,7 @@ class ProposalController extends Controller
         $companyId = auth()->user()->company_id;
         $proposal = $this->proposalService->findByCompany($id, $companyId);
 
-        if (!$proposal) {
+        if (! $proposal) {
             abort(404, 'Proposta não encontrada');
         }
 
@@ -84,7 +84,7 @@ class ProposalController extends Controller
         $companyId = auth()->user()->company_id;
         $proposal = $this->proposalService->findByCompany($id, $companyId);
 
-        if (!$proposal) {
+        if (! $proposal) {
             abort(404, 'Proposta não encontrada');
         }
 
@@ -99,7 +99,7 @@ class ProposalController extends Controller
         $companyId = auth()->user()->company_id;
         $proposal = $this->proposalService->findByCompany($id, $companyId);
 
-        if (!$proposal) {
+        if (! $proposal) {
             abort(404, 'Proposta não encontrada');
         }
 
@@ -114,7 +114,7 @@ class ProposalController extends Controller
         $companyId = auth()->user()->company_id;
         $proposal = $this->proposalService->findByCompany($id, $companyId);
 
-        if (!$proposal) {
+        if (! $proposal) {
             abort(404, 'Proposta não encontrada');
         }
 
@@ -129,7 +129,7 @@ class ProposalController extends Controller
         $companyId = auth()->user()->company_id;
         $proposal = $this->proposalService->findByCompany($id, $companyId);
 
-        if (!$proposal) {
+        if (! $proposal) {
             abort(404, 'Proposta não encontrada');
         }
 

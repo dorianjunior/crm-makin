@@ -6,9 +6,9 @@ use App\Http\Controllers\ProposalController;
 use App\Http\Controllers\Web\ActivityController;
 use App\Http\Controllers\Web\LeadController;
 use App\Http\Controllers\Web\PipelineController;
+use App\Http\Controllers\Web\ProductController;
 use App\Http\Controllers\Web\StageController;
 use App\Http\Controllers\Web\TaskController;
-use App\Http\Controllers\Web\ProductController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -53,17 +53,17 @@ Route::middleware(['auth', 'active'])->group(function () {
     Route::patch('tasks/{task}/toggle-complete', [TaskController::class, 'toggleComplete'])->name('tasks.toggleComplete');
 
     // Products - Inertia page wired to backend controller
-    Route::resource('products', ProductController::class)->only(['index','store','update','destroy']);
+    Route::resource('products', ProductController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::post('products/{product}/duplicate', [ProductController::class, 'duplicate'])->name('products.duplicate');
 
     // Proposals - Inertia page wired to backend controller
-    Route::resource('proposals', ProposalController::class)->only(['index','store','update','destroy']);
+    Route::resource('proposals', ProposalController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::post('proposals/{proposal}/duplicate', [ProposalController::class, 'duplicate'])->name('proposals.duplicate');
     Route::post('proposals/{proposal}/send', [ProposalController::class, 'send'])->name('proposals.send');
     Route::get('proposals/{proposal}/download', [ProposalController::class, 'download'])->name('proposals.download');
 
     // CMS
-    Route::resource('sites', SiteController::class)->only(['index','store','update','destroy']);
+    Route::resource('sites', SiteController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::post('sites/{site}/regenerate-api-key', [SiteController::class, 'regenerateApiKey'])->name('sites.regenerateApiKey');
     Route::patch('sites/{site}/toggle-active', [SiteController::class, 'toggleActive'])->name('sites.toggleActive');
 

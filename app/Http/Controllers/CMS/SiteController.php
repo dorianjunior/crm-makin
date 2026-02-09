@@ -55,13 +55,13 @@ class SiteController extends Controller
         $companyId = auth()->user()->company_id;
         $site = $this->siteService->findByCompany($id, $companyId);
 
-        if (!$site) {
+        if (! $site) {
             abort(404, 'Site não encontrado');
         }
 
         $validated = $request->validate([
             'name' => 'sometimes|string|max:255',
-            'domain' => 'sometimes|string|max:255|unique:sites,domain,' . $id,
+            'domain' => 'sometimes|string|max:255|unique:sites,domain,'.$id,
             'active' => 'sometimes|boolean',
             'settings' => 'nullable|array',
         ]);
@@ -77,7 +77,7 @@ class SiteController extends Controller
         $companyId = auth()->user()->company_id;
         $site = $this->siteService->findByCompany($id, $companyId);
 
-        if (!$site) {
+        if (! $site) {
             abort(404, 'Site não encontrado');
         }
 
@@ -92,7 +92,7 @@ class SiteController extends Controller
         $companyId = auth()->user()->company_id;
         $site = $this->siteService->findByCompany($id, $companyId);
 
-        if (!$site) {
+        if (! $site) {
             abort(404, 'Site não encontrado');
         }
 
@@ -106,7 +106,7 @@ class SiteController extends Controller
         $companyId = auth()->user()->company_id;
         $site = $this->siteService->findByCompany($id, $companyId);
 
-        if (!$site) {
+        if (! $site) {
             abort(404, 'Site não encontrado');
         }
 

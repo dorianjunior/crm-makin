@@ -83,7 +83,7 @@ class SiteService
             ->orderBy('created_at', 'desc');
 
         // Search filter
-        if (!empty($filters['search'])) {
+        if (! empty($filters['search'])) {
             $search = $filters['search'];
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
@@ -92,7 +92,7 @@ class SiteService
         }
 
         // Status filter
-        if (!empty($filters['status'])) {
+        if (! empty($filters['status'])) {
             $isActive = $filters['status'] === 'active';
             $query->where('active', $isActive);
         }

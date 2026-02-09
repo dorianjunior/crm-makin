@@ -8,7 +8,6 @@ use App\Http\Requests\CRM\UpdateTaskRequest;
 use App\Models\CRM\Task;
 use App\Services\CRM\TaskService;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -58,13 +57,12 @@ class TaskController extends Controller
         // Se mudou para completed, registrar conclusão
         if ($request->status === 'completed' && $task->status !== 'completed') {
             $this->taskService->complete($task, auth()->id());
-        } 
+        }
         // Se estava completed e mudou status, reabrir
         elseif ($task->status === 'completed' && $request->status !== 'completed') {
             $this->taskService->reopen($task);
             $this->taskService->update($task, $request->except(['status']));
-        } 
-        else {
+        } else {
             $this->taskService->update($task, $request->validated());
         }
 

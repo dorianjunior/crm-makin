@@ -116,7 +116,7 @@ class ProposalService
             ->orderBy('created_at', 'desc');
 
         // Search filter
-        if (!empty($filters['search'])) {
+        if (! empty($filters['search'])) {
             $search = $filters['search'];
             $query->where(function ($q) use ($search) {
                 $q->where('number', 'like', "%{$search}%")
@@ -127,12 +127,12 @@ class ProposalService
         }
 
         // Status filter
-        if (!empty($filters['status'])) {
+        if (! empty($filters['status'])) {
             $query->where('status', $filters['status']);
         }
 
         // Period filter
-        if (!empty($filters['period'])) {
+        if (! empty($filters['period'])) {
             $this->applyPeriodFilter($query, $filters['period']);
         }
 
@@ -212,6 +212,7 @@ class ProposalService
     {
         $lastProposal = Proposal::orderBy('id', 'desc')->first();
         $nextNumber = $lastProposal ? ((int) substr($lastProposal->number, 4)) + 1 : 1;
-        return 'PROP' . str_pad($nextNumber, 6, '0', STR_PAD_LEFT);
+
+        return 'PROP'.str_pad($nextNumber, 6, '0', STR_PAD_LEFT);
     }
 }

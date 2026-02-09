@@ -112,12 +112,12 @@ class PageSeeder extends Seeder
         foreach ($sites as $site) {
             $user = User::where('company_id', $site->company_id)->first();
 
-            if (!$user) {
+            if (! $user) {
                 continue;
             }
 
             foreach ($pages as $pageData) {
-                $slug = $pageData['slug'] . '-' . $site->id;
+                $slug = $pageData['slug'].'-'.$site->id;
 
                 // Skip if page already exists
                 if (Page::where('slug', $slug)->exists()) {
@@ -139,7 +139,7 @@ class PageSeeder extends Seeder
                 ]);
             }
 
-            $this->command->info("✅ Created " . count($pages) . " pages for site: {$site->name}");
+            $this->command->info('✅ Created '.count($pages)." pages for site: {$site->name}");
         }
     }
 }

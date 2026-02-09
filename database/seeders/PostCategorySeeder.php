@@ -65,7 +65,7 @@ class PostCategorySeeder extends Seeder
                 ]);
             }
 
-            $this->command->info("✅ Created " . count($categories) . " categories for site: {$site->name}");
+            $this->command->info('✅ Created '.count($categories)." categories for site: {$site->name}");
         }
     }
 }

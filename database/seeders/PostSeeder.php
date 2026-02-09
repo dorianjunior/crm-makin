@@ -155,7 +155,7 @@ class PostSeeder extends Seeder
         foreach ($sites as $site) {
             $user = User::where('company_id', $site->company_id)->first();
 
-            if (!$user) {
+            if (! $user) {
                 continue;
             }
 
@@ -164,11 +164,11 @@ class PostSeeder extends Seeder
                     ->where('slug', $postData['category_slug'])
                     ->first();
 
-                if (!$category) {
+                if (! $category) {
                     continue;
                 }
 
-                $slug = $postData['slug'] . '-' . $site->id;
+                $slug = $postData['slug'].'-'.$site->id;
 
                 // Skip if post already exists
                 if (Post::where('slug', $slug)->exists()) {
@@ -191,7 +191,7 @@ class PostSeeder extends Seeder
                 ]);
             }
 
-            $this->command->info("✅ Created " . count($posts) . " posts for site: {$site->name}");
+            $this->command->info('✅ Created '.count($posts)." posts for site: {$site->name}");
         }
     }
 }

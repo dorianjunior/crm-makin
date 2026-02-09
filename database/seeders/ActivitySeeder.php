@@ -96,7 +96,7 @@ class ActivitySeeder extends Seeder
                         'user_id' => $users->random()->id,
                         'type' => $activityType['type'],
                         'description' => $activityType['descriptions'][array_rand($activityType['descriptions'])],
-                        'notes' => rand(0, 1) ? 'Observações: ' . fake()->sentence() : null,
+                        'notes' => rand(0, 1) ? 'Observações: '.fake()->sentence() : null,
                         'duration' => $activityType['durations'] ? $activityType['durations'][array_rand($activityType['durations'])] : null,
                     ]);
 
@@ -116,7 +116,7 @@ class ActivitySeeder extends Seeder
                     'user_id' => $users->random()->id,
                     'type' => $activityType['type'],
                     'description' => $activityType['descriptions'][array_rand($activityType['descriptions'])],
-                    'notes' => 'Atividade realizada hoje - ' . fake()->sentence(),
+                    'notes' => 'Atividade realizada hoje - '.fake()->sentence(),
                     'duration' => $activityType['durations'] ? $activityType['durations'][array_rand($activityType['durations'])] : null,
                 ]);
             }

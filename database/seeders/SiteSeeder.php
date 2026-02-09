@@ -178,7 +178,8 @@ class SiteSeeder extends Seeder
                 ]);
             }
 
-            $this->command->info("✅ Created {count($sites)} sites for company: {$company->name}");
+            $sitesCount = count($sites);
+            $this->command->info("✅ Created {$sitesCount} sites for company: {$company->name}");
         }
     }
 }

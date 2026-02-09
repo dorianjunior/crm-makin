@@ -71,11 +71,11 @@ class ProductService
         $query = Product::where('company_id', $companyId)
             ->with('company');
 
-        if (!empty($filters['search'])) {
+        if (! empty($filters['search'])) {
             $term = $filters['search'];
             $query->where(function ($q) use ($term) {
                 $q->where('name', 'like', "%{$term}%")
-                  ->orWhere('sku', 'like', "%{$term}%");
+                    ->orWhere('sku', 'like', "%{$term}%");
             });
         }
 
