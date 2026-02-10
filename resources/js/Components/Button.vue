@@ -195,6 +195,7 @@ const handleClick = (event) => {
 .btn--ghost:hover:not(:disabled) {
     background: var(--bg-secondary);
     border-color: var(--border-bold, #262626);
+    color: var(--text-primary);
 }
 
 /* Sizes */
