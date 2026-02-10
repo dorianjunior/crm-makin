@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\CMS\PageController;
 use App\Http\Controllers\CMS\SiteController;
 use App\Http\Controllers\ProposalController;
 use App\Http\Controllers\Web\ActivityController;
@@ -67,9 +68,11 @@ Route::middleware(['auth', 'active'])->group(function () {
     Route::post('sites/{site}/regenerate-api-key', [SiteController::class, 'regenerateApiKey'])->name('sites.regenerateApiKey');
     Route::patch('sites/{site}/toggle-active', [SiteController::class, 'toggleActive'])->name('sites.toggleActive');
 
-    Route::get('/pages', function () {
-        return Inertia::render('CMS/Pages/Index');
-    })->name('pages.index');
+    Route::resource('pages', PageController::class)->only(['index', 'store', 'update', 'destroy']);
+    Route::post('pages/{page}/publish', [PageController::class, 'publish'])->name('pages.publish');
+    Route::post('pages/{page}/unpublish', [PageController::class, 'unpublish'])->name('pages.unpublish');
+    Route::post('pages/{page}/duplicate', [PageController::class, 'duplicate'])->name('pages.duplicate');
+
     Route::get('/posts', function () {
         return Inertia::render('CMS/Posts/Index');
     })->name('posts.index');
