@@ -31,7 +31,7 @@ const submit = () => {
                 <div class="login__logo">
                     <div class="login__logo-icon">
                         <img
-                            src="/images/logo-i-orange.png"
+                            src="/images/logo-i-orange.webp"
                             alt="Makin"
                             class="login__logo-img"
                         />

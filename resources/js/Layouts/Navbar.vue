@@ -34,13 +34,13 @@ const logout = () => {
             <Link href="/dashboard" class="navbar__brand">
                 <img
                     v-if="sidebarOpen"
-                    src="/images/logo-h-orange.png"
+                    src="/images/logo-h-orange.webp"
                     alt="Makin"
                     class="navbar__brand-logo navbar__brand-logo--open"
                 />
                 <img
                     v-else
-                    src="/images/logo-i-orange.png"
+                    src="/images/logo-i-orange.webp"
                     alt="Makin"
                     class="navbar__brand-logo navbar__brand-logo--closed"
                 />
