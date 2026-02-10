@@ -30,7 +30,11 @@ const submit = () => {
             <div class="login__brand">
                 <div class="login__logo">
                     <div class="login__logo-icon">
-                        <i class="fas fa-rocket"></i>
+                        <img
+                            src="/images/logo-i-orange.png"
+                            alt="Makin"
+                            class="login__logo-img"
+                        />
                     </div>
                 </div>
                 <h1 class="login__title">MAKIN</h1>
@@ -166,9 +170,13 @@ const submit = () => {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 36px;
-    color: #ff6b35;
     transition: transform 300ms ease, border-color 300ms ease;
+}
+
+.login__logo-img {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
 }
 
 .login__logo-icon:hover {

@@ -32,10 +32,18 @@ const logout = () => {
         <!-- Fixed Brand in Sidebar Space -->
         <div class="navbar__brand-area" :class="sidebarOpen ? 'navbar__brand-area--open' : 'navbar__brand-area--closed'">
             <Link href="/dashboard" class="navbar__brand">
-                <span class="navbar__brand-mark">
-                    <i class="fas fa-rocket"></i>
-                </span>
-                <span v-if="sidebarOpen" class="navbar__brand-text">MAKIN</span>
+                <img
+                    v-if="sidebarOpen"
+                    src="/images/logo-h-orange.png"
+                    alt="Makin"
+                    class="navbar__brand-logo navbar__brand-logo--open"
+                />
+                <img
+                    v-else
+                    src="/images/logo-i-orange.png"
+                    alt="Makin"
+                    class="navbar__brand-logo navbar__brand-logo--closed"
+                />
             </Link>
         </div>
 

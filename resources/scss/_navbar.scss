@@ -47,6 +47,7 @@
     padding: 0 $spacing-md;
     transition: width $transition-normal ease;
     z-index: 50;
+    overflow: hidden;
 
     &--open {
         width: $sidebar-width-open;
@@ -61,7 +62,6 @@
     display: inline-flex;
     align-items: center;
     gap: 10px;
-    padding: 8px 12px;
     background: var(--bg-primary);
     color: var(--text-primary);
     font-weight: 800;
@@ -70,6 +70,20 @@
     line-height: 1.1;
     text-decoration: none;
     transition: all 200ms ease;
+}
+
+.navbar__brand-logo {
+    display: block;
+    height: 200px;
+    width: 90%;
+}
+
+.navbar__brand-logo--open {
+    height: 200px;
+}
+
+.navbar__brand-logo--closed {
+    height: 38px;
 }
 
 .navbar__brand-mark {
