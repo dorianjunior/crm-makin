@@ -1,0 +1,4996 @@
+{
+	"info": {
+		"_postman_id": "crm-makin-collection",
+		"name": "CRM Makin - API Collection",
+		"description": "Collection completa da API do CRM Makin com todas as rotas disponíveis",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{auth_token}}",
+				"type": "string"
+			}
+		]
+	},
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000/api",
+			"type": "string"
+		},
+		{
+			"key": "auth_token",
+			"value": "",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "Public Routes",
+			"item": [
+				{
+					"name": "Authentication",
+					"item": [
+						{
+							"name": "Register",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"John Doe\",\n    \"email\": \"john@example.com\",\n    \"password\": \"password123\",\n    \"password_confirmation\": \"password123\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/auth/register",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"auth",
+										"register"
+									]
+								},
+								"description": "Registrar um novo usuário no sistema"
+							},
+							"response": []
+						},
+						{
+							"name": "Login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code === 200) {",
+											"    var jsonData = pm.response.json();",
+											"    if (jsonData.token) {",
+											"        pm.collectionVariables.set(\"auth_token\", jsonData.token);",
+											"    }",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"admin@example.com\",\n    \"password\": \"password\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/auth/login",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								},
+								"description": "Fazer login e obter o token de autenticação"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Webhooks",
+					"item": [
+						{
+							"name": "Instagram",
+							"item": [
+								{
+									"name": "Verify Webhook",
+									"request": {
+										"auth": {
+											"type": "noauth"
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/webhooks/instagram/verify?hub.mode=subscribe&hub.challenge=test&hub.verify_token=your_verify_token",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"webhooks",
+												"instagram",
+												"verify"
+											],
+											"query": [
+												{
+													"key": "hub.mode",
+													"value": "subscribe"
+												},
+												{
+													"key": "hub.challenge",
+													"value": "test"
+												},
+												{
+													"key": "hub.verify_token",
+													"value": "your_verify_token"
+												}
+											]
+										},
+										"description": "Verificação do webhook do Instagram pela Meta"
+									},
+									"response": []
+								},
+								{
+									"name": "Handle Webhook",
+									"request": {
+										"auth": {
+											"type": "noauth"
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"object\": \"instagram\",\n    \"entry\": []\n}"
+										},
+										"url": {
+											"raw": "{{base_url}}/webhooks/instagram/handle",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"webhooks",
+												"instagram",
+												"handle"
+											]
+										},
+										"description": "Receber mensagens do Instagram"
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "WhatsApp",
+							"item": [
+								{
+									"name": "Verify Webhook",
+									"request": {
+										"auth": {
+											"type": "noauth"
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/webhooks/whatsapp/verify?hub.mode=subscribe&hub.challenge=test&hub.verify_token=your_verify_token",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"webhooks",
+												"whatsapp",
+												"verify"
+											],
+											"query": [
+												{
+													"key": "hub.mode",
+													"value": "subscribe"
+												},
+												{
+													"key": "hub.challenge",
+													"value": "test"
+												},
+												{
+													"key": "hub.verify_token",
+													"value": "your_verify_token"
+												}
+											]
+										},
+										"description": "Verificação do webhook do WhatsApp pela Meta"
+									},
+									"response": []
+								},
+								{
+									"name": "Handle Webhook",
+									"request": {
+										"auth": {
+											"type": "noauth"
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"object\": \"whatsapp_business_account\",\n    \"entry\": []\n}"
+										},
+										"url": {
+											"raw": "{{base_url}}/webhooks/whatsapp/handle",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"webhooks",
+												"whatsapp",
+												"handle"
+											]
+										},
+										"description": "Receber mensagens e status do WhatsApp"
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "CMS Preview",
+					"item": [
+						{
+							"name": "Show Preview",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/cms/preview/:type/:id/:token",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"cms",
+										"preview",
+										":type",
+										":id",
+										":token"
+									],
+									"variable": [
+										{
+											"key": "type",
+											"value": "page"
+										},
+										{
+											"key": "id",
+											"value": "1"
+										},
+										{
+											"key": "token",
+											"value": "preview_token_here"
+										}
+									]
+								},
+								"description": "Visualizar preview de conteúdo CMS sem autenticação"
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Protected Routes",
+			"item": [
+				{
+					"name": "Auth",
+					"item": [
+						{
+							"name": "Get Current User",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/auth/user",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"auth",
+										"user"
+									]
+								},
+								"description": "Obter informações do usuário autenticado"
+							},
+							"response": []
+						},
+						{
+							"name": "Logout",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/auth/logout",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"auth",
+										"logout"
+									]
+								},
+								"description": "Fazer logout e invalidar o token"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Admin",
+					"item": [
+						{
+							"name": "Roles",
+							"item": [
+								{
+									"name": "List Roles",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/roles",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"roles"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Create Role",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"name\": \"manager\",\n    \"display_name\": \"Manager\",\n    \"description\": \"Manager role\"\n}"
+										},
+										"url": {
+											"raw": "{{base_url}}/roles",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"roles"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get Role",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/roles/:id",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"roles",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Update Role",
+									"request": {
+										"method": "PUT",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"name\": \"manager\",\n    \"display_name\": \"Manager Updated\",\n    \"description\": \"Updated description\"\n}"
+										},
+										"url": {
+											"raw": "{{base_url}}/roles/:id",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"roles",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete Role",
+									"request": {
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/roles/:id",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"roles",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Permissions",
+							"item": [
+								{
+									"name": "List Permissions",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/permissions",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"permissions"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Create Permission",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"name\": \"create-leads\",\n    \"display_name\": \"Create Leads\",\n    \"description\": \"Permission to create leads\"\n}"
+										},
+										"url": {
+											"raw": "{{base_url}}/permissions",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"permissions"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Users",
+							"item": [
+								{
+									"name": "List Users",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/users",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"users"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Create User",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"name\": \"New User\",\n    \"email\": \"user@example.com\",\n    \"password\": \"password123\"\n}"
+										},
+										"url": {
+											"raw": "{{base_url}}/users",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"users"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get User",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/users/:id",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"users",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Update User",
+									"request": {
+										"method": "PUT",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"name\": \"Updated User\",\n    \"email\": \"updated@example.com\"\n}"
+										},
+										"url": {
+											"raw": "{{base_url}}/users/:id",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"users",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete User",
+									"request": {
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/users/:id",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"users",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "CRM",
+					"item": [
+						{
+							"name": "Companies",
+							"item": [
+								{
+									"name": "List Companies",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/crm/companies",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"companies"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Create Company",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"name\": \"Acme Corporation\",\n    \"domain\": \"acme.com\",\n    \"cnpj\": \"12.345.678/0001-90\",\n    \"email\": \"contact@acme.com\",\n    \"phone\": \"(11) 1234-5678\",\n    \"status\": \"active\"\n}"
+										},
+										"url": {
+											"raw": "{{base_url}}/crm/companies",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"companies"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get Company",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/crm/companies/:id",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"companies",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Update Company",
+									"request": {
+										"method": "PUT",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"name\": \"Acme Corp Updated\",\n    \"email\": \"newemail@acme.com\"\n}"
+										},
+										"url": {
+											"raw": "{{base_url}}/crm/companies/:id",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"companies",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete Company",
+									"request": {
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/crm/companies/:id",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"companies",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Activate Company",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/crm/companies/:id/activate",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"companies",
+												":id",
+												"activate"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Deactivate Company",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/crm/companies/:id/deactivate",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"companies",
+												":id",
+												"deactivate"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Suspend Company",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/crm/companies/:id/suspend",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"companies",
+												":id",
+												"suspend"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Leads",
+							"item": [
+								{
+									"name": "Lead Sources",
+									"item": [
+										{
+											"name": "List Lead Sources",
+											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json"
+													}
+												],
+												"url": {
+													"raw": "{{base_url}}/crm/lead-sources",
+													"host": [
+														"{{base_url}}"
+													],
+													"path": [
+														"crm",
+														"lead-sources"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Create Lead Source",
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json"
+													},
+													{
+														"key": "Accept",
+														"value": "application/json"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n    \"name\": \"Website\",\n    \"description\": \"Leads from website contact form\"\n}"
+												},
+												"url": {
+													"raw": "{{base_url}}/crm/lead-sources",
+													"host": [
+														"{{base_url}}"
+													],
+													"path": [
+														"crm",
+														"lead-sources"
+													]
+												}
+											},
+											"response": []
+										}
+									]
+								},
+								{
+									"name": "List Leads",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/crm/leads",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"leads"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Create Lead",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"name\": \"John Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phone\": \"(11) 98765-4321\",\n    \"company_name\": \"Tech Solutions\",\n    \"lead_source_id\": 1,\n    \"status\": \"new\"\n}"
+										},
+										"url": {
+											"raw": "{{base_url}}/crm/leads",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"leads"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get Lead",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/crm/leads/:id",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"leads",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Update Lead",
+									"request": {
+										"method": "PUT",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"name\": \"John Doe Updated\",\n    \"status\": \"contacted\"\n}"
+										},
+										"url": {
+											"raw": "{{base_url}}/crm/leads/:id",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"leads",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete Lead",
+									"request": {
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/crm/leads/:id",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"leads",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Assign Lead",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"user_id\": 2\n}"
+										},
+										"url": {
+											"raw": "{{base_url}}/crm/leads/:id/assign",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"leads",
+												":id",
+												"assign"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Change Lead Status",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"status\": \"qualified\"\n}"
+										},
+										"url": {
+											"raw": "{{base_url}}/crm/leads/:id/change-status",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"leads",
+												":id",
+												"change-status"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Activities",
+							"item": [
+								{
+									"name": "List Activities",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/crm/activities",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"activities"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Create Activity",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"type\": \"call\",\n    \"subject\": \"Follow-up call\",\n    \"description\": \"Called customer to discuss proposal\",\n    \"related_type\": \"lead\",\n    \"related_id\": 1,\n    \"date\": \"2026-02-14\"\n}"
+										},
+										"url": {
+											"raw": "{{base_url}}/crm/activities",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"activities"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get Recent Activities",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/crm/activities/recent",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"activities",
+												"recent"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Tasks",
+							"item": [
+								{
+									"name": "List Tasks",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/crm/tasks",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"tasks"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Create Task",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"title\": \"Send proposal\",\n    \"description\": \"Send proposal to client via email\",\n    \"due_date\": \"2026-02-20\",\n    \"priority\": \"high\",\n    \"status\": \"pending\",\n    \"assigned_to\": 2\n}"
+										},
+										"url": {
+											"raw": "{{base_url}}/crm/tasks",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"tasks"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get Task",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/crm/tasks/:id",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"tasks",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Update Task",
+									"request": {
+										"method": "PUT",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"title\": \"Send updated proposal\",\n    \"priority\": \"urgent\"\n}"
+										},
+										"url": {
+											"raw": "{{base_url}}/crm/tasks/:id",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"tasks",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Complete Task",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/crm/tasks/:id/complete",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"tasks",
+												":id",
+												"complete"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Cancel Task",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/crm/tasks/:id/cancel",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"tasks",
+												":id",
+												"cancel"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get Overdue Tasks",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/crm/tasks/overdue",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"tasks",
+												"overdue"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get Upcoming Tasks",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/crm/tasks/upcoming",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"tasks",
+												"upcoming"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Pipelines",
+							"item": [
+								{
+									"name": "List Pipelines",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/crm/pipelines",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"pipelines"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Create Pipeline",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"name\": \"Sales Pipeline\",\n    \"description\": \"Standard sales process\",\n    \"is_default\": true\n}"
+										},
+										"url": {
+											"raw": "{{base_url}}/crm/pipelines",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"pipelines"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Add Stage to Pipeline",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"name\": \"Qualification\",\n    \"order\": 1,\n    \"probability\": 20\n}"
+										},
+										"url": {
+											"raw": "{{base_url}}/crm/pipelines/:id/stages",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"pipelines",
+												":id",
+												"stages"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Update Pipeline Stage",
+									"request": {
+										"method": "PUT",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"name\": \"Qualification Updated\",\n    \"probability\": 25\n}"
+										},
+										"url": {
+											"raw": "{{base_url}}/crm/pipelines/:id/stages/:stageId",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"pipelines",
+												":id",
+												"stages",
+												":stageId"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												},
+												{
+													"key": "stageId",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Reorder Pipeline Stages",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"stages\": [\n        {\"id\": 1, \"order\": 1},\n        {\"id\": 2, \"order\": 2},\n        {\"id\": 3, \"order\": 3}\n    ]\n}"
+										},
+										"url": {
+											"raw": "{{base_url}}/crm/pipelines/:id/reorder-stages",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"pipelines",
+												":id",
+												"reorder-stages"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Products",
+							"item": [
+								{
+									"name": "List Products",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/crm/products",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"products"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Create Product",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"name\": \"CRM License\",\n    \"description\": \"Annual CRM software license\",\n    \"sku\": \"CRM-001\",\n    \"price\": 1200.00,\n    \"cost\": 400.00,\n    \"is_active\": true\n}"
+										},
+										"url": {
+											"raw": "{{base_url}}/crm/products",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"products"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Activate Product",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/crm/products/:id/activate",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"products",
+												":id",
+												"activate"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Deactivate Product",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/crm/products/:id/deactivate",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"products",
+												":id",
+												"deactivate"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Proposals",
+							"item": [
+								{
+									"name": "List Proposals",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/crm/proposals",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"proposals"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Create Proposal",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"title\": \"CRM Implementation Proposal\",\n    \"lead_id\": 1,\n    \"valid_until\": \"2026-03-14\",\n    \"notes\": \"Proposal for implementing CRM system\",\n    \"status\": \"draft\"\n}"
+										},
+										"url": {
+											"raw": "{{base_url}}/crm/proposals",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"proposals"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Add Item to Proposal",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"product_id\": 1,\n    \"quantity\": 5,\n    \"unit_price\": 1200.00,\n    \"discount\": 10\n}"
+										},
+										"url": {
+											"raw": "{{base_url}}/crm/proposals/:id/items",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"proposals",
+												":id",
+												"items"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Accept Proposal",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/crm/proposals/:id/accept",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"proposals",
+												":id",
+												"accept"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Reject Proposal",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"reason\": \"Price too high\"\n}"
+										},
+										"url": {
+											"raw": "{{base_url}}/crm/proposals/:id/reject",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"proposals",
+												":id",
+												"reject"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Files",
+							"item": [
+								{
+									"name": "List Files",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/crm/files",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"files"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Upload File",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "file",
+													"type": "file",
+													"src": []
+												},
+												{
+													"key": "related_type",
+													"value": "lead",
+													"type": "text"
+												},
+												{
+													"key": "related_id",
+													"value": "1",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{base_url}}/crm/files",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"files"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Download File",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/crm/files/:id/download",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"files",
+												":id",
+												"download"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Social Media",
+					"item": [
+						{
+							"name": "Instagram",
+							"item": [
+								{
+									"name": "Get Auth URL",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/crm/social/instagram/auth-url",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"social",
+												"instagram",
+												"auth-url"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Connect Account",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"code\": \"authorization_code_from_instagram\"\n}"
+										},
+										"url": {
+											"raw": "{{base_url}}/crm/social/instagram/connect",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"social",
+												"instagram",
+												"connect"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "List Accounts",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/crm/social/instagram/accounts",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"social",
+												"instagram",
+												"accounts"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get Messages",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/crm/social/instagram/accounts/:accountId/messages",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"social",
+												"instagram",
+												"accounts",
+												":accountId",
+												"messages"
+											],
+											"variable": [
+												{
+													"key": "accountId",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get Posts",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/crm/social/instagram/accounts/:accountId/posts",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"social",
+												"instagram",
+												"accounts",
+												":accountId",
+												"posts"
+											],
+											"variable": [
+												{
+													"key": "accountId",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Refresh Token",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/crm/social/instagram/accounts/:accountId/refresh-token",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"social",
+												"instagram",
+												"accounts",
+												":accountId",
+												"refresh-token"
+											],
+											"variable": [
+												{
+													"key": "accountId",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Disconnect Account",
+									"request": {
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/crm/social/instagram/accounts/:accountId/disconnect",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"social",
+												"instagram",
+												"accounts",
+												":accountId",
+												"disconnect"
+											],
+											"variable": [
+												{
+													"key": "accountId",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "WhatsApp",
+							"item": [
+								{
+									"name": "List Accounts",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/crm/social/whatsapp/accounts",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"social",
+												"whatsapp",
+												"accounts"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Create Account",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"name\": \"Business Account\",\n    \"phone_number_id\": \"1234567890\",\n    \"business_account_id\": \"0987654321\",\n    \"access_token\": \"your_access_token\"\n}"
+										},
+										"url": {
+											"raw": "{{base_url}}/crm/social/whatsapp/accounts",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"social",
+												"whatsapp",
+												"accounts"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get Conversations",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/crm/social/whatsapp/accounts/:accountId/conversations",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"social",
+												"whatsapp",
+												"accounts",
+												":accountId",
+												"conversations"
+											],
+											"variable": [
+												{
+													"key": "accountId",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get Messages",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/crm/social/whatsapp/conversations/:conversationId/messages",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"social",
+												"whatsapp",
+												"conversations",
+												":conversationId",
+												"messages"
+											],
+											"variable": [
+												{
+													"key": "conversationId",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Send Message",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"to\": \"5511987654321\",\n    \"type\": \"text\",\n    \"text\": {\n        \"body\": \"Hello from CRM!\"\n    }\n}"
+										},
+										"url": {
+											"raw": "{{base_url}}/crm/social/whatsapp/accounts/:accountId/send",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"social",
+												"whatsapp",
+												"accounts",
+												":accountId",
+												"send"
+											],
+											"variable": [
+												{
+													"key": "accountId",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Send Media",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"to\": \"5511987654321\",\n    \"type\": \"image\",\n    \"image\": {\n        \"link\": \"https://example.com/image.jpg\",\n        \"caption\": \"Check this out!\"\n    }\n}"
+										},
+										"url": {
+											"raw": "{{base_url}}/crm/social/whatsapp/accounts/:accountId/send-media",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"social",
+												"whatsapp",
+												"accounts",
+												":accountId",
+												"send-media"
+											],
+											"variable": [
+												{
+													"key": "accountId",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Mark as Read",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/crm/social/whatsapp/conversations/:conversationId/mark-read",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"social",
+												"whatsapp",
+												"conversations",
+												":conversationId",
+												"mark-read"
+											],
+											"variable": [
+												{
+													"key": "conversationId",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Disconnect Account",
+									"request": {
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/crm/social/whatsapp/accounts/:accountId/disconnect",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"social",
+												"whatsapp",
+												"accounts",
+												":accountId",
+												"disconnect"
+											],
+											"variable": [
+												{
+													"key": "accountId",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "AI Integration",
+					"item": [
+						{
+							"name": "Settings",
+							"item": [
+								{
+									"name": "List AI Settings",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/crm/ai/settings",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"ai",
+												"settings"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Create AI Setting",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"provider\": \"openai\",\n    \"api_key\": \"sk-...\",\n    \"model\": \"gpt-4\",\n    \"is_default\": true\n}"
+										},
+										"url": {
+											"raw": "{{base_url}}/crm/ai/settings",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"ai",
+												"settings"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Set Default AI Setting",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/crm/ai/settings/:id/set-default",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"ai",
+												"settings",
+												":id",
+												"set-default"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Test AI Setting",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/crm/ai/settings/:id/test",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"ai",
+												"settings",
+												":id",
+												"test"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Templates",
+							"item": [
+								{
+									"name": "List Templates",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/crm/ai/templates",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"ai",
+												"templates"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Create Template",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"name\": \"Lead Follow-up\",\n    \"description\": \"Template for following up with leads\",\n    \"prompt\": \"Generate a follow-up email for {{lead_name}}\",\n    \"category\": \"email\"\n}"
+										},
+										"url": {
+											"raw": "{{base_url}}/crm/ai/templates",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"ai",
+												"templates"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Preview Template",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"variables\": {\n        \"lead_name\": \"John Doe\"\n    }\n}"
+										},
+										"url": {
+											"raw": "{{base_url}}/crm/ai/templates/:id/preview",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"ai",
+												"templates",
+												":id",
+												"preview"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Duplicate Template",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/crm/ai/templates/:id/duplicate",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"ai",
+												"templates",
+												":id",
+												"duplicate"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Conversations",
+							"item": [
+								{
+									"name": "List Conversations",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/crm/ai/conversations",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"ai",
+												"conversations"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Create Conversation",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"title\": \"Lead Analysis\",\n    \"context_type\": \"lead\",\n    \"context_id\": 1\n}"
+										},
+										"url": {
+											"raw": "{{base_url}}/crm/ai/conversations",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"ai",
+												"conversations"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Send Message",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"message\": \"Can you analyze this lead and suggest next steps?\"\n}"
+										},
+										"url": {
+											"raw": "{{base_url}}/crm/ai/conversations/:id/send-message",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"ai",
+												"conversations",
+												":id",
+												"send-message"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Complete Conversation",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/crm/ai/conversations/:id/complete",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"ai",
+												"conversations",
+												":id",
+												"complete"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Notifications",
+					"item": [
+						{
+							"name": "List Notifications",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/crm/notifications",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"crm",
+										"notifications"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Statistics",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/crm/notifications/statistics",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"crm",
+										"notifications",
+										"statistics"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Notification",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/crm/notifications/:id",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"crm",
+										"notifications",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Mark as Read",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/crm/notifications/:id/mark-as-read",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"crm",
+										"notifications",
+										":id",
+										"mark-as-read"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Mark All as Read",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/crm/notifications/mark-all-as-read",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"crm",
+										"notifications",
+										"mark-all-as-read"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Preferences",
+							"item": [
+								{
+									"name": "List Preferences",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/crm/notifications/preferences",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"notifications",
+												"preferences"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Create Preference",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"type\": \"lead_assigned\",\n    \"channels\": [\"email\", \"in_app\"],\n    \"enabled\": true\n}"
+										},
+										"url": {
+											"raw": "{{base_url}}/crm/notifications/preferences",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"notifications",
+												"preferences"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Enable Channel",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/crm/notifications/preferences/:id/enable/:channel",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"notifications",
+												"preferences",
+												":id",
+												"enable",
+												":channel"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												},
+												{
+													"key": "channel",
+													"value": "email"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Disable Channel",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/crm/notifications/preferences/:id/disable/:channel",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"notifications",
+												"preferences",
+												":id",
+												"disable",
+												":channel"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												},
+												{
+													"key": "channel",
+													"value": "sms"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Templates",
+							"item": [
+								{
+									"name": "List Templates",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/crm/notifications/templates",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"notifications",
+												"templates"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Create Template",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"type\": \"lead_assigned\",\n    \"channel\": \"email\",\n    \"subject\": \"New lead assigned to you\",\n    \"body\": \"You have been assigned lead: {{lead_name}}\"\n}"
+										},
+										"url": {
+											"raw": "{{base_url}}/crm/notifications/templates",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"notifications",
+												"templates"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Preview Template",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"variables\": {\n        \"lead_name\": \"John Doe\"\n    }\n}"
+										},
+										"url": {
+											"raw": "{{base_url}}/crm/notifications/templates/:id/preview",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"crm",
+												"notifications",
+												"templates",
+												":id",
+												"preview"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "CMS",
+					"item": [
+						{
+							"name": "Sites",
+							"item": [
+								{
+									"name": "List Sites",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/cms/sites",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"cms",
+												"sites"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Create Site",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"name\": \"My Website\",\n    \"domain\": \"example.com\",\n    \"description\": \"Corporate website\",\n    \"is_active\": true\n}"
+										},
+										"url": {
+											"raw": "{{base_url}}/cms/sites",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"cms",
+												"sites"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Regenerate API Key",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/cms/sites/:id/regenerate-key",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"cms",
+												"sites",
+												":id",
+												"regenerate-key"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Activate Site",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/cms/sites/:id/activate",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"cms",
+												"sites",
+												":id",
+												"activate"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Pages",
+							"item": [
+								{
+									"name": "List Pages",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/cms/pages",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"cms",
+												"pages"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Create Page",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"site_id\": 1,\n    \"title\": \"About Us\",\n    \"slug\": \"about-us\",\n    \"content\": \"<h1>About Our Company</h1><p>We are...</p>\",\n    \"meta_title\": \"About Us - Company Name\",\n    \"meta_description\": \"Learn more about our company\",\n    \"status\": \"draft\"\n}"
+										},
+										"url": {
+											"raw": "{{base_url}}/cms/pages",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"cms",
+												"pages"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Publish Page",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/cms/pages/:id/publish",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"cms",
+												"pages",
+												":id",
+												"publish"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Request Approval",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"notes\": \"Ready for review\"\n}"
+										},
+										"url": {
+											"raw": "{{base_url}}/cms/pages/:id/request-approval",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"cms",
+												"pages",
+												":id",
+												"request-approval"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Posts",
+							"item": [
+								{
+									"name": "List Posts",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/cms/posts",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"cms",
+												"posts"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Create Post",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"site_id\": 1,\n    \"title\": \"10 Tips for Success\",\n    \"slug\": \"10-tips-for-success\",\n    \"content\": \"<p>Here are our top 10 tips...</p>\",\n    \"excerpt\": \"Discover the secrets to success\",\n    \"featured_image\": \"https://example.com/image.jpg\",\n    \"status\": \"draft\",\n    \"published_at\": \"2026-02-14 10:00:00\"\n}"
+										},
+										"url": {
+											"raw": "{{base_url}}/cms/posts",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"cms",
+												"posts"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Publish Post",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/cms/posts/:id/publish",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"cms",
+												"posts",
+												":id",
+												"publish"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Menus",
+							"item": [
+								{
+									"name": "List Menus",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/cms/menus",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"cms",
+												"menus"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Create Menu",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"site_id\": 1,\n    \"name\": \"Main Menu\",\n    \"location\": \"header\",\n    \"items\": [\n        {\n            \"label\": \"Home\",\n            \"url\": \"/\",\n            \"order\": 1\n        },\n        {\n            \"label\": \"About\",\n            \"url\": \"/about\",\n            \"order\": 2\n        }\n    ]\n}"
+										},
+										"url": {
+											"raw": "{{base_url}}/cms/menus",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"cms",
+												"menus"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Approvals",
+							"item": [
+								{
+									"name": "List Approvals",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/cms/approvals",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"cms",
+												"approvals"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get Approval Statistics",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/cms/approvals/statistics",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"cms",
+												"approvals",
+												"statistics"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Approve Content",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"notes\": \"Looks good, approved!\"\n}"
+										},
+										"url": {
+											"raw": "{{base_url}}/cms/approvals/:id/approve",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"cms",
+												"approvals",
+												":id",
+												"approve"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Reject Content",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"notes\": \"Needs revisions\"\n}"
+										},
+										"url": {
+											"raw": "{{base_url}}/cms/approvals/:id/reject",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"cms",
+												"approvals",
+												":id",
+												"reject"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Versions",
+							"item": [
+								{
+									"name": "List Versions",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/cms/versions/:type/:id",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"cms",
+												"versions",
+												":type",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "type",
+													"value": "page"
+												},
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get Version",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/cms/versions/:type/:id/:versionNumber",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"cms",
+												"versions",
+												":type",
+												":id",
+												":versionNumber"
+											],
+											"variable": [
+												{
+													"key": "type",
+													"value": "page"
+												},
+												{
+													"key": "id",
+													"value": "1"
+												},
+												{
+													"key": "versionNumber",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Rollback Version",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/cms/versions/:type/:id/rollback/:versionNumber",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"cms",
+												"versions",
+												":type",
+												":id",
+												"rollback",
+												":versionNumber"
+											],
+											"variable": [
+												{
+													"key": "type",
+													"value": "page"
+												},
+												{
+													"key": "id",
+													"value": "1"
+												},
+												{
+													"key": "versionNumber",
+													"value": "2"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Portfolios",
+							"item": [
+								{
+									"name": "List Portfolios",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/cms/portfolios",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"cms",
+												"portfolios"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Create Portfolio",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"site_id\": 1,\n    \"title\": \"Website Redesign Project\",\n    \"description\": \"Complete website redesign for client\",\n    \"client_name\": \"Acme Corp\",\n    \"project_url\": \"https://acme.com\",\n    \"featured_image\": \"https://example.com/portfolio1.jpg\",\n    \"status\": \"draft\"\n}"
+										},
+										"url": {
+											"raw": "{{base_url}}/cms/portfolios",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"cms",
+												"portfolios"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "FAQs",
+							"item": [
+								{
+									"name": "List FAQs",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/cms/faqs",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"cms",
+												"faqs"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Create FAQ",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"site_id\": 1,\n    \"question\": \"What are your business hours?\",\n    \"answer\": \"We are open Monday-Friday, 9AM-5PM\",\n    \"category\": \"General\",\n    \"order\": 1,\n    \"status\": \"published\"\n}"
+										},
+										"url": {
+											"raw": "{{base_url}}/cms/faqs",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"cms",
+												"faqs"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Testimonials",
+							"item": [
+								{
+									"name": "List Testimonials",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/cms/testimonials",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"cms",
+												"testimonials"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Create Testimonial",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"site_id\": 1,\n    \"client_name\": \"John Smith\",\n    \"client_position\": \"CEO\",\n    \"client_company\": \"Tech Solutions\",\n    \"content\": \"Excellent service and great results!\",\n    \"rating\": 5,\n    \"status\": \"published\"\n}"
+										},
+										"url": {
+											"raw": "{{base_url}}/cms/testimonials",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"cms",
+												"testimonials"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Team Members",
+							"item": [
+								{
+									"name": "List Team Members",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/cms/team-members",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"cms",
+												"team-members"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Create Team Member",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"site_id\": 1,\n    \"name\": \"Jane Doe\",\n    \"position\": \"Marketing Manager\",\n    \"bio\": \"Jane has 10 years of experience in digital marketing\",\n    \"photo\": \"https://example.com/jane.jpg\",\n    \"email\": \"jane@example.com\",\n    \"social_links\": {\n        \"linkedin\": \"https://linkedin.com/in/janedoe\"\n    },\n    \"status\": \"published\"\n}"
+										},
+										"url": {
+											"raw": "{{base_url}}/cms/team-members",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"cms",
+												"team-members"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Forms",
+							"item": [
+								{
+									"name": "List Forms",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/cms/forms",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"cms",
+												"forms"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Create Form",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"site_id\": 1,\n    \"name\": \"Contact Form\",\n    \"description\": \"Main contact form\",\n    \"fields\": [\n        {\n            \"name\": \"name\",\n            \"type\": \"text\",\n            \"label\": \"Name\",\n            \"required\": true\n        },\n        {\n            \"name\": \"email\",\n            \"type\": \"email\",\n            \"label\": \"Email\",\n            \"required\": true\n        }\n    ],\n    \"is_active\": true\n}"
+										},
+										"url": {
+											"raw": "{{base_url}}/cms/forms",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"cms",
+												"forms"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Banners",
+							"item": [
+								{
+									"name": "List Banners",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/cms/banners",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"cms",
+												"banners"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Create Banner",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"site_id\": 1,\n    \"title\": \"Summer Sale\",\n    \"description\": \"50% off all products\",\n    \"image\": \"https://example.com/banner.jpg\",\n    \"link\": \"/products\",\n    \"start_date\": \"2026-06-01\",\n    \"end_date\": \"2026-08-31\",\n    \"status\": \"published\"\n}"
+										},
+										"url": {
+											"raw": "{{base_url}}/cms/banners",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"cms",
+												"banners"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Reports & Dashboards",
+					"item": [
+						{
+							"name": "Dashboard",
+							"item": [
+								{
+									"name": "Get General Dashboard",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/dashboard",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"dashboard"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get Sales Dashboard",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/dashboard/sales",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"dashboard",
+												"sales"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get Marketing Dashboard",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/dashboard/marketing",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"dashboard",
+												"marketing"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get Activities Summary",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/dashboard/activities",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"dashboard",
+												"activities"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Reports",
+							"item": [
+								{
+									"name": "List Reports",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/reports",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"reports"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Create Report",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"name\": \"Monthly Sales Report\",\n    \"description\": \"Sales performance for the month\",\n    \"type\": \"sales\",\n    \"filters\": {\n        \"start_date\": \"2026-01-01\",\n        \"end_date\": \"2026-01-31\",\n        \"pipeline_id\": 1\n    },\n    \"columns\": [\"lead_name\", \"value\", \"status\", \"owner\"]\n}"
+										},
+										"url": {
+											"raw": "{{base_url}}/reports",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"reports"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get Report",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/reports/:id",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"reports",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Update Report",
+									"request": {
+										"method": "PUT",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"name\": \"Updated Report Name\",\n    \"description\": \"Updated description\"\n}"
+										},
+										"url": {
+											"raw": "{{base_url}}/reports/:id",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"reports",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete Report",
+									"request": {
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/reports/:id",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"reports",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Generate Report",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/reports/:id/generate",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"reports",
+												":id",
+												"generate"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Export Report",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/reports/:id/export?format=pdf",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"reports",
+												":id",
+												"export"
+											],
+											"query": [
+												{
+													"key": "format",
+													"value": "pdf",
+													"description": "Export format: pdf, excel, csv"
+												}
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Report Schedules",
+							"item": [
+								{
+									"name": "List Report Schedules",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/report-schedules",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"report-schedules"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Create Schedule",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"report_id\": 1,\n    \"name\": \"Weekly Sales Report\",\n    \"frequency\": \"weekly\",\n    \"day_of_week\": 1,\n    \"time\": \"09:00\",\n    \"format\": \"pdf\",\n    \"recipients\": [\"manager@example.com\", \"team@example.com\"],\n    \"is_active\": true\n}"
+										},
+										"url": {
+											"raw": "{{base_url}}/report-schedules",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"report-schedules"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get Schedule",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/report-schedules/:id",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"report-schedules",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Update Schedule",
+									"request": {
+										"method": "PUT",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"frequency\": \"daily\",\n    \"time\": \"08:00\"\n}"
+										},
+										"url": {
+											"raw": "{{base_url}}/report-schedules/:id",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"report-schedules",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete Schedule",
+									"request": {
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/report-schedules/:id",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"report-schedules",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Activate Schedule",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/report-schedules/:id/activate",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"report-schedules",
+												":id",
+												"activate"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Deactivate Schedule",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/report-schedules/:id/deactivate",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"report-schedules",
+												":id",
+												"deactivate"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				}
+			]
+		}
+	]
+}
