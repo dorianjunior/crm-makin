@@ -2,7 +2,7 @@
 
 namespace Database\Factories\Social;
 
-use App\Models\Lead;
+use App\Models\CRM\Lead;
 use App\Models\Social\WhatsAppAccount;
 use App\Models\Social\WhatsAppConversation;
 use Illuminate\Database\Eloquent\Factories\Factory;

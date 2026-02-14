@@ -2,8 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Admin\Role;
 use App\Models\CRM\Company;
-use App\Models\Role;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;

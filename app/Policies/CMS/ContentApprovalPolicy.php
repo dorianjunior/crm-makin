@@ -6,7 +6,7 @@ namespace App\Policies\CMS;
 
 use App\Enums\ContentStatus;
 use App\Models\CMS\ContentApproval;
-use App\Models\User;
+use App\Models\Admin\User;
 
 class ContentApprovalPolicy
 {

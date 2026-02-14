@@ -2,7 +2,7 @@
 
 namespace Database\Factories\Social;
 
-use App\Models\Company;
+use App\Models\CRM\Company;
 use App\Models\Social\WhatsAppAccount;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Crypt;

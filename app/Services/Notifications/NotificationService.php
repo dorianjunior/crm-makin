@@ -2,10 +2,10 @@
 
 namespace App\Services\Notifications;
 
-use App\Models\Notification;
-use App\Models\NotificationPreference;
-use App\Models\NotificationTemplate;
-use App\Models\User;
+use App\Models\Notification\Notification;
+use App\Models\Notification\NotificationPreference;
+use App\Models\Notification\NotificationTemplate;
+use App\Models\Admin\User;
 use Illuminate\Support\Facades\Log;
 
 class NotificationService

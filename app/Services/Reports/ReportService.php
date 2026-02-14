@@ -2,13 +2,13 @@
 
 namespace App\Services\Reports;
 
-use App\Models\Activity;
-use App\Models\Lead;
-use App\Models\PipelineStage;
-use App\Models\Proposal;
-use App\Models\Report;
-use App\Models\Task;
-use App\Models\User;
+use App\Models\CRM\Activity;
+use App\Models\CRM\Lead;
+use App\Models\CRM\PipelineStage;
+use App\Models\CRM\Proposal;
+use App\Models\Reports\Report;
+use App\Models\CRM\Task;
+use App\Models\Admin\User;
 use Illuminate\Database\Eloquent\Builder;
 
 class ReportService

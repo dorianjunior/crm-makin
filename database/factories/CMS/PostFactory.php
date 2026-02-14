@@ -3,7 +3,7 @@
 namespace Database\Factories\CMS;
 
 use App\Enums\ContentStatus;
-use App\Models\User;
+use App\Models\Admin\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**

@@ -3,9 +3,9 @@
 namespace Tests\Feature\CMS;
 
 use App\Enums\ContentStatus;
+use App\Models\Admin\User;
 use App\Models\CMS\Page;
 use App\Models\CMS\Site;
-use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 

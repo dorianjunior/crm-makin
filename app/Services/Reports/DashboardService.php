@@ -2,11 +2,11 @@
 
 namespace App\Services\Reports;
 
-use App\Models\Activity;
-use App\Models\Lead;
-use App\Models\Proposal;
-use App\Models\Task;
-use App\Models\User;
+use App\Models\CRM\Activity;
+use App\Models\CRM\Lead;
+use App\Models\CRM\Proposal;
+use App\Models\CRM\Task;
+use App\Models\Admin\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 

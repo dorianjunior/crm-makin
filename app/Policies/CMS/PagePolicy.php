@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Policies\CMS;
 
 use App\Models\CMS\Page;
-use App\Models\User;
+use App\Models\Admin\User;
 
 class PagePolicy
 {

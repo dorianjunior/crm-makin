@@ -2,8 +2,8 @@
 
 namespace App\Jobs;
 
-use App\Models\AIConversation;
-use App\Models\AIPromptTemplate;
+use App\Models\AI\AIConversation;
+use App\Models\AI\AIPromptTemplate;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;

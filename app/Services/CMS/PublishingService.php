@@ -9,7 +9,7 @@ use App\Events\CMS\ContentPublished as ContentPublishedEvent;
 use App\Models\CMS\ContentApproval;
 use App\Models\CMS\Page;
 use App\Models\CMS\Post;
-use App\Models\User;
+use App\Models\Admin\User;
 use Illuminate\Database\Eloquent\Model;
 
 class PublishingService

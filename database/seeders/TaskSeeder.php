@@ -4,10 +4,10 @@ namespace Database\Seeders;
 
 use App\Enums\TaskPriority;
 use App\Enums\TaskStatus;
+use App\Models\Admin\User;
 use App\Models\CRM\Company;
 use App\Models\CRM\Lead;
 use App\Models\CRM\Task;
-use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class TaskSeeder extends Seeder

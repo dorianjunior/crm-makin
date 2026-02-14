@@ -2,7 +2,7 @@
 
 namespace App\Models\CMS;
 
-use App\Models\User;
+use App\Models\Admin\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

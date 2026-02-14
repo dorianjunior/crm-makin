@@ -1,6 +1,6 @@
 FROM php:8.2-fpm-alpine
 
-RUN apk add --no-cache \
+RUN apk update && apk add --no-cache \
     bash \
     curl \
     git \
@@ -13,6 +13,10 @@ RUN apk add --no-cache \
     mysql-client \
     nodejs \
     npm \
+    autoconf \
+    g++ \
+    make \
+    linux-headers \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) \
         pdo \
@@ -23,7 +27,8 @@ RUN apk add --no-cache \
         bcmath \
     && pecl install redis \
     && docker-php-ext-enable redis \
-    && rm -rf /tmp/pear
+    && apk del autoconf g++ make linux-headers \
+    && rm -rf /tmp/pear /var/cache/apk/*
 
 COPY --from=composer:2.7 /usr/bin/composer /usr/bin/composer
 

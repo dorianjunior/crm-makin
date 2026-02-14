@@ -1,12 +1,12 @@
 <?php
 
+use App\Models\Admin\Role;
+use App\Models\Admin\User;
 use App\Models\CRM\Company;
 use App\Models\CRM\Lead;
-use App\Models\Role;
 use App\Models\Social\WhatsAppAccount;
 use App\Models\Social\WhatsAppConversation;
 use App\Models\Social\WhatsAppMessage;
-use App\Models\User;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Queue;
 use Laravel\Sanctum\Sanctum;

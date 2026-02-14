@@ -2,10 +2,10 @@
 
 namespace Tests;
 
+use App\Models\Admin\Role;
+use App\Models\Admin\User;
 use App\Models\CMS\Site;
 use App\Models\CRM\Company;
-use App\Models\Role;
-use App\Models\User;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase

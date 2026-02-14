@@ -1,15 +1,15 @@
 <?php
 
-use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\CMS\PageController;
-use App\Http\Controllers\CMS\SiteController;
-use App\Http\Controllers\ProposalController;
-use App\Http\Controllers\Web\ActivityController;
-use App\Http\Controllers\Web\LeadController;
-use App\Http\Controllers\Web\PipelineController;
-use App\Http\Controllers\Web\ProductController;
-use App\Http\Controllers\Web\StageController;
-use App\Http\Controllers\Web\TaskController;
+use App\Http\Controllers\Web\Auth\LoginController;
+use App\Http\Controllers\Web\CMS\PageController;
+use App\Http\Controllers\Web\CMS\SiteController;
+use App\Http\Controllers\Web\CRM\ActivityController;
+use App\Http\Controllers\Web\CRM\LeadController;
+use App\Http\Controllers\Web\CRM\PipelineController;
+use App\Http\Controllers\Web\CRM\ProductController;
+use App\Http\Controllers\Web\CRM\ProposalController;
+use App\Http\Controllers\Web\CRM\StageController;
+use App\Http\Controllers\Web\CRM\TaskController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -85,8 +85,11 @@ Route::middleware(['auth', 'active'])->group(function () {
 
     // Social
     Route::get('/instagram', function () {
-        return Inertia::render('Social/Instagram/Messages');
+        return Inertia::render('Social/Instagram/Index');
     })->name('instagram.index');
+    Route::get('/instagram/messages', function () {
+        return Inertia::render('Social/Instagram/Messages');
+    })->name('instagram.messages');
     Route::get('/whatsapp', function () {
         return Inertia::render('Social/WhatsApp/Chat');
     })->name('whatsapp.index');

@@ -2,7 +2,7 @@
 
 namespace App\Models\Social;
 
-use App\Models\Lead;
+use App\Models\CRM\Lead;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

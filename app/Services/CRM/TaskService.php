@@ -5,7 +5,7 @@ namespace App\Services\CRM;
 use App\Enums\TaskStatus;
 use App\Models\CRM\Lead;
 use App\Models\CRM\Task;
-use App\Models\User;
+use App\Models\Admin\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;

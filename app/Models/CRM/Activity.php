@@ -2,8 +2,8 @@
 
 namespace App\Models\CRM;
 
-use App\Models\Company;
-use App\Models\User;
+use App\Models\CRM\Company;
+use App\Models\Admin\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

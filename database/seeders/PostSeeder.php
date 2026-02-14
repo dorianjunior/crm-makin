@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Models\Admin\User;
 use App\Models\CMS\Post;
 use App\Models\CMS\PostCategory;
 use App\Models\CMS\Site;
-use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class PostSeeder extends Seeder

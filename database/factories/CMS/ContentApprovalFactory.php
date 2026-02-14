@@ -2,8 +2,8 @@
 
 namespace Database\Factories\CMS;
 
+use App\Models\Admin\User;
 use App\Models\CMS\Page;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**

@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\Admin\User;
 use App\Models\CMS\Page;
 use App\Models\CMS\Site;
-use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class PageSeeder extends Seeder

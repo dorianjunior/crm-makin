@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Models\Admin\User;
 use App\Models\CRM\Activity;
 use App\Models\CRM\Company;
 use App\Models\CRM\Lead;
-use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class ActivitySeeder extends Seeder

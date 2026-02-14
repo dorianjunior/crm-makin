@@ -2,7 +2,7 @@
 
 namespace App\Services\Notifications;
 
-use App\Models\Notification;
+use App\Models\Notification\Notification;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 

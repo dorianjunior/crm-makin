@@ -2,8 +2,8 @@
 
 namespace App\Services\Reports;
 
-use App\Models\Report;
-use App\Models\ReportExport;
+use App\Models\Reports\Report;
+use App\Models\Reports\ReportExport;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 

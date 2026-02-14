@@ -1,8 +1,8 @@
 <?php
 
-use App\Http\Controllers\AIConversationController;
-use App\Http\Controllers\AIPromptTemplateController;
-use App\Http\Controllers\AISettingsController;
+use App\Http\Controllers\API\AI\AIConversationController;
+use App\Http\Controllers\API\AI\AIPromptTemplateController;
+use App\Http\Controllers\API\AI\AISettingsController;
 use App\Http\Controllers\API\CMS\BannerController;
 use App\Http\Controllers\API\CMS\ContentApprovalController;
 use App\Http\Controllers\API\CMS\FaqController;
@@ -34,16 +34,16 @@ use App\Http\Controllers\API\Social\InstagramController;
 use App\Http\Controllers\API\Social\InstagramWebhookController;
 use App\Http\Controllers\API\Social\WhatsAppController;
 use App\Http\Controllers\API\Social\WhatsAppWebhookController;
-use App\Http\Controllers\Auth\AuthController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\NotificationController;
-use App\Http\Controllers\NotificationPreferenceController;
-use App\Http\Controllers\NotificationTemplateController;
-use App\Http\Controllers\PermissionController;
-use App\Http\Controllers\ReportController;
-use App\Http\Controllers\ReportScheduleController;
-use App\Http\Controllers\RoleController;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\API\Auth\AuthController;
+use App\Http\Controllers\API\DashboardController;
+use App\Http\Controllers\API\Notifications\NotificationController;
+use App\Http\Controllers\API\Notifications\NotificationPreferenceController;
+use App\Http\Controllers\API\Notifications\NotificationTemplateController;
+use App\Http\Controllers\API\Admin\PermissionController;
+use App\Http\Controllers\API\Reports\ReportController;
+use App\Http\Controllers\API\Reports\ReportScheduleController;
+use App\Http\Controllers\API\Admin\RoleController;
+use App\Http\Controllers\API\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 
 // ============================================

@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Models\ReportSchedule;
+use App\Models\Reports\ReportSchedule;
 use App\Services\Reports\ExportService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
