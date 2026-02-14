@@ -141,7 +141,7 @@ MAIL_PORT=1025
 
 ```bash
 # Iniciar todos os serviços
-docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+docker compose up -d
 
 # Verificar se os containers estão rodando
 docker ps
