@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\API\Public;
+namespace App\Http\Controllers\API\CMS;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CMS\PageResource;
