@@ -42,13 +42,12 @@ class InstagramController extends Controller
     {
         $request->validate([
             'code' => 'required|string',
-            'company_id' => 'required|exists:companies,id',
         ]);
 
         try {
             $account = $this->instagramService->connectAccount(
                 $request->code,
-                $request->company_id
+                $request->user()->company_id
             );
 
             return response()->json([
@@ -63,7 +62,7 @@ class InstagramController extends Controller
         } catch (\Exception $e) {
             Log::error('Instagram connection failed', [
                 'error' => $e->getMessage(),
-                'company_id' => $request->company_id,
+                'company_id' => $request->user()->company_id,
             ]);
 
             return response()->json([

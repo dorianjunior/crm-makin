@@ -136,7 +136,7 @@ class InstagramService implements MessageServiceInterface
         }
 
         $response = Http::get("{$this->graphApiUrl}/{$account->instagram_user_id}/media", [
-            'fields' => 'id,caption,media_type,media_url,permalink,thumbnail_url,timestamp,username',
+            'fields' => 'id,caption,media_type,media_url,permalink,thumbnail_url,timestamp,username,like_count,comments_count,children{media_url,media_type}',
             'limit' => $limit,
             'access_token' => $account->decrypted_token,
         ]);

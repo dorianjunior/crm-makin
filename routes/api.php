@@ -150,7 +150,6 @@ Route::middleware(['auth:sanctum', 'active'])->group(function () {
         // SOCIAL MEDIA INTEGRATION ROUTES
         // ============================================
         Route::prefix('social')->group(function () {
-            // Instagram
             Route::prefix('instagram')->group(function () {
                 Route::get('/auth-url', [InstagramController::class, 'getAuthUrl']);
                 Route::post('/connect', [InstagramController::class, 'connect']);

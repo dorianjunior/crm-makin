@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\Public\ContentController;
+use App\Http\Controllers\API\Public\SocialContentController;
 use Illuminate\Support\Facades\Route;
 
 /**
@@ -27,6 +28,11 @@ use Illuminate\Support\Facades\Route;
  *     message: 'Gostaria de saber mais sobre...'
  *   })
  * })
+ *
+ * // Buscar posts do Instagram para carrossel:
+ * fetch('https://sua-plataforma.com/api/public/instagram/posts?site_key=abc123&limit=12')
+ *   .then(res => res.json())
+ *   .then(data => console.log(data.posts))
  */
 
 // Grupo de rotas públicas (sem autenticação)
@@ -39,6 +45,12 @@ Route::prefix('public')->group(function () {
     Route::get('/portfolio', [ContentController::class, 'portfolio']);
     Route::get('/team', [ContentController::class, 'team']);
     Route::get('/testimonials', [ContentController::class, 'testimonials']);
+
+    // Social Media Content
+    Route::prefix('instagram')->group(function () {
+        Route::get('/posts', [SocialContentController::class, 'instagramPosts']);
+        Route::get('/accounts', [SocialContentController::class, 'instagramAccounts']);
+    });
 
     // Lead Capture
     Route::post('/leads', [ContentController::class, 'createLead']);

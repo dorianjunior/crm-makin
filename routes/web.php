@@ -84,12 +84,8 @@ Route::middleware(['auth', 'active'])->group(function () {
     })->name('menus.index');
 
     // Social
-    Route::get('/instagram', function () {
-        return Inertia::render('Social/Instagram/Index');
-    })->name('instagram.index');
-    Route::get('/instagram/messages', function () {
-        return Inertia::render('Social/Instagram/Messages');
-    })->name('instagram.messages');
+    Route::get('/instagram', [\App\Http\Controllers\Web\Social\InstagramController::class, 'index'])->name('instagram.index');
+    Route::get('/instagram/{accountId}/messages', [\App\Http\Controllers\Web\Social\InstagramController::class, 'messages'])->name('instagram.messages');
     Route::get('/whatsapp', function () {
         return Inertia::render('Social/WhatsApp/Chat');
     })->name('whatsapp.index');
